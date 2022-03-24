@@ -6,9 +6,24 @@ and using a linux machine and bash with npm installed:
 
 -----
 
+sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt -y upgrade
+
+sudo apt install nodejs npm libjansson4 libcurl4 -y
+
+mkdir ~/.novo-bitcoin
+
+nano ~/.novo-bitcoin/novo.conf
+
+port=8666  
+rpcport=8665  
+rpcuser=youputausernamehere  
+rpcpassword=youputabigasspasswordhere  
+
 wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novoconfig.sh && chmod +x novoconfig.sh
 
 ./novoconfig.sh
+
+during this installation, you can press j at some point, and it will install an addr generator and paste one out for you at the end 
 
 cd ~/.novo-bitcoin
 
