@@ -14,10 +14,12 @@ mkdir ~/.novo-bitcoin
 
 nano ~/.novo-bitcoin/novo.conf
 
+```
 port=8666
 rpcport=8665
 rpcuser=youputausernamehere
 rpcpassword=youputabigasspasswordhere
+```
 
 wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novoconfig.sh && chmod +x novoconfig.sh
 
