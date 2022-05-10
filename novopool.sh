@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # lets get this bread
-
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novopool.sh && chmod +x novopool.sh && ./novopool.sh
 
 echo "downloading and configuring novobitcoin pool miner..."
 echo "mine.bit90.io"
