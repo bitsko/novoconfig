@@ -30,7 +30,7 @@ if [[ ! -d "$novoBin" ]]; then mkdir -p "$novoBin"; fi
 if [[ ! -d "$novoDL" ]]; then mkdir -p "$novoDL"; fi
 if [ ! -f "$minerConf" ]; then
 
-        echo "{"$'\n'"  \"url\" : \"stratum+tcp://m.novopool.me.3333\","$'\n'"  \"user\" : \"$miningAddress.$minerName\","$'\n'\
+        echo "{"$'\n'"  \"url\" : \"stratum+tcp://m.novopool.me:3333\","$'\n'"  \"user\" : \"$miningAddress.$minerName\","$'\n'\
 #       echo "{"$'\n'"  \"url\" : \"stratum+tcp://mine.bit90.io:3042\","$'\n'"  \"user\" : \"$miningAddress.$minerName\","$'\n'\
                 " \"algo\" : \"sha256dt\","$'\n'"  \"threads\" : \"$threads\""$'\n'"}" \
                 > "$minerConf"; fi
