@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# consult your lawyer before use
-# pool is down, welcome to law
+# lets get this bread
+
 
 echo "downloading and configuring novobitcoin pool miner..."
-# echo "https://help.hellonovo.net/"
+echo "mine.bit90.io"
 echo "closed source binary file:"
 echo "use at your own risk in an isolated environment"
 echo "press Ctrl+C to abort"
@@ -29,7 +29,7 @@ gitUrl="https://github.com/novobitcoin/novobitcoin-release/releases/download"
 if [[ ! -d "$novoBin" ]]; then mkdir -p "$novoBin"; fi
 if [[ ! -d "$novoDL" ]]; then mkdir -p "$novoDL"; fi
 if [ ! -f "$minerConf" ]; then
-        echo "{"$'\n'"  \"url\" : \"stratum+tcp://<pool name here>:3042\","$'\n'"  \"user\" : \"$miningAddress.$minerName\","$'\n'\
+        echo "{"$'\n'"  \"url\" : \"stratum+tcp://:mine.bit90.io:3042\","$'\n'"  \"user\" : \"$miningAddress.$minerName\","$'\n'\
                 " \"algo\" : \"sha256dt\","$'\n'"  \"threads\" : \"$threads\""$'\n'"}" \
                 > "$minerConf"; fi
 if [ ! -f "$runScript" ]; then
@@ -45,6 +45,6 @@ if [ ! -f "$novoDL"/"$minerDL" ]; then wget "$gitUrl"/v"$vrs"/"$minerDL" -P "$no
 tar -xzf "$novoDL"/"$minerDL" -C "$novoDL"
 cp "$novoDL"/novominer/bin/* "$novoBin"/
 rm -r "$novoDL"
-echo "to pool mine" # on mine.hellonovo.net"
+echo "to pool mine on mine.bit90.io"
 echo "use $runScript"
 echo "or $quietScript"
