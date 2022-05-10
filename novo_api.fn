@@ -5,7 +5,7 @@
 # or . novo_api.fn
 # you shouldn't need a lawyer consultation to use this file but its never something i wouldnt recommend anyway, just give em a ring or email
 
-API_SITE=novobitcoin.bitcoincloud.net
+API_SITE=https://novoexplorer.com 
 
 #API Calls for novo-bitcoin
 #Return data from coind
