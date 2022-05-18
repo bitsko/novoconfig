@@ -19,7 +19,7 @@ old_dir="$HOME/.novo-bitcoin"
 new_dir="$HOME/.novo"
 
 if [[ ! -d "$new_dir" ]]; then
-        mkdir "$new_dir"
+        mkdir -p "$new_dir/bin"     
 fi
 
 if [[ -d "$old_dir" ]]; then
@@ -28,14 +28,16 @@ if [[ -d "$old_dir" ]]; then
         if [[ -f "$old_dir/bin/cfg.json" ]]; then
                 cp "$old_dir/bin/cfg.json" "$new_dir/bin/cfg.json"
         fi
-else
-        mkdir -p "$HOME/.novo/bin"
+        
 fi
 
 wget "$binary" && tar -xzvf "$tar_gz"
-cp "$PWD"/novo-"$vrs"/bin/novo-cli "$HOME/.novo/bin/novo-cli"
-cp "$PWD"/novo-"$vrs"/bin/novod "$HOME/.novo/bin/novod"
-cp "$PWD"/novo-"$vrs"/bin/novo-tx "$HOME/.novo/bin/novo-tx"
+
+cp novo-"$vrs"/bin/novo-cli "$new_dir/bin/novo-cli"
+cp novo-"$vrs"/bin/novod "$new_dir/bin/novod"
+cp novo-"$vrs"/bin/novo-tx "$new_dir/bin/novo-tx"
+rm -r novo-"$vrs"
+rm "$tar_gz"
 
 if [[ ! -f "$new_dir/novo.conf" ]]; then
         IFS= read -r -p "enter a username for novod"$'\n>' username
@@ -43,8 +45,8 @@ if [[ ! -f "$new_dir/novo.conf" ]]; then
         echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$username"$'\n'"rpcpassword=$rpcpassword" > "$new_dir/novo.conf"
         if [[ "$index" == 1 ]]; then echo "txindex=1" >> "$new_dir/novo.conf"; fi
 fi
-echo "binaries available in $HOME/.novo/bin"
-echo "one way to start the node would be to type"
+echo $'\n'"binaries available in $HOME/.novo/bin"$'\n'
+echo "one way to start the node would be to type:"
 echo "$HOME/.novo/bin/novod --daemon"
-echo "check version with"
+echo $'\n'"check version with:"
 echo "$HOME/.novo/bin/novo-cli --version"
