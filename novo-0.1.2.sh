@@ -18,7 +18,7 @@ old_dir="$HOME/.novo-bitcoin"
 new_dir="$HOME/.novo"
 
 if [[ -d "$old_dir" ]]; then
-	cp "$old_dir" "$new_dir"
+	cp -r "$old_dir" "$new_dir"
 fi
 
 if [[ ! -d "$new_dir" ]]; then
