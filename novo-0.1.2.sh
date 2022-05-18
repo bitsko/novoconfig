@@ -1,8 +1,12 @@
 #!/bin/bash
 
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novo-0.1.2.sh && chmod +x novo-0.1.2.sh && ./novo-0.1.2.sh
+
 # USE AT YOUR OWN RISK
 # STOP YOUR NODE FIRST
 IFS= read -r -p "stop your node first.  press ctrl+c to exit or any key to continue" anykey
+
+
 
 #turn tx indexing on with "index" as pos. param.
 index=0; if [[ "$@" =~ "index" ]]; then index=1; fi
