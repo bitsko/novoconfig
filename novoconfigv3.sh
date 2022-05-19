@@ -64,7 +64,7 @@ if [ ! -f "$poolScript" ]; then
         "kill \"\$nbsvid\""$'\n'"echo \"shutting down\"" > "$poolScript"
         chmod +x "$poolScript"; fi
 if [ ! -f "$novoDL"/"$nodeDL" ]; then wget "$gitUrl"/v"$vrs"/"$nodeDL" -P "$novoDL"; fi
-if [ ! -f "$novoDL"/"$minerDL" ]; then wget "$gitUrl"/v"$vrs"/"$minerDL" -P "$novoDL"; fi
+if [ ! -f "$novoDL"/"$minerDL" ]; then wget "$gitUrl"/v"$mvrs"/"$minerDL" -P "$novoDL"; fi
 tar -xzf "$novoDL"/"$nodeDL" -C "$novoDL"
 tar -xzf "$novoDL"/"$minerDL" -C "$novoDL"
 cp "$novoDL"/novo-bitcoin-"$vrs"/bin/* "$novoBin"/
