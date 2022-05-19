@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-#these work with v2
+#these work with v3
 #place them in your .bash_aliases or maybe .bashrc
 #or source this file for single session use
-# just make sure to check with the lawyer that you have first, k?
 
-nwal(){ $HOME/.novo-bitcoin/bin/novobitcoin-cli getwalletinfo; }
-ninfo(){ $HOME/.novo-bitcoin/bin/novobitcoin-cli getinfo; }
-nhelp(){ $HOME/.novo-bitcoin/bin/novobitcoin-cli help; }
-nstart(){ $HOME/.novo-bitcoin/bin/nbsv.sh; }
-ncli(){ $HOME/.novo-bitcoin/bin/novobitcoin-cli $1 $2 $3 $4 $5 $6 $7 $8 $9; }
+nwal(){ $HOME/.novo/bin/novo-cli getwalletinfo; }
+ninfo(){ $HOME/.novo/bin/novo-cli getinfo; }
+nhelp(){ $HOME/.novo/bin/novo-cli help; }
+nstart(){ $HOME/.novo/bin/novo.sh; }
+ncli(){ $HOME/.novo/bin/novo-cli $1 $2 $3 $4 $5 $6 $7 $8 $9; }
