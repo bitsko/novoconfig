@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # lets get this bread
-# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novopool.sh && chmod +x novopool.sh && ./novopool.sh
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novopool_me.sh && chmod +x novopool_me.sh && ./novopool_me.sh
 
 echo "downloading and configuring novo pool miner..."
 echo "m.novopool.me:3333"
