@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novoconfigv3.sh && chmod +x novoconfigv3.sh && ./novoconfigv3.sh
 
 echo "downloading and configuring novo..."
 echo "use at your own risk"
