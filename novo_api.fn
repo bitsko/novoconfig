@@ -3,11 +3,10 @@
 # wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_api.fn
 # source novo_api.fn
 # or . novo_api.fn
-# you shouldn't need a lawyer consultation to use this file but its never something i wouldnt recommend anyway, just give em a ring or email
 
 API_SITE=https://novoexplorer.com 
 
-#API Calls for novo-bitcoin
+#API Calls for novo
 #Return data from coind
 
 if ! [ -x "$(command -v curl)" ]; then echo "install curl"; return; fi
