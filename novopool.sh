@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# lets get this bread
+# lets get this novo
 # wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novopool.sh && chmod +x novopool.sh && ./novopool.sh
 
-echo "downloading and configuring novobitcoin pool miner..."
+echo "downloading and configuring novo pool miner..."
 echo "mine.bit90.io"
 echo "closed source binary file:"
 echo "use at your own risk in an isolated environment"
