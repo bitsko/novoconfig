@@ -1,5 +1,6 @@
 # how to run a 0.1.2 node and cpu mine bit90 pool at same time
 # you don't need to run a node to cpu mine bit90 pool, fyi
+# ubuntu, debian
 
 wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novoconfigv3.sh && chmod +x novoconfigv3.sh
 
