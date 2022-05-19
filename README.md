@@ -5,6 +5,8 @@ see https://github.com/novobitcoin/novobitcoin-release
 requires libcurl4, libjansson4 for ubuntu miner
 
 ------
+node and cpu pool mining:
+
 wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novoconfigv3.sh && chmod +x novoconfigv3.sh
 
 ./novoconfigv3.sh
