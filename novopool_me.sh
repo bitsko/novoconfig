@@ -2,7 +2,7 @@
 # lets get this bread
 # wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novopool.sh && chmod +x novopool.sh && ./novopool.sh
 
-echo "downloading and configuring novobitcoin pool miner..."
+echo "downloading and configuring novo pool miner..."
 echo "m.novopool.me:3333"
 echo "closed source binary file:"
 echo "use at your own risk in an isolated environment"
@@ -21,8 +21,8 @@ IFS= read -r -p "how many CPU threads to mine with?"$'\n>' threads
 vrs="0.1.0"
 novoBin="$HOME/novo-miner"
 novoDL="$novoBin/dl"
-runScript="$novoBin/npool.sh"
-quietScript="$novoBin/npoolq.sh"
+runScript="$novoBin/npool_me.sh"
+quietScript="$novoBin/npoolq_me.sh"
 minerConf="$novoBin/cfg.json"
 minerDL="novominer-$vrs-x86_64-linux-gnu.tar.gz"
 gitUrl="https://github.com/novobitcoin/novobitcoin-release/releases/download"
