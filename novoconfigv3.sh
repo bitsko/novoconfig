@@ -29,7 +29,7 @@ gitUrl="https://github.com/novobitcoin/novobitcoin-release/releases/download"
 if [[ ! -d "$novoDir" ]]; then mkdir -p "$novoDir"; fi
 if [[ ! -d "$novoBin" ]]; then mkdir -p "$novoBin"; fi
 if [[ ! -d "$novoDL" ]]; then mkdir -p "$novoDL"; fi
-read -p "press s to give an address to mine to, j to generate a keypair with bsv-js (not a novo-bitcoin generated address! works if code for addresses remains the same I guess), or N to leave blank and edit $novoBin/cfg.json later"$'\n>' sjn
+read -p "press s to give an address to mine to, j to generate a keypair with bsv-js (not a novo generated address!), or N to leave blank and edit $novoBin/cfg.json later"$'\n>' sjn
 case $sjn in
     [Ss]* ) read -r -p "what address to send the mined tokens to?" whataddress
             miningAddress=$whataddress
@@ -45,7 +45,7 @@ case $sjn in
                 miningAddress=$(awk 'END{ print $1 }'<"$novoBin"/"$bsvAddy")
             ;;
     [Nn]* ) miningAddress=Your_Address_Here;;
-    * ) echo "Please give an address after selecting s, or generate an address using j, or configure later in ~/.novo-bitcoin/bin/cfg.json by choosing n";;
+    * ) echo "Please give an address after selecting s, or generate an address using j, or configure later in ~/.novo/bin/cfg.json by choosing n";;
 esac
 if [ ! -f "$novoConf" ]; then
         echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$username"$'\n'"rpcpassword=$rpcpassword" > "$novoConf"
@@ -68,8 +68,8 @@ if [ ! -f "$novoDL"/"$nodeDL" ]; then wget "$gitUrl"/v"$vrs"/"$nodeDL" -P "$novo
 if [ ! -f "$novoDL"/"$minerDL" ]; then wget "$gitUrl"/v"$mvrs"/"$minerDL" -P "$novoDL"; fi
 tar -xzf "$novoDL"/"$nodeDL" -C "$novoDL"
 tar -xzf "$novoDL"/"$minerDL" -C "$novoDL"
-cp "$novoDL"/novo-bitcoin-"$vrs"/bin/* "$novoBin"/
+cp "$novoDL"/novo-"$vrs"/bin/* "$novoBin"/
 cp "$novoDL"/novominer/bin/* "$novoBin"/
 rm -r "$novoDL"
-echo "to run novobitcoin and cpu pool miner at the same time:"
+echo "to run novo and cpu pool miner at the same time:"
 echo "use $poolScript"
