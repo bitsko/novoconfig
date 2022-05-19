@@ -1,31 +1,20 @@
-Consult with a lawyer before using anything within this repository
+scripts for novo
 
 see https://github.com/novobitcoin/novobitcoin-release
 
 requires libcurl4, libjansson4 for ubuntu miner
 
-# novoconfig ## DEPRECATED
+------
+wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novoconfigv3.sh && chmod +x novoconfigv3.sh
 
-in an isolated environment such as a machine just for this task or a virtual machine, and at your own risk running binaries without public source code-
+./novoconfigv3.sh
 
-and using a linux machine and bash with npm installed:
+cd ~/.novo/bin
 
------
-
-
-wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novoconfigv2.sh && chmod +x novoconfigv2.sh
-
-./novoconfigv2.sh
-
-cd ~/.novo-bitcoin/bin
-
-./nbsv.sh
+./novo.sh
 
 -----
-
-
-
 
 addresses generated with bsvjs can be imported into the novobitcoin wallet by running
-./novobitcoin-cli importprivkey your_private_key_here
-and the private key generated can be found in the ~/.novo-bitcoin/bin folder.
+./novo-cli importprivkey your_private_key_here
+and the private key generated can be found in the ~/.novo/bin folder.
