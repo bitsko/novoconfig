@@ -4,7 +4,7 @@
 #there is no source code for this script to work with
 #untested 
 #missing something, doesnt work, mining also not working
-#consult ur lawyer
+
 
 #need to fill these in
 username=
@@ -19,8 +19,8 @@ novoBin="$HOME/.novo-bitcoin/bin"
 minerConf="$novoBin/cfg.json"
 novoConf="$HOME/.novo-bitcoin/novo.conf"
 
-#sourceDir=novobitcoin
-#source=https://github.com/wszhang/"$sourceDir"
+#sourceDir=novo
+#source=https://github.com/idkbro/"$sourceDir"
 #git clone "$source"
 #cd "$sourceDir"
 
@@ -54,26 +54,26 @@ if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; the
 	make 
 	echo "update() { sudo apt update && sudo apt upgrade -y; }" >> ~/.bashrc
 elif [[ "$os_release_ID" == "manjaro" ]]; then
-	make -j 3
+	make -j 2
 	echo "update() { sudo pacman -Syu ; }" >> ~/.bashrc
 fi
 
-echo "nwal(){ \$HOME/.novo-bitcoin/bin/novobitcoin-cli getwalletinfo; }" >> ~/.bashrc
-echo "ninfo(){ \$HOME/.novo-bitcoin/bin/novobitcoin-cli getinfo; }" >> ~/.bashrc
-echo "nhelp(){ \$HOME/.novo-bitcoin/bin/novobitcoin-cli help; }" >> ~/.bashrc
-#echo "nstart(){ \$HOME/.novo-bitcoin/bin/nbsv.sh ; }" >> ~/.bashrc
-echo "ncli(){ \$HOME/.novo-bitcoin/bin/novobitcoin-cli \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9; }" >> ~/.bashrc
+echo "nwal(){ \$HOME/.novo/bin/novo-cli getwalletinfo; }" >> ~/.bashrc
+echo "ninfo(){ \$HOME/.novo/bin/novo-cli getinfo; }" >> ~/.bashrc
+echo "nhelp(){ \$HOME/.novo/bin/novo-cli help; }" >> ~/.bashrc
+#echo "nstart(){ \$HOME/.novo/bin/novo.sh ; }" >> ~/.bashrc
+echo "ncli(){ \$HOME/.novo/bin/novo-cli \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9; }" >> ~/.bashrc
 echo "source ~/.bashrc or restart to use aliases such as nwal and ncli"
 
-if [[ ! -d "$HOME/.novo-bitcoin" ]]; then
-	mkdir "$HOME/.novo-bitcoin"
+if [[ ! -d "$HOME/.novo" ]]; then
+	mkdir "$HOME/.novo"
 fi
-if [[ ! -d "$HOME/.novo-bitcoin/bin" ]]; then 
-	mkdir "$HOME/.novo-bitcoin/bin"
-	cp novobitcoind "$novoBin"/novobitcoind
-	cp novobitcoin-cli "$novoBin"/novobitcoin-cli
-	strip "$novoBin"/novobitcoind
-	strip "$novoBin"/novobitcoin-cli
+if [[ ! -d "$HOME/.novo/bin" ]]; then 
+	mkdir "$HOME/.novo/bin"
+	cp novod "$novoBin"/novod
+	cp novo-cli "$novoBin"/novo-cli
+	strip "$novoBin"/novod
+	strip "$novoBin"/novo-cli
 fi	
 
 echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$username"$'\n'\
