@@ -9,9 +9,9 @@ API_SITE=https://novoexplorer.com
 #API Calls for novo
 #Return data from coind
 
-if ! [ -x "$(command -v curl)" ]; then echo "install curl"; return; fi
-if ! [ -x "$(command -v jq)" ]; then echo "install jq"; return; fi
-if ! [ -x "$(command -v grep)" ]; then echo "install grep"; return; fi
+#if ! [ -x "$(command -v curl)" ]; then echo "install curl"; return; fi
+#if ! [ -x "$(command -v jq)" ]; then echo "install jq"; return; fi
+#if ! [ -x "$(command -v grep)" ]; then echo "install grep"; return; fi
 
 novo_gethash(){
 #Returns the current network hashrate. (hash/s)
