@@ -1,4 +1,5 @@
 #!/bin/bash
+# wget && chmod +x vast_ai_compile.sh && ./vast_ai_compile.sh
 apt update && apt upgrade -y && sed -i 's/bionic/focal/g' /etc/apt/sources.list && \
 apt update && apt -y upgrade && \
 apt -y install screen libjansson4 ocl-icd-* \
