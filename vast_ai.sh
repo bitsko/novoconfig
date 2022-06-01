@@ -2,6 +2,8 @@
 # vast.ai image: nvidia/opencl
 # bit90pool novo-cgminer script
 
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/vast_ai.sh && chmod +x vast_ai.sh && ./vast_ai.sh
+
 # docker GPU command string                                                                                                          
 apt update && apt upgrade -y && sed -i 's/bionic/focal/g' /etc/apt/sources.list && \
         apt update && apt upgrade -y && apt install screen libjansson4 ocl-icd-* opencl-headers libcurl4-openssl-dev pkg-config libtool autoconf && \
@@ -28,3 +30,18 @@ echo    "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u youraddy.yourname -p p
 # make
 # to run:
 # ./cgminer -o stratum+tcp://mine.bit90.io:3333 -u yournovoaddresshere.yourminername -p password -k diablo
+
+
+# !/bin/bash
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/vast_ai_compile.sh && chmod +x vast_ai_compile.sh && ./vast_ai_compile.sh
+# apt update && apt upgrade -y && sed -i 's/bionic/focal/g' /etc/apt/sources.list && \
+# apt update && apt -y upgrade && \
+# apt -y install screen libjansson4 ocl-icd-* \
+#       opencl-headers libcurl4-openssl-dev pkg-config libtool autoconf \
+#       git build-essential libncurses5-dev autogen automake && \
+# git clone https://github.com/Bit90pool/novo-cgminer && \
+# cd novo-cgminer && \
+# ./autogen.sh --enable-opencl && \
+# CFLAGS="-O2 -Wall -march=native" ./configure 
+# make
+# echo "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u youraddy.minername -p password -k diablo"
