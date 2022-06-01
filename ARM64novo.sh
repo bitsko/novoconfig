@@ -38,11 +38,11 @@ sudo apt-get install \
 
 elif [[ "$os_release_ID" == "manjaro-arm" ]]; then
 sudo pacman -Syu
-sudo pacman -S libevent boost-libs sqlite qrencode \
-	binutils arm-none-eabi-binutils arm-none-eabi-gcc boost \
-	autoconf automake binutils bison fakeroot file \
-	findutils flex gawk gcc gettext grep groff gzip libtool \
-	m4 make patch pkgconf sed texinfo which miniupnpc screen
+sudo pacman -S boost boost-libs libevent libnatpmp zeromq autoconf automake \
+	binutils libtool m4 make systemd python \
+	sqlite qrencode arm-none-eabi-binutils arm-none-eabi-gcc \
+	bison fakeroot file findutils flex gawk gcc gettext grep groff gzip \
+	patch pkgconf sed texinfo which miniupnpc screen nano 
 fi
 
 ./autogen.sh
@@ -52,10 +52,10 @@ CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 
 if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
 	make 
-	echo "update() { sudo apt update && sudo apt upgrade -y; }" >> ~/.bashrc
+#	echo "update() { sudo apt update && sudo apt upgrade -y; }" >> ~/.bash_aliases
 elif [[ "$os_release_ID" == "manjaro" ]]; then
 	make -j 2
-	echo "update() { sudo pacman -Syu ; }" >> ~/.bashrc
+#	echo "update() { sudo pacman -Syu ; }" >> ~/.bashrc
 fi
 
 echo "nwal(){ \$HOME/.novo/bin/novo-cli getwalletinfo; }" >> ~/.bashrc
