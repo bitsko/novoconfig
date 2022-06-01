@@ -1,4 +1,5 @@
 #!/bin/bash
+apt update && apt upgrade -y && sed -i 's/bionic/focal/g' /etc/apt/sources.list && \
 apt update && apt -y upgrade && \
 apt -y install screen libjansson4 ocl-icd-* \
        opencl-headers libcurl4-openssl-dev pkg-config libtool autoconf \
