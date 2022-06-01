@@ -2,11 +2,19 @@
 # vast.ai image: nvidia/opencl
 # bit90pool novo-cgminer script
 
-apt update && apt -y upgrade && apt -y install libjansson4 libcurl4-openssl-dev screen nano && \
-wget https://github.com/Bit90pool/novo-cgminer/releases/download/v1.0/novo-cgiminer-v1.0-ubuntu-18.04.tar.gz && \
-tar -zxvf novo-cgiminer-v1.0-ubuntu-18.04.tar.gz && \
-cd novo-cgminer && \
-echo "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u  -p password -k diablo"
+# docker GPU command string                                                                                                          
+apt update && apt upgrade -y && sed -i 's/bionic/focal/g' /etc/apt/sources.list && \
+        apt update && apt upgrade -y && apt install screen libjansson4 ocl-icd-* opencl-headers libcurl4-openssl-dev pkg-config libtool autoconf && \
+        wget https://github.com/Bit90pool/novo-cgminer/releases/download/v1.0/novo-cgiminer-v1.0-ubuntu-20.04.tar.gz && \
+        tar -zxvf novo-cgiminer-v1.0-ubuntu-20.04.tar.gz && cd novo-cgminer && \
+echo    "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u youraddy.yourname -p password -k diablo"
+
+################### 18.04 #########################
+# apt update && apt -y upgrade && apt -y install libjansson4 libcurl4-openssl-dev screen nano && \
+# wget https://github.com/Bit90pool/novo-cgminer/releases/download/v1.0/novo-cgiminer-v1.0-ubuntu-18.04.tar.gz && \
+# tar -zxvf novo-cgiminer-v1.0-ubuntu-18.04.tar.gz && \
+# cd novo-cgminer && \
+# echo "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u  -p password -k diablo"
 
 # ################### source build ########################
 # apt update && apt -y upgrade && \
