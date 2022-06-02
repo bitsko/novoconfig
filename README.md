@@ -1,6 +1,6 @@
 scripts for novo
 
-see https://github.com/novobitcoin/novobitcoin-release
+see https://github.com/novoworks/novo-release/releases/
 
 requires libcurl4, libjansson4 for ubuntu miner
 
@@ -17,6 +17,6 @@ cd ~/.novo/bin
 
 -----
 
-addresses generated with bsvjs can be imported into the novobitcoin wallet by running
+addresses generated with bsvjs can be imported into the novo wallet by running
 ./novo-cli importprivkey your_private_key_here
 and the private key generated can be found in the ~/.novo/bin folder.
