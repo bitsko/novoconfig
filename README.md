@@ -2,7 +2,7 @@ scripts for novo
 
 see https://github.com/novoworks/novo-release/
 
-requires libcurl4, libjansson4 for ubuntu miner
+requires libcurl4, libjansson4 for ubuntu cpu miner
 ------
 
 upgrade your node:
