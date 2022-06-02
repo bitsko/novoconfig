@@ -3,6 +3,10 @@ scripts for novo
 see https://github.com/novoworks/novo-release/
 
 requires libcurl4, libjansson4 for ubuntu miner
+------
+
+upgrade your node:
+wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novo-0.1.2.sh && chmod +x novo-0.1.2.sh && ./novo-0.1.2.sh
 
 ------
 node and cpu pool mining:
