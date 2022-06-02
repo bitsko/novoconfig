@@ -1,6 +1,6 @@
 scripts for novo
 
-see https://github.com/novoworks/novo-release/releases/
+see https://github.com/novoworks/novo-release/
 
 requires libcurl4, libjansson4 for ubuntu miner
 
