@@ -20,6 +20,7 @@ minerConf="$novoBin/cfg.json"
 novoConf="$HOME/.novo-bitcoin/novo.conf"
 
 #sourceDir=novo
+# https://github.com/novoworks/novo-release/releases/
 #source=https://github.com/idkbro/"$sourceDir"
 #git clone "$source"
 #cd "$sourceDir"
