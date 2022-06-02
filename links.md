@@ -10,6 +10,6 @@
 
 ✈️Twitter: https://twitter.com/NovoBitcoin
 
-🐦 Telegram: https://t.me/NovoBitcoinOfficial
+🐦 Telegram: https://t.me/Novo_Official
 
 💬 Twitter Community: https://twitter.com/i/communities/1518343304991047680
