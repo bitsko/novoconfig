@@ -3,7 +3,10 @@
 # wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novopool.sh && chmod +x novopool.sh && ./novopool.sh
 
 echo "downloading and configuring novo pool miner..."
+
+# echo "m.novopool.me:3333"
 echo "mine.bit90.io"
+
 echo "closed source binary file:"
 echo "use at your own risk in an isolated environment"
 echo "press Ctrl+C to abort"
@@ -29,8 +32,11 @@ gitUrl="https://github.com/novoworks/novo-release/releases/download"
 if [[ ! -d "$novoBin" ]]; then mkdir -p "$novoBin"; fi
 if [[ ! -d "$novoDL" ]]; then mkdir -p "$novoDL"; fi
 if [ ! -f "$minerConf" ]; then
+#
+#        echo "{"$'\n'"  \"url\" : \"stratum+tcp://m.novopool.me:3333\","$'\n'"  \"user\" : \"$miningAddress.$minerName\","$'\n'\
         echo "{"$'\n'"  \"url\" : \"stratum+tcp://mine.bit90.io:3042\","$'\n'"  \"user\" : \"$miningAddress.$minerName\","$'\n'\
-                " \"algo\" : \"sha256dt\","$'\n'"  \"threads\" : \"$threads\""$'\n'"}" \
+#
+        " \"algo\" : \"sha256dt\","$'\n'"  \"threads\" : \"$threads\""$'\n'"}" \
                 > "$minerConf"; fi
 if [ ! -f "$runScript" ]; then
         echo "#!/usr/bin/env bash"$'\n'\
