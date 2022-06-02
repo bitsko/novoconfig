@@ -25,7 +25,7 @@ runScript="$novoBin/npool_me.sh"
 quietScript="$novoBin/npoolq_me.sh"
 minerConf="$novoBin/cfg.json"
 minerDL="novominer-$vrs-x86_64-linux-gnu.tar.gz"
-gitUrl="https://github.com/novobitcoin/novobitcoin-release/releases/download"
+gitUrl="https://github.com/novoworks/novo-release/releases/download"
 if [[ ! -d "$novoBin" ]]; then mkdir -p "$novoBin"; fi
 if [[ ! -d "$novoDL" ]]; then mkdir -p "$novoDL"; fi
 if [ ! -f "$minerConf" ]; then
