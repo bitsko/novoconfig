@@ -5,6 +5,7 @@
 # or . novo_api.fn
 
 API_SITE=https://novoexplorer.com 
+# https://novoblocks.info/
 
 #API Calls for novo
 #Return data from coind
