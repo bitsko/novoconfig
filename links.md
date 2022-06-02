@@ -1,12 +1,12 @@
-🌐 Website: https://novobitcoin.org/
+🌐 Website: https://novonode.org/
 
-💬 Novo-Bitcoin Forum: https://forum.novobitcoin.org/index.php
+💬 Novo-Bitcoin Forum: https://novoforum.net/index.php
 
 💬 Bitcoin Talk Announcement: https://bitcointalk.org/index.php?topic=5387769.0
 
-🖥️ GitHub: https://github.com/novobitcoin
+🖥️ GitHub: https://github.com/novoworks
 
-🧭 Explorer: https://novobitcoin.bitcoincloud.net/ 
+🧭 Explorer: https://novoexplorer.com/
 
 ✈️Twitter: https://twitter.com/NovoBitcoin
 
