@@ -25,7 +25,7 @@ novoConf="$HOME/.novo/novo.conf"
 bsvAddy="miningAddress.txt"
 minerDL="novominer-$mvrs-x86_64-linux-gnu.tar.gz"
 nodeDL="novo-$vrs-x86_64-linux-gnu.tar.gz"
-gitUrl="https://github.com/novobitcoin/novobitcoin-release/releases/download"
+gitUrl="https://github.com/novoworks/novo-release/releases/"
 if [[ ! -d "$novoDir" ]]; then mkdir -p "$novoDir"; fi
 if [[ ! -d "$novoBin" ]]; then mkdir -p "$novoBin"; fi
 if [[ ! -d "$novoDL" ]]; then mkdir -p "$novoDL"; fi
