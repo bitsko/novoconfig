@@ -12,12 +12,12 @@ rpcpassword=
 threads=
 miningAddress=
 
-echo "raspi 64 bit debian ubuntu manjaro novobitcoin compile script"
+echo "raspi 64 bit debian ubuntu manjaro novo compile script"
 
-novoDir="$HOME/.novo-bitcoin"
-novoBin="$HOME/.novo-bitcoin/bin"
+novoDir="$HOME/.novo"
+novoBin="$HOME/.novo/bin"
 minerConf="$novoBin/cfg.json"
-novoConf="$HOME/.novo-bitcoin/novo.conf"
+novoConf="$HOME/.novo/novo.conf"
 
 #sourceDir=novo
 # https://github.com/novoworks/novo-release/releases/
@@ -59,12 +59,12 @@ elif [[ "$os_release_ID" == "manjaro" ]]; then
 #	echo "update() { sudo pacman -Syu ; }" >> ~/.bashrc
 fi
 
-echo "nwal(){ \$HOME/.novo/bin/novo-cli getwalletinfo; }" >> ~/.bashrc
-echo "ninfo(){ \$HOME/.novo/bin/novo-cli getinfo; }" >> ~/.bashrc
-echo "nhelp(){ \$HOME/.novo/bin/novo-cli help; }" >> ~/.bashrc
-#echo "nstart(){ \$HOME/.novo/bin/novo.sh ; }" >> ~/.bashrc
-echo "ncli(){ \$HOME/.novo/bin/novo-cli \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9; }" >> ~/.bashrc
-echo "source ~/.bashrc or restart to use aliases such as nwal and ncli"
+# echo "nwal(){ \$HOME/.novo/bin/novo-cli getwalletinfo; }" >> ~/.bashrc
+# echo "ninfo(){ \$HOME/.novo/bin/novo-cli getinfo; }" >> ~/.bashrc
+# echo "nhelp(){ \$HOME/.novo/bin/novo-cli help; }" >> ~/.bashrc
+# echo "nstart(){ \$HOME/.novo/bin/novo.sh ; }" >> ~/.bashrc
+# echo "ncli(){ \$HOME/.novo/bin/novo-cli \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9; }" >> ~/.bashrc
+# echo "source ~/.bashrc or restart to use aliases such as nwal and ncli"
 
 if [[ ! -d "$HOME/.novo" ]]; then
 	mkdir "$HOME/.novo"
