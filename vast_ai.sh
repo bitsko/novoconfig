@@ -6,7 +6,8 @@
 
 # docker GPU command string 
 apt update && apt -y upgrade && sed -i 's/bionic/focal/g' /etc/apt/sources.list && \
-        apt update && DEBIAN_FRONTEND=noninteractive apt -y upgrade && apt -y install screen libjansson4 ocl-icd-* opencl-headers libcurl4-openssl-dev pkg-config libtool autoconf && \
+        apt update && DEBIAN_FRONTEND=noninteractive apt -y upgrade && apt -y install screen libjansson4 ocl-icd-* \
+        opencl-headers libcurl4-openssl-dev pkg-config libtool autoconf && \
         wget https://github.com/Bit90pool/novo-cgminer/releases/download/v1.0/novo-cgiminer-v1.0-ubuntu-20.04.tar.gz && \
         tar -zxvf novo-cgiminer-v1.0-ubuntu-20.04.tar.gz && cd novo-cgminer && \
 
