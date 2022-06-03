@@ -14,4 +14,4 @@ cd novo-cgminer
 ./autogen.sh --enable-opencl 
 CFLAGS="-O2 -Wall -march=native" ./configure
 make -j $(echo "$(nproc) - 1" | bc)
-echo "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u yournovoaddresshere.yourminername -p password -k diablo"
+echo "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u yournovoaddresshere.yourminername -p password"
