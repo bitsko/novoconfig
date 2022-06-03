@@ -1,6 +1,6 @@
 #!/bin/bash
 # ################### source build ########################
-
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/vast_compile_test.sh && chmod +x vast_compile_test.sh && ./vast_compile_test.sh
 apt update
 apt -y upgrade
 sed -i 's/bionic/focal/g' /etc/apt/sources.list 
