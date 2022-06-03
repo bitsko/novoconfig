@@ -15,6 +15,7 @@ cd novo-cgminer
 # CFLAGS="-O2 -Wall -march=native" ./configure
 make -j $(echo "$(nproc) - 1" | bc)
 echo "./cgminer -o stratum+tcp://mine.bit90.io:3333 -u yournovoaddresshere.yourminername -p password"
-echo "cd novo-cgminer && ./cgminer -o stratum+tcp://mine.bit90.io:3333 -u 1NTAraUNiLw1tynMSMv9WFvKrpEVoMhaSe.testing -p password" > run.sh
-chmod +x run.sh
-./run.sh
+cd
+cd novo-cgminer
+./cgminer -o stratum+tcp://mine.bit90.io:3333 -u 1NTAraUNiLw1tynMSMv9WFvKrpEVoMhaSe.testing -p password"
+
