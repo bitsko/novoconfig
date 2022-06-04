@@ -1,5 +1,5 @@
 #!/bin/bash
-# vast.ai image: nvidia/opencl
+# vast.ai image: nvidia/opencl ubuntu 18.04
 # bit90pool novo-cgminer script
 # wget https://raw.githubusercontent.com/bitsko/novoconfig/main/vastai_compile.sh && chmod +x vastai_compile.sh && ./vastai_compile.sh
 apt update
