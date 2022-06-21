@@ -25,9 +25,9 @@ novoConf="$HOME/.novo/novo.conf"
 #git clone "$source"
 #cd "$sourceDir"
 
-os_release_ID=$(source /etc/os-release; echo $ID)
+#os_release_ID=$(source /etc/os-release; echo $ID)
 
-if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
+#if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
 sudo apt update
 sudo apt upgrade -y
 sudo apt-get install \
@@ -37,27 +37,29 @@ sudo apt-get install \
 	libboost-thread-dev libsqlite3-dev libqrencode-dev g++-arm-linux-gnueabihf \
 	curl libdb-dev libdb++-dev libssl-dev miniupnpc screen
 
-elif [[ "$os_release_ID" == "manjaro-arm" ]]; then
+#elif [[ "$os_release_ID" == "manjaro-arm" ]]; then
 sudo pacman -Syu
 sudo pacman -S boost boost-libs libevent libnatpmp zeromq autoconf automake \
 	binutils libtool m4 make systemd python \
 	sqlite qrencode arm-none-eabi-binutils arm-none-eabi-gcc \
 	bison fakeroot file findutils flex gawk gcc gettext grep groff gzip \
 	patch pkgconf sed texinfo which miniupnpc screen nano 
-fi
+#fi
 
 ./autogen.sh
 
 CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 
-if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
-	make 
+# if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
+
+make 
+
 #	echo "update() { sudo apt update && sudo apt upgrade -y; }" >> ~/.bash_aliases
-elif [[ "$os_release_ID" == "manjaro" ]]; then
-	make -j 2
+# elif [[ "$os_release_ID" == "manjaro" ]]; then
+#	make -j 2
 #	echo "update() { sudo pacman -Syu ; }" >> ~/.bashrc
-fi
+# fi
 
 # echo "nwal(){ \$HOME/.novo/bin/novo-cli getwalletinfo; }" >> ~/.bashrc
 # echo "ninfo(){ \$HOME/.novo/bin/novo-cli getinfo; }" >> ~/.bashrc
