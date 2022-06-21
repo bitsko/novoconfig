@@ -25,6 +25,7 @@ novoConf="$HOME/.novo/novo.conf"
 #git clone "$source"
 #cd "$sourceDir"
 
+#this was a bad idea to source the os-release file
 #os_release_ID=$(source /etc/os-release; echo $ID)
 
 #if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
