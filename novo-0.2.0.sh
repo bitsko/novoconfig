@@ -12,11 +12,17 @@ index=0; if [[ "$@" =~ "index" ]]; then index=1; fi
 #version of binary
 novo_vrs="0.2.0"
 tar_gz=novo-"$novo_vrs"-x86_64-linux-gnu.tar.gz
-binary=https://github.com/novoworks/novo/releases/download/v"$novo_vrs"/"$tar_gz"
+nbinary=https://github.com/novoworks/novo/releases/download/v"$novo_vrs"/"$tar_gz"
 
 
 old_dir="$HOME/.novo-bitcoin"
 new_dir="$HOME/.novo"
+
+
+if [[ -d "$new_dir" ]]; then
+        cp -r "$new_dir" "$new_dir"."$EPOCHSECONDS".backup
+	echo "backing up existing novo install to $new_dir.$EPOCHSECONDS.backup"
+fi
 
 if [[ -d "$old_dir" ]]; then
 	cp -r "$old_dir" "$new_dir"
@@ -26,7 +32,7 @@ if [[ ! -d "$new_dir" ]]; then
         mkdir -p "$new_dir/bin"
 fi
 
-wget "$binary" && tar -xzvf "$tar_gz"
+wget "$nbinary" && tar -xzvf "$tar_gz"
 
 cp novo-"$novo_vrs"/bin/novo-cli "$new_dir/bin/novo-cli"
 cp novo-"$novo_vrs"/bin/novod "$new_dir/bin/novod"
@@ -38,7 +44,8 @@ rm "$tar_gz"
 if [[ ! -f "$new_dir/novo.conf" ]]; then
         IFS= read -r -p "enter a username for novod"$'\n>' username
         IFS= read -r -p "enter a rpc password for novod"$'\n>' rpcpassword
-        echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$username"$'\n'"rpcpassword=$rpcpassword" > "$new_dir/novo.conf"
+        echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$username"$'\n'"rpcpassword=$rpcpassword"\
+	$'\n'"maxmempool=1600"> "$new_dir/novo.conf"
         if [[ "$index" == 1 ]]; then echo "txindex=1" >> "$new_dir/novo.conf"; fi
 fi
 
@@ -50,6 +57,6 @@ echo "$HOME/.novo/bin/novo-cli --version"
 
 unset novo_vrs
 unset tar_gz
-unset binary
+unset nbinary
 unset new_dir
 unset old_dir
