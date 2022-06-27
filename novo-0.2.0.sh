@@ -12,7 +12,7 @@ index=0; if [[ "$@" =~ "index" ]]; then index=1; fi
 #version of binary
 novo_vrs="0.2.0"
 tar_gz=novo-"$novo_vrs"-x86_64-linux-gnu.tar.gz
-binary=https://github.com/novoworks/novo-release/releases/download/v"$novo_vrs"/"$tar_gz"
+binary=https://github.com/novoworks/novo/releases/download/v"$novo_vrs"/"$tar_gz"
 
 
 old_dir="$HOME/.novo-bitcoin"
