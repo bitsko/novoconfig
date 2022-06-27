@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # lets get this novo
-# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novopool.sh && chmod +x novopool.sh && ./novopool.sh
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_cpu_pool.sh && chmod +x novo_cpu_pool.sh && ./novo_cpu_pool.sh
 
 echo "downloading and configuring novo pool miner..."
 
