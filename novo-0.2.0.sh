@@ -49,6 +49,10 @@ if [[ ! -f "$new_dir/novo.conf" ]]; then
         if [[ "$index" == 1 ]]; then echo "txindex=1" >> "$new_dir/novo.conf"; fi
 fi
 
+if [[ -z $(grep maxmempool "$new_dir/novo.conf") ]]; then
+	echo "maxmempool=1600" >> "$new_dir/novo.conf"
+fi	
+
 echo $'\n'"binaries available in $HOME/.novo/bin"$'\n'
 echo "one way to start the node would be to type:"
 echo "$HOME/.novo/bin/novod --daemon"
