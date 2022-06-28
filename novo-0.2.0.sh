@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# upgrade or install novo 0.2.0
 # wget https://raw.githubusercontent.com/bitsko/novoconfig/main/novo-0.2.0.sh && chmod +x novo-0.2.0.sh && ./novo-0.2.0.sh
 
 # USE AT YOUR OWN RISK
