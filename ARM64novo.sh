@@ -18,7 +18,6 @@ novoSrc="$HOME/novo_src_v$novoVer"
 novoTgz=v"$novoVer".tar.gz
 novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 
-
 wget "$novoGit"
 tar -xf "$novoTgz" -C "$novoSrc"
 
@@ -28,7 +27,7 @@ if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
 
 sudo apt update
 sudo apt upgrade -y
-sudo apt-get install \
+sudo apt -y install \
 	build-essential libtool autotools-dev automake pkg-config \
 	bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
 	libboost-chrono-dev libboost-program-options-dev libboost-test-dev \
