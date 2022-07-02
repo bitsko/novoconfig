@@ -4,7 +4,6 @@
 
 echo "downloading and configuring novo pool miner..."
 
-# echo "m.novopool.me:3333"
 echo "mine.bit90.io"
 
 echo "closed source binary file:"
