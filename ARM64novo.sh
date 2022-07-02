@@ -1,34 +1,31 @@
 #!/bin/bash
 
-
-#there is no source code for this script to work with
-#untested 
 #missing something, doesnt work, mining also not working
-
-
-#need to fill these in
-username=
-rpcpassword=
-threads=
-miningAddress=
 
 echo "raspi 64 bit debian ubuntu manjaro novo compile script"
 
+IFS=' ' read -r -p "enter a novod username" novoUsr
+IFS=' ' read -r -p "enter a novod rpc password" novoRpc
+IFS=' ' read -r -p "how many cpu cores to mine with?" novoCpu
+IFS=' ' read -r -p "what address would you like to mine to?" novoAdr
+
 novoDir="$HOME/.novo"
-novoBin="$HOME/.novo/bin"
-minerConf="$novoBin/cfg.json"
-novoConf="$HOME/.novo/novo.conf"
+novoBin="$novoDir/bin"
+novoMnr="$novoBin/cfg.json"
+novoCnf="$novoDir/novo.conf"
+novoVer="0.2.0"
+novoSrc="$HOME/novo_src_v$novoVer"
+novoTgz=v"$novoVer".tar.gz
+novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 
-#sourceDir=novo
-# https://github.com/novoworks/novo-release/releases/
-#source=https://github.com/idkbro/"$sourceDir"
-#git clone "$source"
-#cd "$sourceDir"
 
-#this was a bad idea to source the os-release file
-#os_release_ID=$(source /etc/os-release; echo $ID)
+wget "$novoGit"
+tar -xf "$novoTgz" -C "$novoSrc"
 
-#if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
+novo_OS=$(source /etc/os-release; echo $ID)
+
+if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
+
 sudo apt update
 sudo apt upgrade -y
 sudo apt-get install \
@@ -36,54 +33,43 @@ sudo apt-get install \
 	bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
 	libboost-chrono-dev libboost-program-options-dev libboost-test-dev \
 	libboost-thread-dev libsqlite3-dev libqrencode-dev g++-arm-linux-gnueabihf \
-	curl libdb-dev libdb++-dev libssl-dev miniupnpc screen
+	curl libdb-dev libdb++-dev libssl-dev miniupnpc screen bc
 
-#elif [[ "$os_release_ID" == "manjaro-arm" ]]; then
+elif [[ "$novo_OS" == "manjaro-arm" ]]; then
 sudo pacman -Syu
 sudo pacman -S boost boost-libs libevent libnatpmp zeromq autoconf automake \
 	binutils libtool m4 make systemd python \
 	sqlite qrencode arm-none-eabi-binutils arm-none-eabi-gcc \
 	bison fakeroot file findutils flex gawk gcc gettext grep groff gzip \
-	patch pkgconf sed texinfo which miniupnpc screen nano 
-#fi
+	patch pkgconf sed texinfo which miniupnpc screen nano bc
+fi
 
-./autogen.sh
+"$novoSrc"/autogen.sh
 
 CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
-	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
+	"$novoSrc"/configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 
-# if [[ "$os_release_ID" == "debian" ]] || [[ "$os_release_ID" == "ubuntu" ]]; then
+"$novoSrc"/make -j $(echo "$(nproc) - 1" | bc)
 
-make 
-
-#	echo "update() { sudo apt update && sudo apt upgrade -y; }" >> ~/.bash_aliases
-# elif [[ "$os_release_ID" == "manjaro" ]]; then
-#	make -j 2
-#	echo "update() { sudo pacman -Syu ; }" >> ~/.bashrc
-# fi
-
-# echo "nwal(){ \$HOME/.novo/bin/novo-cli getwalletinfo; }" >> ~/.bashrc
-# echo "ninfo(){ \$HOME/.novo/bin/novo-cli getinfo; }" >> ~/.bashrc
-# echo "nhelp(){ \$HOME/.novo/bin/novo-cli help; }" >> ~/.bashrc
-# echo "nstart(){ \$HOME/.novo/bin/novo.sh ; }" >> ~/.bashrc
-# echo "ncli(){ \$HOME/.novo/bin/novo-cli \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9; }" >> ~/.bashrc
-# echo "source ~/.bashrc or restart to use aliases such as nwal and ncli"
-
-if [[ ! -d "$HOME/.novo" ]]; then
-	mkdir "$HOME/.novo"
+if [[ ! -d "$novoDir" ]]; then
+	mkdir "$novoDir"
 fi
-if [[ ! -d "$HOME/.novo/bin" ]]; then 
-	mkdir "$HOME/.novo/bin"
-	cp novod "$novoBin"/novod
-	cp novo-cli "$novoBin"/novo-cli
-	strip "$novoBin"/novod
-	strip "$novoBin"/novo-cli
-fi	
 
-echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$username"$'\n'\
-	"rpcpassword=$rpcpassword"$'\n'"gen=1" > "$novoConf"
+if [[ ! -d "$novoBin" ]]; then 
+	mkdir "$novoBin"
+fi
 
-echo "{"$'\n'"  \"url\" : \"http://127.0.0.1:8665\","$'\n'"  \"user\" : \"$username\","$'\n'\
-                " \"pass\" : \"$rpcpassword\","$'\n'"  \"algo\" : \"sha256dt\","$'\n'\
-                " \"threads\" : \"$threads\","$'\n'"  \"coinbase-addr\": \"$miningAddress\""$'\n'"}" \
-                > "$minerConf"
+cp novod "$novoBin"/novod
+cp novo-cli "$novoBin"/novo-cli
+strip "$novoBin"/novod
+strip "$novoBin"/novo-cli
+
+echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$novoUsr"$'\n'\
+	"rpcpassword=$novoRpc"$'\n'"gen=1" > "$novoCnf"
+
+echo "{"$'\n'"  \"url\" : \"http://127.0.0.1:8665\","$'\n'"  \"user\" : \"$novoUsr\","$'\n'\
+                " \"pass\" : \"$novoRpc\","$'\n'"  \"algo\" : \"sha256dt\","$'\n'\
+                " \"threads\" : \"$novoCpu\","$'\n'"  \"coinbase-addr\": \"$novoAdr\""$'\n'"}" \
+                > "$novoCnf"
+
+unset novoUsr novoRpc novoCpu novoAdr novoDir novoMnr novoCnf novoVer novoSrc novoTgz novoGit novo_OS	
