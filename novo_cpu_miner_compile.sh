@@ -2,6 +2,7 @@
 
 # compilation script for:
 # https://github.com/benkno/novo-bfgminer
+# wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_cpu_miner_compile.sh && chmod +x novo_cpu_miner_compile.sh && ./novo_cpu_miner_compile.sh
 
 if ! dpkg -s libjansson4 &> /dev/null; then sudo apt -y install libjansson4; fi
 if ! dpkg -s libcurl4 &> /dev/null; then sudo apt -y install libcurl4; fi
