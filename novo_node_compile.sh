@@ -65,7 +65,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		binutils libtool m4 make systemd python automake autoconf zeromq \
 		sqlite qrencode arm-none-eabi-binutils arm-none-eabi-gcc nano bc \
 		bison fakeroot file findutils flex gawk gcc gettext grep groff \
-		patch pkgconf sed texinfo which miniupnpc screen gzip
+		patch pkgconf sed texinfo which miniupnpc screen gzip )
 		while read -r line; do
 	        	if ! pacman -Qs "$line" &> /dev/null
 	                	then sudo pacman --noconfirm -Syu "$line"
