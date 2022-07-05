@@ -5,7 +5,7 @@
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_cpuminer.sh && chmod +x novo_cpuminer.sh && ./novo_cpuminer.sh
 
 novo_os_release=$(source /etc/os-release; echo $ID)
-if [[ "$novo_os_release" == "debian" || "ubuntu" ]]; then
+if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]]; then
 	sudo apt update
 	declare -a dpkg_pkg_array_=( autoconf libjansson4 libjansson-dev libgcrypt20-dev libncurses-dev \
 	  libevent-dev libtool uthash-dev libcurl4-openssl-dev curl make yasm wget git bc )
@@ -15,7 +15,7 @@ if [[ "$novo_os_release" == "debian" || "ubuntu" ]]; then
         fi
 	done <<<$(printf '%s\n' "${dpkg_pkg_array_[@]}")
 	unset dpkg_pkg_array_
-elif [[ "$novo_os_release" == "manjaro-arm" || "manjaro" ]]; then
+elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manjaro" ]]; then
 	declare -a arch_pkg_array_=( libtool autoconf jansson uthash curl make yasm wget git bc )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null
