@@ -19,7 +19,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         	if ! pacman -Qs curl &> /dev/null; then sudo pacman --noconfirm -Syu curl; fi
         	if ! pacman -Qs jq &> /dev/null; then sudo pacman --noconfirm -Syu jq; fi
 	else
-		echo "OS unsupported by this script; ask @bitsko in the telegram chat to add your 64 bit Linux OS"
+		echo "OS unsupported; ask @bitsko in the telegram chat to add your 64 bit Linux OS"
 		script_exit
 		unset -f script_exit
 		exit 1
