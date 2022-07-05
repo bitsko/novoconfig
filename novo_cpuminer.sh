@@ -1,7 +1,12 @@
 #!/bin/bash
+
 # novo_cpuminer.sh
-# compile and pool mine
+# use at your own risk
+
+# compile and pool mine using:
 # https://github.com/benkno/novo-bfgminer
+
+# to download and compile the cpu miner try:
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_cpuminer.sh && chmod +x novo_cpuminer.sh && ./novo_cpuminer.sh
 
 novo_os_release=$(source /etc/os-release; echo $ID)
@@ -27,6 +32,7 @@ fi
 
 git clone https://github.com/benkno/novo-bfgminer
 if [[ "$?" != 0 ]]; then echo "git cloning failed"; exit 1; fi
+
 cd novo-bfgminer
 git config --global url.https://github.com/.insteadOf git://github.com/
 ./autogen.sh
@@ -36,5 +42,7 @@ make_proc_count=$(echo "$(nproc) - 1" | bc)
 if [[ $make_proc_count == 0 ]]; then make_proc_count=$((make_proc_count + 1)); fi
 make -j "$make_proc_count"
 
+echo $'\n'"to cpu pool mine:"
 echo $'\n'"$PWD/bfgminer --algo fastauto -S cpu:auto --cpu-threads $(nproc) -o stratum+tcp://mine.bit90.io:3333 -u 1NTAraUNiLw1tynMSMv9WFvKrpEVoMhaSe.test -p password"
+
 unset novo_os_release make_proc_count
