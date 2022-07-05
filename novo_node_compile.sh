@@ -2,7 +2,7 @@
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS novoAny; }	
+script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS; }	
 
 if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]] || \
@@ -36,9 +36,9 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		mkdir "$novoDir"
 	elif [[ -d "$novoDir" ]]; then 
 		echo $'\n'"backing up existing novo directory"$'\n'
-		IFS= read -r -p "stop your node first if running. press enter to continue" novoAny
+		IFS= read -r -p "stop your node first if running. press enter to continue"
 		cp -r "$novoDir" $HOME/novo.$EPOCHSECONDS.backup
-		echo "existing .novo folder backed up to: $HOME/novo.$EPOCHSECONDS.backup"	
+		echo "existing .novo folder backed up to: "$HOME"/novo."$EPOCHSECONDS".backup"	
 	fi
 
 	wget -N "$novoGit" 
@@ -56,7 +56,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	        if ! dpkg -s "$line" &> /dev/null
                 then sudo apt -y install "$line"
 	        fi
-		done <<<$(printf '%s\n' "${dpkg_pkg_array_[@]}")
+		done <<<"$(printf '%s\n' "${dpkg_pkg_array_[@]}")"
 		unset dpkg_pkg_array_
 
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
@@ -70,19 +70,19 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	        	if ! pacman -Qs "$line" &> /dev/null
 	                	then sudo pacman --noconfirm -Syu "$line"
 		        fi
-		done <<<$(printf '%s\n' "${arch_pkg_array_[@]}")
+		done <<<"$(printf '%s\n' "${arch_pkg_array_[@]}")"
 		unset arch_pkg_array_
 	fi	
 
-	cd "$novoVer"
+	cd "$novoVer" || echo "unable to cd to $novoVer"; exit 1
 	./autogen.sh
 	
 	if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
 		CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
-		"$novoSrc"/configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
+		"$novoVer"/configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
         elif [[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
-		"$novoSrc"/configure --without-gui
+		"$novoVer"/configure --without-gui
 	fi
 	
 	make -j $(echo "$(nproc) - 1" | bc)
