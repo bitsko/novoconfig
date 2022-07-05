@@ -59,7 +59,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		done <<<$(printf '%s\n' "${dpkg_pkg_array_[@]}")
 		unset dpkg_pkg_array_
 
-	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS == "manjaro" ]]; then
+	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
 		sudo pacman -Syu
 		declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
 		binutils libtool m4 make systemd python automake autoconf zeromq \
@@ -93,15 +93,16 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	cp novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 	echo "binaries available in $novoBin"
 	
-  if [[ ! -f "$novoCnf ]]; then
+  if [[ ! -f "$novoCnf" ]]; then
 		IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
 		IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 		echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$novoUsr"$'\n'\
 		"rpcpassword=$novoRpc"$'\n'"gen=1"$'\n'"txindex=1" > "$novoCnf"
-	fi
+		
+  fi
   
-  script_exit
-	unset -f script_exit
+script_exit
+unset -f script_exit
 	
 else
 	echo "CPU architecture unsupported by this script. Is it 64 bit?"
