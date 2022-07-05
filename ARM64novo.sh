@@ -1,17 +1,12 @@
 #!/bin/bash
 
-#missing something, doesnt work, mining also not working
-
-echo "raspi 64 bit debian ubuntu manjaro novo compile script"
+# wget https://raw.githubusercontent.com/bitsko/novoconfig/main/ARM64novo.sh && chmod +x ARM64novo.sh && ./ARM64novo.sh
 
 IFS=' ' read -r -p "enter a novod username" novoUsr
 IFS=' ' read -r -p "enter a novod rpc password" novoRpc
-IFS=' ' read -r -p "how many cpu cores to mine with?" novoCpu
-IFS=' ' read -r -p "what address would you like to mine to?" novoAdr
 
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
-novoMnr="$novoBin/cfg.json"
 novoCnf="$novoDir/novo.conf"
 novoVer="0.2.0"
 novoSrc="$HOME/novo_src_v$novoVer"
@@ -42,6 +37,7 @@ sudo pacman -S boost boost-libs libevent libnatpmp zeromq autoconf automake \
 	bison fakeroot file findutils flex gawk gcc gettext grep groff gzip \
 	patch pkgconf sed texinfo which miniupnpc screen nano bc
 fi
+
 cd "$novoSrc"
 ./autogen.sh
 
@@ -64,11 +60,6 @@ strip "$novoBin"/novod
 strip "$novoBin"/novo-cli
 
 echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$novoUsr"$'\n'\
-	"rpcpassword=$novoRpc"$'\n'"gen=1" > "$novoCnf"
+	"rpcpassword=$novoRpc"$'\n'"gen=1"$'\n'"txindex=1" > "$novoCnf"
 
-echo "{"$'\n'"  \"url\" : \"http://127.0.0.1:8665\","$'\n'"  \"user\" : \"$novoUsr\","$'\n'\
-                " \"pass\" : \"$novoRpc\","$'\n'"  \"algo\" : \"sha256dt\","$'\n'\
-                " \"threads\" : \"$novoCpu\","$'\n'"  \"coinbase-addr\": \"$novoAdr\""$'\n'"}" \
-                > "$novoCnf"
-
-unset novoUsr novoRpc novoCpu novoAdr novoDir novoMnr novoCnf novoVer novoSrc novoTgz novoGit novo_OS	
+unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoSrc novoTgz novoGit novo_OS	
