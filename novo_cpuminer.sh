@@ -26,7 +26,7 @@ elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manj
 fi
 
 git clone https://github.com/benkno/novo-bfgminer
-# if [[ "$?" != 0 ]]; then echo "git cloning failed"; exit 1; fi
+if [[ "$?" != 0 ]]; then echo "git cloning failed"; exit 1; fi
 cd novo-bfgminer
 git config --global url.https://github.com/.insteadOf git://github.com/
 ./autogen.sh
