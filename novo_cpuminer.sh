@@ -1,5 +1,8 @@
 #!/bin/bash
 # novo_cpuminer.sh
+# compile and pool mine
+# https://github.com/benkno/novo-bfgminer
+# wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_cpuminer.sh && chmod +x novo_cpuminer.sh && ./novo_cpuminer.sh
 
 novo_os_release=$(source /etc/os-release; echo $ID)
 if [[ "$novo_os_release" == "debian" || "ubuntu" ]]; then
