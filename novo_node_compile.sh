@@ -2,7 +2,7 @@
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS; }
+script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS novoSrc; }
 
 if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]] || \
@@ -31,7 +31,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
 	novoTgz="$novoVer".tar.gz
 	novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
-
+	novoSrc="novo-$novoVer"
 	if [[ ! -d "$novoDir" ]]; then
 		mkdir "$novoDir"
 	elif [[ -d "$novoDir" ]]; then
@@ -73,7 +73,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		unset arch_pkg_array_
 	fi
 
-	cd "$novoVer" || echo "unable to cd to $novoVer"; exit 1
+	cd "$novoSrc" || echo "unable to cd to $novoSrc"; exit 1
 	./autogen.sh
 	if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
