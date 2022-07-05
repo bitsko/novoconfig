@@ -42,13 +42,13 @@ sudo pacman -S boost boost-libs libevent libnatpmp zeromq autoconf automake \
 	bison fakeroot file findutils flex gawk gcc gettext grep groff gzip \
 	patch pkgconf sed texinfo which miniupnpc screen nano bc
 fi
-
-"$novoSrc"/autogen.sh
+cd "$novoSrc"
+./autogen.sh
 
 CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	"$novoSrc"/configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 
-"$novoSrc"/make -j $(echo "$(nproc) - 1" | bc)
+make -j $(echo "$(nproc) - 1" | bc)
 
 if [[ ! -d "$novoDir" ]]; then
 	mkdir "$novoDir"
