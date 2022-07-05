@@ -14,7 +14,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		sudo apt -y upgrade
 		if ! dpkg -s curl &> /dev/null;	then sudo apt install curl; fi
 		if ! dpkg -s jq &> /dev/null; then sudo apt install jq;	fi
-	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS == "manjaro" ]]; then
+	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
 		sudo pacman -Syu
         	if ! pacman -Qs curl &> /dev/null; then sudo pacman --noconfirm -Syu curl; fi
         	if ! pacman -Qs jq &> /dev/null; then sudo pacman --noconfirm -Syu jq; fi
