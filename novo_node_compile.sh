@@ -31,7 +31,8 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
 	novoTgz="$novoVer".tar.gz
 	novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
-	novoNum="$(sed 's/v//g'<<<"$novoVer")"
+	novoNum=$(echo ${novoVer//v/})
+#	"$(sed 's/v//g'<<<"$novoVer")"
 	novoSrc="novo-$novoNum"
 	if [[ ! -d "$novoDir" ]]; then
 		mkdir "$novoDir"
