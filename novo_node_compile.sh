@@ -8,6 +8,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]] || \
 	[[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
 
+	novo_OS=$(source /etc/os-release; echo $ID)
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
 		sudo apt update
 		sudo apt -y upgrade
@@ -43,7 +44,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	wget -N "$novoGit" 
 	tar -xf "$novoTgz" 
 
-	novo_OS=$(source /etc/os-release; echo $ID)
+	
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
 		sudo apt update
 		declare -a dpkg_pkg_array_=( build-essential libtool autotools-dev pkg-config \
