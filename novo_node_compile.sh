@@ -75,7 +75,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		unset arch_pkg_array_
 	fi
 
-	cd "$novoSrc" || echo "unable to cd to $novoSrc"; exit 1
+	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 	./autogen.sh
 	if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
