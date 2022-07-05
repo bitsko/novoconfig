@@ -2,13 +2,13 @@
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS; }	
+script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS; }
 
 if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]] || \
 	[[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
 
-	novo_OS=$(source /etc/os-release; echo $ID)
+	novo_OS=$(source /etc/os-release; echo "$ID")
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
 		sudo apt update
 		sudo apt -y upgrade
@@ -34,17 +34,16 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 
 	if [[ ! -d "$novoDir" ]]; then
 		mkdir "$novoDir"
-	elif [[ -d "$novoDir" ]]; then 
+	elif [[ -d "$novoDir" ]]; then
 		echo $'\n'"backing up existing novo directory"$'\n'
 		IFS= read -r -p "stop your node first if running. press enter to continue"
 		cp -r "$novoDir" "$HOME"/novo."$EPOCHSECONDS".backup
-		echo "existing .novo folder backed up to: ""$HOME""/novo.""$EPOCHSECONDS"".backup"	
+		echo "existing .novo folder backed up to: ""$HOME""/novo.""$EPOCHSECONDS"".backup"
 	fi
 
-	wget -N "$novoGit" 
-	tar -xf "$novoTgz" 
+	wget -N "$novoGit"
+	tar -xf "$novoTgz"
 
-	
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
 		sudo apt update
 		declare -a dpkg_pkg_array_=( build-essential libtool autotools-dev pkg-config \
@@ -72,11 +71,10 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		        fi
 		done <<<"$(printf '%s\n' "${arch_pkg_array_[@]}")"
 		unset arch_pkg_array_
-	fi	
+	fi
 
 	cd "$novoVer" || echo "unable to cd to $novoVer"; exit 1
 	./autogen.sh
-	
 	if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
 		CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
@@ -84,26 +82,22 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         elif [[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
 		"$novoVer"/configure --without-gui
 	fi
-	
 	make -j "$(echo "$(nproc) - 1" | bc)"
-	
-  if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
-	
+	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 	cp novod "$novoBin"/novod && strip "$novoBin"/novod
 	cp novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 	echo "binaries available in $novoBin"
-	
-  if [[ ! -f "$novoCnf" ]]; then
+	if [[ ! -f "$novoCnf" ]]; then
 		IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
 		IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 		echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$novoUsr"$'\n'\
 		"rpcpassword=$novoRpc"$'\n'"gen=1"$'\n'"txindex=1" > "$novoCnf"
-		
-  fi
-  
+
+	fi
+
 script_exit
 unset -f script_exit
-	
+
 else
 	echo "CPU architecture unsupported by this script. Is it 64 bit?"
 	script_exit
