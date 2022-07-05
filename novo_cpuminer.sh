@@ -35,5 +35,5 @@ make_proc_count=$(echo "$(nproc) - 1" | bc)
 if [[ $make_proc_count == 0 ]]; then make_proc_count=$((make_proc_count + 1)); fi
 make -j "$make_proc_count"
 
-echo $'\n'"$PWD/novo-bfgminer/bfgminer --algo fastauto -S cpu:auto --cpu-threads $(nproc) -o stratum+tcp://mine.bit90.io:3333 -u 1NTAraUNiLw1tynMSMv9WFvKrpEVoMhaSe.test -p password"
+echo $'\n'"$PWD/bfgminer --algo fastauto -S cpu:auto --cpu-threads $(nproc) -o stratum+tcp://mine.bit90.io:3333 -u 1NTAraUNiLw1tynMSMv9WFvKrpEVoMhaSe.test -p password"
 unset novo_os_release make_proc_count
