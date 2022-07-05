@@ -31,7 +31,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
 	novoTgz="$novoVer".tar.gz
 	novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
-	novoNum=$(echo ${novoVer//v/})
+	novoNum="${novoVer//v/}"
 #	"$(sed 's/v//g'<<<"$novoVer")"
 	novoSrc="novo-$novoNum"
 	if [[ ! -d "$novoDir" ]]; then
@@ -80,9 +80,9 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
 		CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
-		"$novoVer"/configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
+		"$novoSrc"/configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
         elif [[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
-		"$novoVer"/configure --without-gui
+		"$novoSrc"/configure --without-gui
 	fi
 	make -j "$(echo "$(nproc) - 1" | bc)"
 	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
