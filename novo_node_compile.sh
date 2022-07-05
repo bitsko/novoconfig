@@ -28,7 +28,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	novoDir="$HOME/.novo"
 	novoBin="$novoDir/bin"
 	novoCnf="$novoDir/novo.conf"
-	novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name)"
+	novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
 	novoTgz="$novoVer".tar.gz
 	novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 
