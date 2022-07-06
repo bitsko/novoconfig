@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# compile the latest version of novo node; for ubuntu, debian and manjaro on 64 bit and ARM processors
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS novoSrc novoNum; }
