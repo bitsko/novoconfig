@@ -59,11 +59,9 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		libboost-thread-dev libsqlite3-dev libqrencode-dev g++-arm-linux-gnueabihf \
 		libdb-dev libdb++-dev libssl-dev miniupnpc screen bc )
 		while read -r line; do
-	        	if ! dpkg -s "$line" &> /dev/null
-                		then sudo apt -y install "$line"
-				if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
-	       		fi
-		done <<<"$(printf '%s\n' "${dpkg_pkg_array_[@]}")"
+	        	if ! dpkg -s "$line" &> /dev/null; then sudo apt -y install "$line"; fi
+			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+	       	done <<<"$(printf '%s\n' "${dpkg_pkg_array_[@]}")"
 		unset dpkg_pkg_array_
 
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
@@ -74,10 +72,8 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		bison fakeroot file findutils flex gawk gcc gettext grep groff \
 		patch pkgconf sed texinfo which miniupnpc screen gzip )
 		while read -r line; do
-	        	if ! pacman -Qi "$line" &> /dev/null
-	                	then sudo pacman --noconfirm -Sy "$line"
-				if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
-		        fi
+	        	if ! pacman -Qi "$line" &> /dev/null; then sudo pacman --noconfirm -Sy "$line"; fi
+			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 		done <<<"$(printf '%s\n' "${arch_pkg_array_[@]}")"
 		unset arch_pkg_array_
 	fi
