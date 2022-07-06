@@ -25,7 +25,7 @@ if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]] 
 	done <<<$(printf '%s\n' "${dpkg_pkg_array_[@]}")
 	unset dpkg_pkg_array_
 	if [[ -n "${dpkg_to_install[*]}" ]]; then
-		sudo apt -y install "${dpkg_to_install[*]}"
+		sudo apt -y install ${dpkg_to_install[*]}
 		novo_pkg_check_
 		unset dpkg_to_install
 	fi
