@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#these work with v3
+
 #place them in your .bash_aliases or maybe .bashrc
 #or source this file for single session use
 
