@@ -11,7 +11,8 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	[[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
 
 	novo_OS=$(source /etc/os-release; echo "$ID")
-	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
+	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]] || \
+		[[ "$novo_OS" == "raspbian" ]]; then
 		sudo apt update
 		sudo apt -y upgrade
 		if ! dpkg -s curl &> /dev/null;	then sudo apt -y install curl; pkg_Err; fi
@@ -50,7 +51,8 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	wget -N "$novoGit"
 	tar -xf "$novoTgz"
 
-	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
+	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]] || \
+		[[ "$novo_OS" == "raspbian" ]]; then
 
 		declare -a dpkg_pkg_array_=( build-essential libtool autotools-dev pkg-config \
 		bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
