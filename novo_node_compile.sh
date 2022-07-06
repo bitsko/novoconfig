@@ -46,7 +46,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	tar -xf "$novoTgz"
 
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
-		sudo apt update
+		
 		declare -a dpkg_pkg_array_=( build-essential libtool autotools-dev pkg-config \
 		bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
 		libboost-chrono-dev libboost-program-options-dev libboost-test-dev automake \
@@ -60,15 +60,15 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		unset dpkg_pkg_array_
 
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
-		sudo pacman -Syu
+		
 		declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
 		binutils libtool m4 make systemd python automake autoconf zeromq \
 		sqlite qrencode arm-none-eabi-binutils arm-none-eabi-gcc nano bc \
 		bison fakeroot file findutils flex gawk gcc gettext grep groff \
 		patch pkgconf sed texinfo which miniupnpc screen gzip )
 		while read -r line; do
-	        	if ! pacman -Qs "$line" &> /dev/null
-	                	then sudo pacman --noconfirm -Syu "$line"
+	        	if ! pacman -Qi "$line" &> /dev/null
+	                	then sudo pacman --noconfirm -Sy "$line"
 		        fi
 		done <<<"$(printf '%s\n' "${arch_pkg_array_[@]}")"
 		unset arch_pkg_array_
