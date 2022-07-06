@@ -14,11 +14,16 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		sudo apt update
 		sudo apt -y upgrade
 		if ! dpkg -s curl &> /dev/null;	then sudo apt install curl; fi
+		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 		if ! dpkg -s jq &> /dev/null; then sudo apt install jq;	fi
+		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
 		sudo pacman -Syu
         	if ! pacman -Qs curl &> /dev/null; then sudo pacman --noconfirm -Syu curl; fi
+		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
         	if ! pacman -Qs jq &> /dev/null; then sudo pacman --noconfirm -Syu jq; fi
+		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+		
 	else
 		echo "OS unsupported; ask @bitsko in the telegram chat to add your 64 bit Linux OS"
 		script_exit
@@ -54,9 +59,10 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		libboost-thread-dev libsqlite3-dev libqrencode-dev g++-arm-linux-gnueabihf \
 		libdb-dev libdb++-dev libssl-dev miniupnpc screen bc )
 		while read -r line; do
-	        if ! dpkg -s "$line" &> /dev/null
-                then sudo apt -y install "$line"
-	        fi
+	        	if ! dpkg -s "$line" &> /dev/null
+                		then sudo apt -y install "$line"
+				if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+	       		fi
 		done <<<"$(printf '%s\n' "${dpkg_pkg_array_[@]}")"
 		unset dpkg_pkg_array_
 
@@ -70,6 +76,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		while read -r line; do
 	        	if ! pacman -Qi "$line" &> /dev/null
 	                	then sudo pacman --noconfirm -Sy "$line"
+				if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 		        fi
 		done <<<"$(printf '%s\n' "${arch_pkg_array_[@]}")"
 		unset arch_pkg_array_
