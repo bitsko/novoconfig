@@ -17,6 +17,7 @@ if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]];
 	while read -r line; do
         if ! dpkg -s "$line" &> /dev/null
                 then sudo apt -y install "$line"
+		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
         fi
 	done <<<$(printf '%s\n' "${dpkg_pkg_array_[@]}")
 	unset dpkg_pkg_array_
@@ -26,6 +27,7 @@ elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manj
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null
                 	then sudo pacman --noconfirm -Syu "$line"
+			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 	        fi
 	done <<<$(printf '%s\n' "${arch_pkg_array_[@]}")
 	unset arch_pkg_array_
