@@ -86,8 +86,9 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	fi
 	make -j "$(echo "$(nproc) - 1" | bc)"
 	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
-	cp novod "$novoBin"/novod && strip "$novoBin"/novod
-	cp novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
+	cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
+	cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
+	cp src/novo-tx "$novoBin"/novo-cli && strip "$novoBin"/novo-tx
 	echo "binaries available in $novoBin"
 	if [[ ! -f "$novoCnf" ]]; then
 		IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
