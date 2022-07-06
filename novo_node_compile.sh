@@ -3,7 +3,7 @@
 # compile the latest version of novo node; for ubuntu, debian and manjaro on 64 bit and ARM processors
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS novoSrc novoNum; }
+script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS novoSrc novoNum make_proc_count; }
 
 if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]] || \
@@ -87,7 +87,12 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         elif [[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
 		./configure --without-gui
 	fi
-	make -j "$(echo "$(nproc) - 1" | bc)"
+	
+		
+	make_proc_count=$(echo "$(nproc) - 1" | bc)
+	if [[ $make_proc_count == 0 ]]; then make_proc_count=$((make_proc_count + 1)); fi
+	make -j "$make_proc_count"
+	
 	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 	cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 	cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
