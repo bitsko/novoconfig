@@ -45,6 +45,9 @@ elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manj
 		novo_pkg_check_
 		unset arch_to_install
 	fi
+else
+	echo "$ID currently unsupported."
+	exit 1
 fi
 
 git clone https://github.com/benkno/novo-bfgminer
