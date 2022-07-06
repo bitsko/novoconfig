@@ -21,7 +21,7 @@ if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]];
 	done <<<$(printf '%s\n' "${dpkg_pkg_array_[@]}")
 	unset dpkg_pkg_array_
 elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manjaro" ]]; then
-	declare -a arch_pkg_array_=( libtool autoconf jansson uthash curl make yasm wget git bc )
+	declare -a arch_pkg_array_=( libtool autoconf automake jansson uthash curl make yasm wget git bc )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null
                 	then sudo pacman --noconfirm -Syu "$line"
