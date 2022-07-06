@@ -40,7 +40,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		echo $'\n'"backing up existing novo directory"$'\n'
 		IFS= read -r -p "stop your node first if running. press enter to continue"
 		cp -r "$novoDir" "$HOME"/novo."$EPOCHSECONDS".backup
-		echo "existing .novo folder backed up to: ""$HOME""/novo.""$EPOCHSECONDS"".backup"
+		echo "existing .novo folder backed up to: $HOME/novo.$EPOCHSECONDS.backup"
 	fi
 
 	wget -N "$novoGit"
