@@ -17,7 +17,7 @@ if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]] 
 	sudo apt update
 	sudo apt -y upgrade
 	declare -a dpkg_pkg_array_=( autoconf libjansson4 libjansson-dev libgcrypt20-dev libncurses-dev \
-	  libevent-dev libtool uthash-dev libcurl4-openssl-dev curl make yasm wget git bc )
+	  libevent-dev libtool uthash-dev libcurl4-openssl-dev curl make yasm wget git bc automake )
 	while read -r line; do
         if ! dpkg -s "$line" &> /dev/null
                 then dpkg_to_install+=( "$line" )
