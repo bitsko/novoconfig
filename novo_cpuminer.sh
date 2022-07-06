@@ -11,7 +11,7 @@
 
 novo_os_release=$(source /etc/os-release; echo $ID)
 if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]] || \
-	[[ "$novo_os_release" == "raspbian" ]]; then
+	[[ "$novo_os_release" == "raspbian" ]] || [[ "$novo_os_release" == "linuxmint" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
 	declare -a dpkg_pkg_array_=( autoconf libjansson4 libjansson-dev libgcrypt20-dev libncurses-dev \
