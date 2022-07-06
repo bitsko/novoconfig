@@ -90,7 +90,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	
 		
 	make_proc_count=$(echo "$(nproc) - 1" | bc)
-	if [[ $make_proc_count == 0 ]]; then make_proc_count=$((make_proc_count + 1)); fi
+	if [[ $make_proc_count == 0 ]]; then make_proc_count="1"; fi
 	make -j "$make_proc_count"
 	
 	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
