@@ -40,7 +40,7 @@ elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manj
 	done <<<$(printf '%s\n' "${arch_pkg_array_[@]}")
 	unset arch_pkg_array_
 	if [[ -n "${arch_to_install[*]}" ]]; then
-		sudo pacman --noconfirm -Sy "${arch_to_install[*]}"
+		sudo pacman --noconfirm -Sy ${arch_to_install[*]}
 		novo_pkg_check_
 		unset arch_to_install
 	fi
