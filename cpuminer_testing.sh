@@ -31,7 +31,7 @@ if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]] 
 		unset dpkg_to_install
 	fi
 elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manjaro" ]] || \
-	[[ "$novo_os_release" == "endeavoros" ]]; then
+	[[ "$novo_os_release" == "endeavouros" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( libtool libevent autoconf automake jansson uthash curl ncurses \
 		libgcrypt pkgconf make yasm wget git bc )
