@@ -95,7 +95,8 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
 		IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 		echo "port=8666"$'\n'"rpcport=8665"$'\n'"rpcuser=$novoUsr"$'\n'\
-		"rpcpassword=$novoRpc"$'\n'"gen=1"$'\n'"txindex=1" > "$novoCnf"
+		"rpcpassword=$novoRpc"$'\n'"gen=1"$'\n'"txindex=1"$'\n'\
+		"maxmempool=1600" > "$novoCnf"
 	fi
 
 script_exit
