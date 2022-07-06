@@ -12,6 +12,7 @@
 novo_os_release=$(source /etc/os-release; echo $ID)
 if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]]; then
 	sudo apt update
+	sudo apt -y upgrade
 	declare -a dpkg_pkg_array_=( autoconf libjansson4 libjansson-dev libgcrypt20-dev libncurses-dev \
 	  libevent-dev libtool uthash-dev libcurl4-openssl-dev curl make yasm wget git bc )
 	while read -r line; do
@@ -22,11 +23,12 @@ if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]];
 	done <<<$(printf '%s\n' "${dpkg_pkg_array_[@]}")
 	unset dpkg_pkg_array_
 elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manjaro" ]]; then
+	sudo pacman -Syu
 	declare -a arch_pkg_array_=( libtool libevent autoconf automake jansson uthash curl ncurses \
 		libgcrypt pkgconf make yasm wget git bc )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null
-                	then sudo pacman --noconfirm -Syu "$line"
+                	then sudo pacman --noconfirm -Sy "$line"
 			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 	        fi
 	done <<<$(printf '%s\n' "${arch_pkg_array_[@]}")
