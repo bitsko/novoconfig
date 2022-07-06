@@ -3,7 +3,8 @@
 # compile the latest version of novo node; for ubuntu, debian and manjaro on 64 bit and ARM processors
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS novoSrc novoNum make_proc_count; }
+script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit novo_OS novoSrc novoNum novoPrc pkg_Err; }
+pkg_Err(){ if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi; }
 
 if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	[[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]] || \
@@ -13,16 +14,14 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
 		sudo apt update
 		sudo apt -y upgrade
-		if ! dpkg -s curl &> /dev/null;	then sudo apt -y install curl; fi
-		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
-		if ! dpkg -s jq &> /dev/null; then sudo apt -y install jq;	fi
-		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+		if ! dpkg -s curl &> /dev/null;	then sudo apt -y install curl; pkg_Err; fi
+		if ! dpkg -s jq &> /dev/null; then sudo apt -y install jq; pkg_Err; fi
+		if ! dpkg -s wget &> /dev/null; then sudo apt -y install wget; pkg_Err;	fi
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
 		sudo pacman -Syu
-        	if ! pacman -Qs curl &> /dev/null; then sudo pacman --noconfirm -Syu curl; fi
-		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
-        	if ! pacman -Qs jq &> /dev/null; then sudo pacman --noconfirm -Syu jq; fi
-		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+        	if ! pacman -Qs curl &> /dev/null; then sudo pacman --noconfirm -Syu curl; pkg_Err; fi
+        	if ! pacman -Qs jq &> /dev/null; then sudo pacman --noconfirm -Syu jq; pkg_Err; fi
+		if ! pacman -Qs wget &> /dev/null; then sudo pacman --noconfirm -Syu wget; pkg_Err; fi
 	else
 		echo "OS unsupported; ask @bitsko in the telegram chat to add your 64 bit Linux OS"
 		script_exit
@@ -60,15 +59,13 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		libssl-dev miniupnpc bc )
 
 		while read -r line; do
-	        	if ! dpkg -s "$line" &> /dev/null; then sudo apt -y install "$line"; fi
-			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+	        	if ! dpkg -s "$line" &> /dev/null; then sudo apt -y install "$line"; pkg_Err; fi
 	       	done <<<"$(printf '%s\n' "${dpkg_pkg_array_[@]}")"
 		unset dpkg_pkg_array_
 		if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		        [[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
 			if ! dpkg -s g++-arm-linux-gnueabihf &> /dev/null
-				then sudo apt -y install g++-arm-linux-gnueabihf; fi
-			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+				then sudo apt -y install g++-arm-linux-gnueabihf; pkg_Err; fi
 		fi
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
 
@@ -79,18 +76,15 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		gzip )
 
 		while read -r line; do
-	        	if ! pacman -Qi "$line" &> /dev/null; then sudo pacman --noconfirm -Sy "$line"; fi
-			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+	        	if ! pacman -Qi "$line" &> /dev/null; then sudo pacman --noconfirm -Sy "$line"; pkg_Err; fi
 		done <<<"$(printf '%s\n' "${arch_pkg_array_[@]}")"
 		unset arch_pkg_array_
 		if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
                         [[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
                         if ! pacman -Qi arm-none-eabi-binutils &> /dev/null
-				then sudo pacman --noconfirm -Sy arm-none-eabi-binutils; fi
-			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+				then sudo pacman --noconfirm -Sy arm-none-eabi-binutils; pkg_Err; fi
                         if ! pacman -Qi arm-none-eabi-gcc &> /dev/null
-				then sudo pacman --noconfirm -Sy arm-none-eabi-gcc; fi
-			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+				then sudo pacman --noconfirm -Sy arm-none-eabi-gcc; pkg_Err; fi
 		fi
 	fi
 
@@ -105,9 +99,9 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	fi
 
 
-	make_proc_count=$(echo "$(nproc) - 1" | bc)
-	if [[ $make_proc_count == 0 ]]; then make_proc_count="1"; fi
-	make -j "$make_proc_count"
+	novoPrc=$(echo "$(nproc) - 1" | bc)
+	if [[ $novoPrc == 0 ]]; then novoPrc="1"; fi
+	make -j "$novoPrc"
 
 	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 	cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
