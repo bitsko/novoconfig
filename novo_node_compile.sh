@@ -23,7 +23,6 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
         	if ! pacman -Qs jq &> /dev/null; then sudo pacman --noconfirm -Syu jq; fi
 		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
-		
 	else
 		echo "OS unsupported; ask @bitsko in the telegram chat to add your 64 bit Linux OS"
 		script_exit
@@ -39,6 +38,7 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 	novoNum="${novoVer//v/}"
 	novoSrc="$PWD/novo-$novoNum"
+	
 	if [[ ! -d "$novoDir" ]]; then
 		mkdir "$novoDir"
 	elif [[ -d "$novoDir" ]]; then
@@ -52,30 +52,46 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	tar -xf "$novoTgz"
 
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
-		
+
 		declare -a dpkg_pkg_array_=( build-essential libtool autotools-dev pkg-config \
 		bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
 		libboost-chrono-dev libboost-program-options-dev libboost-test-dev automake \
-		libboost-thread-dev libsqlite3-dev libqrencode-dev g++-arm-linux-gnueabihf \
-		libdb-dev libdb++-dev libssl-dev miniupnpc screen bc )
+		libboost-thread-dev libsqlite3-dev libqrencode-dev libdb-dev libdb++-dev \
+		libssl-dev miniupnpc bc )
+
 		while read -r line; do
 	        	if ! dpkg -s "$line" &> /dev/null; then sudo apt -y install "$line"; fi
 			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 	       	done <<<"$(printf '%s\n' "${dpkg_pkg_array_[@]}")"
 		unset dpkg_pkg_array_
-
+		if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
+		        [[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
+			if ! dpkg -s g++-arm-linux-gnueabihf &> /dev/null
+				then sudo apt -y install g++-arm-linux-gnueabihf; fi
+			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+		fi
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
-		
+
 		declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
 		binutils libtool m4 make systemd python automake autoconf zeromq \
-		sqlite qrencode arm-none-eabi-binutils arm-none-eabi-gcc nano bc \
-		bison fakeroot file findutils flex gawk gcc gettext grep groff \
-		patch pkgconf sed texinfo which miniupnpc screen gzip )
+		sqlite qrencode nano bc bison fakeroot file findutils flex gawk \
+		gcc gettext grep groff patch pkgconf sed texinfo which miniupnpc \
+		gzip )
+
 		while read -r line; do
 	        	if ! pacman -Qi "$line" &> /dev/null; then sudo pacman --noconfirm -Sy "$line"; fi
 			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 		done <<<"$(printf '%s\n' "${arch_pkg_array_[@]}")"
 		unset arch_pkg_array_
+		if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
+                        [[ $(uname -m) == "armv8b" ]] || [[ $(uname -m) == "armv8l" ]]; then
+                        if ! pacman -Qi arm-none-eabi-binutils &> /dev/null
+				then sudo pacman --noconfirm -Sy arm-none-eabi-binutils; fi
+			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+                        if ! pacman -Qi arm-none-eabi-gcc &> /dev/null
+				then sudo pacman --noconfirm -Sy arm-none-eabi-gcc; fi
+			if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
+		fi
 	fi
 
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
@@ -87,12 +103,12 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
         elif [[ $(uname -m) == "i686" ]] || [[ $(uname -m) == "x86_64" ]]; then
 		./configure --without-gui
 	fi
-	
-		
+
+
 	make_proc_count=$(echo "$(nproc) - 1" | bc)
 	if [[ $make_proc_count == 0 ]]; then make_proc_count="1"; fi
 	make -j "$make_proc_count"
-	
+
 	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 	cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 	cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
