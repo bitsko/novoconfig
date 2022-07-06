@@ -13,9 +13,9 @@ if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "aarch64_be" ]] || \
 	if [[ "$novo_OS" == "debian" ]] || [[ "$novo_OS" == "ubuntu" ]]; then
 		sudo apt update
 		sudo apt -y upgrade
-		if ! dpkg -s curl &> /dev/null;	then sudo apt install curl; fi
+		if ! dpkg -s curl &> /dev/null;	then sudo apt -y install curl; fi
 		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
-		if ! dpkg -s jq &> /dev/null; then sudo apt install jq;	fi
+		if ! dpkg -s jq &> /dev/null; then sudo apt -y install jq;	fi
 		if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi
 	elif [[ "$novo_OS" == "manjaro-arm" ]] || [[ "$novo_OS" == "manjaro" ]]; then
 		sudo pacman -Syu
