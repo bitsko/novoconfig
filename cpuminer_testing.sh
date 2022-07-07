@@ -13,7 +13,7 @@ novo_pkg_check_(){ if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 novo_os_release=$(source /etc/os-release; echo $ID)
-if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
+if [[ "${deb_os_array[*]}" =~ "$novo_os_release" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
 	declare -a dpkg_pkg_array_=( autoconf libjansson4 libjansson-dev libgcrypt20-dev libncurses-dev \
@@ -29,7 +29,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 		novo_pkg_check_
 		unset dpkg_to_install
 	fi
-elif [[ "{archos_array[*]}" =~ "$novo_OS" ]]; then
+elif [[ "{archos_array[*]}" =~ "$novo_os_release" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( libtool libevent autoconf automake jansson uthash curl ncurses \
 		libgcrypt pkgconf make yasm wget git bc )
