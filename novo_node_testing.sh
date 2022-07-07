@@ -91,7 +91,7 @@ elif [[ -d "$novoDir" ]]; then
 	echo "existing .novo folder backed up to: $HOME/novo.$EPOCHSECONDS.backup"
 fi
 wget -N "$novoGit"
-tar -xfv "$novoTgz"
+tar -xf "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 ./autogen.sh
