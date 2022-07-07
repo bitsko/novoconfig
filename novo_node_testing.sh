@@ -11,8 +11,8 @@ script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer nov
 cpu_type="$(uname -m)"
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
-declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv6l )
-declare -a x86cpu_array=( i686 x86_64 )
+declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv6l armv7l )
+declare -a x86cpu_array=( i686 x86_64 i386 )
 novo_OS=$(source /etc/os-release; echo "$ID")
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
