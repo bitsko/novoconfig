@@ -10,11 +10,10 @@
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_cpuminer.sh && chmod +x novo_cpuminer.sh && ./novo_cpuminer.sh
 
 novo_pkg_check_(){ if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi; }
-
+declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
+declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 novo_os_release=$(source /etc/os-release; echo $ID)
-if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]] || \
-	[[ "$novo_os_release" == "raspbian" ]] || [[ "$novo_os_release" == "linuxmint" ]] || \
-	[[ "$novo_os_release" == "pop" ]]; then
+if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
 	declare -a dpkg_pkg_array_=( autoconf libjansson4 libjansson-dev libgcrypt20-dev libncurses-dev \
@@ -30,8 +29,7 @@ if [[ "$novo_os_release" == "debian" ]] || [[ "$novo_os_release" == "ubuntu" ]] 
 		novo_pkg_check_
 		unset dpkg_to_install
 	fi
-elif [[ "$novo_os_release" == "manjaro-arm" ]] || [[ "$novo_os_release" == "manjaro" ]] || \
-	[[ "$novo_os_release" == "endeavouros" ]]; then
+elif [[ "{archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( libtool libevent autoconf automake jansson uthash curl ncurses \
 		libgcrypt pkgconf make yasm wget git bc )
@@ -66,4 +64,4 @@ make -j "$make_proc_count"
 echo $'\n'"to cpu pool mine:"
 echo $'\n'"$PWD/bfgminer --algo fastauto -S cpu:auto --cpu-threads $(nproc) -o stratum+tcp://mine.bit90.io:3333 -u 1NTAraUNiLw1tynMSMv9WFvKrpEVoMhaSe.test -p password"
 
-unset novo_os_release make_proc_count novo_pkg_check_
+unset novo_os_release make_proc_count novo_pkg_check_ deb_os_array archos_array
