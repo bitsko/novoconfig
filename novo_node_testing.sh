@@ -93,7 +93,7 @@ tar -xf "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ./autogen.sh
 if [[ "{armcpu_array[*]}" =~ $(uname -m) ]]; then
-	CONFIG_SITE="$PWD"/depends/arm-linux-gnueabihf/share/config.site \
+	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 elif [[ "{x86cpu_array[*]}" =~ $(uname -m) ]]; then
 	./configure --without-gui
