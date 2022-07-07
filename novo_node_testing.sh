@@ -33,13 +33,13 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
                 pkg_Err
               	unset dpkg_to_install
         fi
-	if [[ "{armcpu_array[*]}" =~ "$cpu_type" ]]; then
+	if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
 		if ! dpkg -s g++-arm-linux-gnueabihf &> /dev/null; then
 			sudo apt -y install g++-arm-linux-gnueabihf
 			pkg_Err
 		fi
 	fi
-elif [[ "{archos_array[*]}" =~ "$novo_OS" ]]; then
+elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
 	binutils libtool m4 make systemd python automake autoconf zeromq \
@@ -58,7 +58,7 @@ elif [[ "{archos_array[*]}" =~ "$novo_OS" ]]; then
        		pkg_Err
                 unset arch_to_install
        	fi
-	if [[ "{armcpu_array[*]}" =~ "$cpu_type" ]]; then
+	if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
 		if ! pacman -Qi arm-none-eabi-binutils &> /dev/null; then
 			sudo pacman --noconfirm -Sy arm-none-eabi-binutils
 			pkg_Err
@@ -94,10 +94,10 @@ wget -N "$novoGit"
 tar -xf "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ./autogen.sh
-if [[ "{armcpu_array[*]}" =~ "$cpu_type" ]]; then
+if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
-elif [[ "{x86cpu_array[*]}" =~ "$cpu_type" ]]; then
+elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]]; then
 	./configure --without-gui
 fi
 novoPrc=$(echo "$(nproc) - 1" | bc)
