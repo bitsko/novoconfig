@@ -29,7 +29,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ -n "${dpkg_to_install[*]}" ]]; then
                 sudo apt -y install ${dpkg_to_install[*]}
                 pkg_Err
-              		unset dpkg_to_install
+              	unset dpkg_to_install
         fi
 	if [[ $(uname -m) =~ "{armcpu_array[*]}" ]]; then
 		if ! dpkg -s g++-arm-linux-gnueabihf &> /dev/null; then
@@ -80,7 +80,7 @@ novoTgz="$novoVer".tar.gz
 novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 novoNum="${novoVer//v/}"
 novoSrc="$PWD/novo-$novoNum"
-	if [[ ! -d "$novoDir" ]]; then
+if [[ ! -d "$novoDir" ]]; then
 	mkdir "$novoDir"
 elif [[ -d "$novoDir" ]]; then
 	echo $'\n'"backing up existing novo directory"$'\n'
@@ -98,10 +98,10 @@ if [[ "{armcpu_array[*]}" =~ $(uname -m) ]]; then
 elif [[ "{x86cpu_array[*]}" =~ $(uname -m) ]]; then
 	./configure --without-gui
 fi
-	novoPrc=$(echo "$(nproc) - 1" | bc)
+novoPrc=$(echo "$(nproc) - 1" | bc)
 if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
 make -j "$novoPrc"
-	if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
+if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
