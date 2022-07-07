@@ -1,12 +1,14 @@
 #!/bin/bash
 
 # compile the latest version of novo node; for ubuntu, debian and manjaro on 64 bit and ARM processors
+
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
-	novo_OS novoSrc novoNum novoPrc archos_array deb_os_array armcpu_array x86cpu_array pkg_Err; }
 pkg_Err(){ if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi; }
-
+script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
+	novo_OS novoSrc novoNum novoPrc archos_array deb_os_array armcpu_array x86cpu_array \
+	cpu_type pkg_Err; }
+cpu_type="$(uname -m)"
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv6l )
@@ -31,7 +33,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
                 pkg_Err
               	unset dpkg_to_install
         fi
-	if [[ "{armcpu_array[*]}" =~ $(uname -m) ]]; then
+	if [[ "{armcpu_array[*]}" =~ "$cpu_type" ]]; then
 		if ! dpkg -s g++-arm-linux-gnueabihf &> /dev/null; then
 			sudo apt -y install g++-arm-linux-gnueabihf
 			pkg_Err
@@ -56,7 +58,7 @@ elif [[ "{archos_array[*]}" =~ "$novo_OS" ]]; then
        		pkg_Err
                 unset arch_to_install
        	fi
-	if [[ "{armcpu_array[*]}" =~ $(uname -m ) ]]; then
+	if [[ "{armcpu_array[*]}" =~ "$cpu_type" ]]; then
 		if ! pacman -Qi arm-none-eabi-binutils &> /dev/null; then
 			sudo pacman --noconfirm -Sy arm-none-eabi-binutils
 			pkg_Err
@@ -67,7 +69,7 @@ elif [[ "{archos_array[*]}" =~ "$novo_OS" ]]; then
 		fi
 	fi
 else
-	echo "$(source /etc/os-release; echo "$ID") unsupported"
+	echo "$novo_OS unsupported"
 	script_exit
 	unset -f script_exit
 	exit 1
@@ -92,10 +94,10 @@ wget -N "$novoGit"
 tar -xf "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ./autogen.sh
-if [[ "{armcpu_array[*]}" =~ $(uname -m) ]]; then
+if [[ "{armcpu_array[*]}" =~ "$cpu_type" ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
-elif [[ "{x86cpu_array[*]}" =~ $(uname -m) ]]; then
+elif [[ "{x86cpu_array[*]}" =~ "$cpu_type" ]]; then
 	./configure --without-gui
 fi
 novoPrc=$(echo "$(nproc) - 1" | bc)
