@@ -21,7 +21,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
 	libboost-chrono-dev libboost-program-options-dev libboost-test-dev automake \
 	libboost-thread-dev libsqlite3-dev libqrencode-dev libdb-dev libdb++-dev \
-	libssl-dev miniupnpc bc curl jq wget )
+	libssl-dev miniupnpc bc curl jq wget libzmq3-dev )
 	while read -r line; do
         	if ! dpkg -s "$line" &> /dev/null; then
 			dpkg_to_install+=( "$line" )
