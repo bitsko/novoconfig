@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# compile the latest version of novo node; for ubuntu, debian and manjaro on 64 bit and ARM processors
+# compile the latest version of novo node
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-pkg_Err(){ if [[ "$?" != 0 ]]; then echo "package update failed"; exit 1; fi; }
+pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 	novo_OS novoSrc novoNum novoPrc archos_array deb_os_array armcpu_array x86cpu_array \
 	cpu_type pkg_Err; }
@@ -91,8 +91,9 @@ elif [[ -d "$novoDir" ]]; then
 	echo "existing .novo folder backed up to: $HOME/novo.$EPOCHSECONDS.backup"
 fi
 wget -N "$novoGit"
-tar -xf "$novoTgz"
+tar -xfv "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
+
 ./autogen.sh
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
@@ -103,13 +104,17 @@ fi
 novoPrc=$(echo "$(nproc) - 1" | bc)
 if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
 make -j "$novoPrc"
+if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
+
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
-echo "binaries available in $novoBin"
+if [[ "$?" == 0 ]]; then
+	echo $'\n'"binaries available in $novoBin"$'\n'
+	ls -hal "$novoBin"
+fi
 if [[ ! -f "$novoCnf" ]]; then
-	# transaction indexing enabled by default
 	IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
 	IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 	echo \
