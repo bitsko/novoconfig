@@ -112,7 +112,7 @@ cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
 if [[ "$?" == 0 ]]; then
 	echo $'\n'"binaries available in $novoBin"$'\n'
-	ls -hal "$novoBin"
+	ls "$novoBin"
 fi
 if [[ ! -f "$novoCnf" ]]; then
 	IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
