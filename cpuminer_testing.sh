@@ -29,7 +29,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_os_release" ]]; then
 		novo_pkg_check_
 		unset dpkg_to_install
 	fi
-elif [[ "{archos_array[*]}" =~ "$novo_os_release" ]]; then
+elif [[ "${archos_array[*]}" =~ "$novo_os_release" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( libtool libevent autoconf automake jansson uthash curl ncurses \
 		libgcrypt pkgconf make yasm wget git bc )
