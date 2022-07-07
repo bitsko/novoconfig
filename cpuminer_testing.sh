@@ -45,7 +45,7 @@ elif [[ "${archos_array[*]}" =~ "$novo_os_release" ]]; then
 		unset arch_to_install
 	fi
 else
-	echo "$ID currently unsupported."
+	echo "$novo_os_release currently unsupported."
 	exit 1
 fi
 
