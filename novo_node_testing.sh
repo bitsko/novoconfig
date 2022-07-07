@@ -34,7 +34,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
               	unset dpkg_to_install
         fi
 	if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
-		if ! dpkg -s g++-arm-linux-gnueabihf &> /dev/null; then
+		if ! dpkg -s g++ &> /dev/null; then
 			sudo apt -y install g++-arm-linux-gnueabihf
 			pkg_Err
 		fi
