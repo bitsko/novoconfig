@@ -67,7 +67,7 @@ elif [[ "{archos_array[*]}" =~ "$novo_OS" ]]; then
 		fi
 	fi
 else
-	echo "$ID unsupported"
+	echo "$(source /etc/os-release; echo "$ID") unsupported"
 	script_exit
 	unset -f script_exit
 	exit 1
