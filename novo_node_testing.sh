@@ -7,11 +7,11 @@
 pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 	novo_OS novoSrc novoNum novoPrc archos_array deb_os_array armcpu_array x86cpu_array \
-	cpu_type pkg_Err; }
+	bsdpkg_array redhat_array cpu_type pkg_Err novoBsd; }
 
 # dependency installation script
 cpu_type="$(uname -m)"
-
+novoBsd=0
 declare -a bsdpkg_array=( freebsd )
 declare -a redhat_array=( fedora )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
@@ -48,10 +48,9 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
-		binutils libtool m4 make systemd python automake autoconf zeromq \
-		sqlite qrencode nano bc bison fakeroot file findutils flex gawk \
-		gcc gettext grep groff patch pkgconf sed texinfo which miniupnpc \
-		gzip curl jq wget )
+		binutils libtool m4 make automake autoconf zeromq gzip curl\
+		sqlite qrencode nano fakeroot gcc grep pkgconf sed miniupnpc \
+		jq wget bc )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null; then
 			arch_to_install+=( "$line" )
@@ -75,11 +74,12 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 		fi
 	fi
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
+	novoBsd=1
 	pkg upgrade -y
-	declare -a bsd__pkg_array_=( boost-all libevent gcc autotools gettext \
-			python sqlite libqrencode octave-forge-zeromq libnpupnp \
-			nano bison fakeroot file findutils flex gawk groff patch \
-			pkgconf texinfo miniupnpc gzip curl jq wget db5 openssl )
+	declare -a bsd__pkg_array_=( boost-all libevent gcc autotools \
+			libqrencode octave-forge-zeromq libnpupnp \
+			nano fakeroot pkgconf miniupnpc gzip curl \
+			jq wget db5 openssl )
 	while read -r line; do 
 		if ! type "$line" >/dev/null; then
 			pkg_to_install_+=( "$line" )
@@ -128,11 +128,15 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ./autogen.sh
 
 # configure with arm specific instructions
-if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
+if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
-elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]]; then
+elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui
+elif [[ "$novoBSD" == 1 ]]; then
+	./configure --disable-hardening MAKE="gmake" \
+      CFLAGS="-I/usr/local/include" CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
+      LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
 fi
 
 # make
