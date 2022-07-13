@@ -79,7 +79,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	declare -a bsd__pkg_array_=( boost-all libevent gcc autotools gettext \
 			python sqlite libqrencode octave-forge-zeromq libnpupnp \
 			nano bison fakeroot file findutils flex gawk groff patch \
-			pkgconf texinfo miniupnpc gzip curl jq wget )
+			pkgconf texinfo miniupnpc gzip curl jq wget libdbi )
 	while read -r line; do 
 		if ! type "$line" >/dev/null; then
 			pkg_to_install_+=( "$line" )
