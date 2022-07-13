@@ -140,10 +140,13 @@ elif [[ "$novoBSD" == 1 ]]; then
 fi
 
 # make
+if [[ "$novoBSD == 1 ]]; then
+    make
+else
 novoPrc=$(echo "$(nproc) - 1" | bc)
 if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
-
 make -j "$novoPrc"
+fi
 if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
 
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
