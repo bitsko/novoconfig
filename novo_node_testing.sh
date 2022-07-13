@@ -11,19 +11,23 @@ script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer nov
 
 # dependency installation script
 cpu_type="$(uname -m)"
+
+declare -a bsdpkg_array=( freebsd )
+declare -a redhat_array=( fedora )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 )
+
 novo_OS=$(source /etc/os-release; echo "$ID")
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
 	declare -a dpkg_pkg_array_=( build-essential libtool autotools-dev pkg-config \
-	bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
-	libboost-chrono-dev libboost-program-options-dev libboost-test-dev automake \
-	libboost-thread-dev libsqlite3-dev libqrencode-dev libdb-dev libdb++-dev \
-	libssl-dev miniupnpc bc curl jq wget libzmq3-dev )
+		bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
+		libboost-chrono-dev libboost-program-options-dev libboost-test-dev automake \
+		libboost-thread-dev libsqlite3-dev libqrencode-dev libdb-dev libdb++-dev \
+		libssl-dev miniupnpc bc curl jq wget libzmq3-dev )
 	while read -r line; do
         	if ! dpkg -s "$line" &> /dev/null; then
 			dpkg_to_install+=( "$line" )
@@ -44,10 +48,10 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
-	binutils libtool m4 make systemd python automake autoconf zeromq \
-	sqlite qrencode nano bc bison fakeroot file findutils flex gawk \
-	gcc gettext grep groff patch pkgconf sed texinfo which miniupnpc \
-	gzip curl jq wget )
+		binutils libtool m4 make systemd python automake autoconf zeromq \
+		sqlite qrencode nano bc bison fakeroot file findutils flex gawk \
+		gcc gettext grep groff patch pkgconf sed texinfo which miniupnpc \
+		gzip curl jq wget )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null; then
 			arch_to_install+=( "$line" )
@@ -69,6 +73,22 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 			sudo pacman --noconfirm -Sy arm-none-eabi-gcc
 			pkg_Err
 		fi
+	fi
+elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
+	pkg upgrade -y
+	declare -a bsd__pkg_array_=( boost-all libevent gcc autotools gettext \
+			python sqlite libqrencode octave-forge-zeromq libnpupnp \
+			nano bison fakeroot file findutils flex gawk groff patch \
+			pkgconf texinfo miniupnpc gzip curl jq wget )
+	while read -r line; do 
+		if ! type "$line" >/dev/null; then
+			pkg_to_install_+=( "$line" )
+		fi
+	done <<<$(printf '%s\n' "${bsd__pkg_array_[@]}")
+	unset bsd__pkg_array_
+	if [[ -n "${pkg_to_install_[*]}" ]]; then
+		pkg install -y ${pkg_to_install_[*]}
+		pkg_Err
 	fi
 else
 	echo "$novo_OS unsupported"
