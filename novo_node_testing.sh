@@ -6,7 +6,7 @@
 
 pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
-	novo_OS novoSrc novoNum novoPrc archos_array deb_os_array armcpu_array x86cpu_array \
+	novo_OS novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 	bsdpkg_array redhat_array cpu_type pkg_Err novoBsd; }
 
 # dependency installation script
@@ -134,18 +134,19 @@ if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui
 elif [[ "$novoBSD" == 1 ]]; then
-	./configure --disable-hardening MAKE="gmake" \
+	./configure --without-gui --disable-hardening MAKE="gmake" \
       CFLAGS="-I/usr/local/include" CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
       LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
 fi
 
 # make
-if [[ "$novoBSD == 1 ]]; then
-    make
+if [[ "$novoBSD" == 1 ]]; then
+	make
 else
-novoPrc=$(echo "$(nproc) - 1" | bc)
-if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
-make -j "$novoPrc"
+	novoPrc=$(echo "$(nproc) - 1" | bc)
+	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
+	make -j "$novoPrc"
+	unset novoPrc
 fi
 if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
 
