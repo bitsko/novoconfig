@@ -8,6 +8,8 @@ pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; f
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 	novo_OS novoSrc novoNum novoPrc archos_array deb_os_array armcpu_array x86cpu_array \
 	cpu_type pkg_Err; }
+
+# dependency installation script
 cpu_type="$(uname -m)"
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
@@ -74,6 +76,8 @@ else
 	unset -f script_exit
 	exit 1
 fi
+# end dependency installation script
+# file and path variables
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
 novoCnf="$novoDir/novo.conf"
@@ -82,6 +86,8 @@ novoTgz="$novoVer".tar.gz
 novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 novoNum="${novoVer//v/}"
 novoSrc="$PWD/novo-$novoNum"
+
+#make directories, backup folders
 if [[ ! -d "$novoDir" ]]; then
 	mkdir "$novoDir"
 elif [[ -d "$novoDir" ]]; then
@@ -90,30 +96,46 @@ elif [[ -d "$novoDir" ]]; then
 	cp -r "$novoDir" "$HOME"/novo."$EPOCHSECONDS".backup
 	echo "existing .novo folder backed up to: $HOME/novo.$EPOCHSECONDS.backup"
 fi
+
+# download
 wget -N "$novoGit"
+
+# extract
 tar -xf "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
+# autogen
 ./autogen.sh
+
+# configure with arm specific instructions
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]]; then
 	./configure --without-gui
 fi
+
+# make
 novoPrc=$(echo "$(nproc) - 1" | bc)
 if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
+
 make -j "$novoPrc"
 if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
 
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
+
+# copies and strips the executables, placing them in .novo/bin
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
+
+# if successful, print location of binaries to terminal
 if [[ "$?" == 0 ]]; then
 	echo $'\n'"binaries available in $novoBin"$'\n'
 	ls "$novoBin"
 fi
+
+# creates the node configuration file
 if [[ ! -f "$novoCnf" ]]; then
 	IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
 	IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
