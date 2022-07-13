@@ -140,7 +140,7 @@ elif [[ "$novoBSD" == 1 ]]; then
 fi
 
 # make
-if [[ "$novoBSD" == 1 ]]; then
+if [[ "$novoBsd" == 1 ]]; then
 	make
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
