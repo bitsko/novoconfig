@@ -136,7 +136,7 @@ elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 elif [[ "$novoBsd" == 1 ]]; then
 	setenv CC clang
 	setenv CXX clang++
-	./configure --without-gui --disable-dependency-tracking --disable-hardening MAKE="gmake" \
+	./configure --without-gui --disable-dependency-tracking --disable-hardening MAKE=gmake \
 	CFLAGS="-I/usr/local/include" \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
