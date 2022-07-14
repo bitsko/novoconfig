@@ -138,7 +138,7 @@ elif [[ "$novoBsd" == 1 ]]; then
 	setenv CXX clang++
 	./configure --without-gui --disable-dependency-tracking --disable-hardening \
 	--with-incompatible-bdb MAKE=gmake \
-	CFLAGS="-I/usr/local/include" \
+	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5" \
 	BDB_LIBS="-ldb_cxx-5" \
