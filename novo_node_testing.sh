@@ -142,7 +142,8 @@ if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; exit 1; fi
 
 # make
 if [[ "$novoBsd" == 1 ]]; then
-	cd "$novoSrc" && gmake
+	cd "$novoSrc"
+	gmake
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
