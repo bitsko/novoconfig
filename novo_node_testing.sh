@@ -133,7 +133,7 @@ if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui
-elif [[ "$novoBSD" == 1 ]]; then
+elif [[ "$novoBsd" == 1 ]]; then
 	setenv CC clang
 	setenv CXX clang++
 	setenv CFLAGS="-I/usr/local/include" 
