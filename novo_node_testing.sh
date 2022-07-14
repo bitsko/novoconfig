@@ -135,7 +135,7 @@ elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui
 elif [[ "$novoBSD" == 1 ]]; then
 	setenv CC clang
-	setenv CXX c++
+	setenv CXX clang++
 	setenv CFLAGS="-I/usr/local/include" 
 	setenv CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" 
 	setenv LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
