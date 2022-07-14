@@ -79,7 +79,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	declare -a bsd__pkg_array_=( boost-all libevent autotools \
 			libqrencode octave-forge-zeromq libnpupnp \
 			nano fakeroot pkgconf miniupnpc gzip curl \
-			jq wget db5 openssl gmake python3 sqlite3 binutils \
+			jq wget db5 libressl gmake python3 sqlite3 binutils \
 			clang )
 	while read -r line; do 
 		if ! command -v "$line" >/dev/null; then
