@@ -134,10 +134,12 @@ if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui
 elif [[ "$novoBSD" == 1 ]]; then
-	./configure --without-gui --disable-dependency-tracking --disable-hardening MAKE="gmake" \
-	CFLAGS="-I/usr/local/include" \
-	CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
-	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
+	setenv CC clang
+	setenv CXX c++
+	setenv CFLAGS="-I/usr/local/include" 
+	setenv CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" 
+	setenv LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
+	./configure --without-gui --disable-dependency-tracking --disable-hardening MAKE="gmake" 
 fi
 if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; exit 1; fi
 
