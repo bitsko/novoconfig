@@ -76,13 +76,13 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	novoBsd=1
 	pkg upgrade -y
-	declare -a bsd__pkg_array_=( boost-all libevent gcc autotools \
+	declare -a bsd__pkg_array_=( boost-all libevent autotools \
 			libqrencode octave-forge-zeromq libnpupnp \
 			nano fakeroot pkgconf miniupnpc gzip curl \
 			jq wget db5 openssl gmake python3 sqlite3 binutils \
 			clang )
 	while read -r line; do 
-		if ! type "$line" >/dev/null; then
+		if ! command -v "$line" >/dev/null; then
 			pkg_to_install_+=( "$line" )
 		fi
 	done <<<$(printf '%s\n' "${bsd__pkg_array_[@]}")
