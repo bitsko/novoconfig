@@ -140,7 +140,7 @@ fi
 
 # make
 if [[ "$novoBsd" == 1 ]]; then
-	gmake
+	cd "$novoSrc" && gmake
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
