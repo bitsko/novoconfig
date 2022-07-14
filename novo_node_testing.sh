@@ -126,7 +126,6 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 # autogen
 ./autogen.sh
-
 # configure with arm specific instructions
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
@@ -141,14 +140,14 @@ fi
 
 # make
 if [[ "$novoBsd" == 1 ]]; then
-	make
+	gmake
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
 	make -j "$novoPrc"
 	unset novoPrc
 fi
-if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
+# if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
 
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 
