@@ -79,7 +79,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	declare -a bsd__pkg_array_=( boost-all libevent gcc autotools \
 			libqrencode octave-forge-zeromq libnpupnp \
 			nano fakeroot pkgconf miniupnpc gzip curl \
-			jq wget db5 libressl gmake python3 )
+			jq wget db5 libressl gmake python3 sqlite3 )
 	while read -r line; do 
 		if ! type "$line" >/dev/null; then
 			pkg_to_install_+=( "$line" )
@@ -133,10 +133,10 @@ if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui
 elif [[ "$novoBSD" == 1 ]]; then
-       CFLAGS="-I/usr/local/include"
-       CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5"
-       LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
-	./configure --without-gui --disable-dependency-tracking --disable-hardening MAKE="gmake"
+	./configure --without-gui --disable-dependency-tracking --disable-hardening MAKE="gmake" \
+	CFLAGS="-I/usr/local/include" \
+	CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
+	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5"
 fi
 if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; exit 1; fi
 
