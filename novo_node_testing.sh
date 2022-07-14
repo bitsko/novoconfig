@@ -48,7 +48,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
-		binutils libtool m4 make automake autoconf zeromq gzip curl\
+		binutils libtool m4 make automake autoconf zeromq gzip curl \
 		sqlite qrencode nano fakeroot gcc grep pkgconf sed miniupnpc \
 		jq wget bc )
 	while read -r line; do
