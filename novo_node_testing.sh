@@ -96,6 +96,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		elif [[ "$novo_OS" == "OpenBSD" ]] || [[ "$novo_OS" == "NetBSD" ]]; then
 			pkg_add ${pkg_to_install_[*]}
 			pkg_Err
+		fi
 	fi
 else
 	echo "$novo_OS unsupported"
