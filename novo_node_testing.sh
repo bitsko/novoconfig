@@ -19,8 +19,8 @@ declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 )
 
-novo_OS=$(source /etc/os-release; echo "$ID")
-if [[ -n "$novo_OS" ]]; then novo_OS=$(uname -s); fi
+novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID"; fi)
+if [[ -z "$novo_OS" ]]; then novo_OS=$(uname -s); fi
 
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
