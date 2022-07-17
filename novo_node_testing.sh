@@ -20,7 +20,7 @@ declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 )
 
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID"; fi)
-if [[ -z "$novo_OS" ]]; then novo_OS=$(uname -s); fi
+if [[ -z "$novo_OS" ]]; then novo_OS=$(uname -s); novoBSD=2; fi
 
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
@@ -76,13 +76,22 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 		fi
 	fi
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
-	novoBsd=1
-	pkg upgrade -y
-	declare -a bsd__pkg_array_=( boost-all libevent autotools \
+	if [[ "$novoBsd" == 2 ]]; then
+		declare -a bsd__pkg_array_=(  libevent libqrencode nano \
+		pkgconf miniupnpc gzip curl jq wget gmake python3 sqlite3 \
+		gcc-11.2 clang boost automake autoconf zeromq openssl )
+						
+		#	libnpupnp fakeroot db5  binutils
+			
+	else
+		novoBsd=1
+		pkg upgrade -y
+		declare -a bsd__pkg_array_=( boost-all libevent autotools \
 			libqrencode octave-forge-zeromq libnpupnp \
 			nano fakeroot pkgconf miniupnpc gzip curl \
 			jq wget db5 libressl gmake python3 sqlite3 \
 			binutils gcc clang )
+	fi
 	while read -r line; do 
 		if ! command -v "$line" >/dev/null; then
 			pkg_to_install_+=( "$line" )
@@ -90,10 +99,10 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	done <<<$(printf '%s\n' "${bsd__pkg_array_[@]}")
 	unset bsd__pkg_array_
 	if [[ -n "${pkg_to_install_[*]}" ]]; then
-		if [[ "$novo_OS" == "freebsd" ]]; then
+		if [[ "$novoBsd" == 1 ]]; then
 			pkg install -y ${pkg_to_install_[*]}
 			pkg_Err
-		elif [[ "$novo_OS" == "OpenBSD" ]] || [[ "$novo_OS" == "NetBSD" ]]; then
+		elif [[ "$novoBsd" == 2 ]]; then
 			pkg_add ${pkg_to_install_[*]}
 			pkg_Err
 		fi
@@ -153,7 +162,7 @@ fi
 if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; exit 1; fi
 
 # make
-if [[ "$novoBsd" == 1 ]]; then
+if [[ "$novoBsd" != 0 ]]; then
 	cd "$novoSrc"
 	gmake
 else
