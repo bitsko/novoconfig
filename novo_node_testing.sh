@@ -134,8 +134,6 @@ if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	./configure --without-gui
 elif [[ "$novoBsd" == 1 ]]; then
-#	setenv CC clang
-#	setenv CXX clang++
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening --with-incompatible-bdb \
 	MAKE=gmake CXX=clang++ CC=clang \
