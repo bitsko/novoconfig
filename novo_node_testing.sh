@@ -135,7 +135,9 @@ fi
 wget -N "$novoGit"
 
 # extract
-tar -zxvf "$novoTgz"
+if [[ ! -f "$novoTgz" ]]; then tar -zxvf "$novoTgz"; fi
+if [[ "$?" != 0 ]]; then echo $'\n'"file extraction has failed"; exit 1; fi
+
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 ##build db4 on some bsds and set versions##
