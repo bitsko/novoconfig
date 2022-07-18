@@ -135,7 +135,7 @@ fi
 wget -N "$novoGit"
 
 # extract
-tar -xf "$novoTgz"
+tar -zxvf "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 ##build db4 on some bsds and set versions##
