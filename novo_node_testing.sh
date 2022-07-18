@@ -178,8 +178,9 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n'"installing db4..."$'\n'
 	BDB_PREFIX="${novoSrc}/db4"
-	mkdir -p $BDB_PREFIX
-	curl -o db-4.8.30.NC.tar.gz 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
+	mkdir -p "$BDB_PREFIX"
+	# curl -o db-4.8.30.NC.tar.gz 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
+	wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
 	debug_step="db-4.8.30.NC.tar.gz checksum match"
 	echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256 -c
 	debug_location
