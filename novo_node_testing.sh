@@ -4,12 +4,22 @@
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
+keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz"; fi; }
+# pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
+debug_location(){
+	if [[ "$?" != 0 ]]; then
+		echo $'\n\n'"$debug_step has failed!"$'\n\n'
+		keep_clean
+		script_exit
+		exit 1
+	fi; }
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 	novo_OS novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
-	bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc; }
+	bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc debug_step \
+	keep_clean; }
 
 # dependency installation script
+debug_step="package installation"
 
 declare -a bsdpkg_array=( freebsd OpenBSD )
 declare -a redhat_array=( fedora )
@@ -40,13 +50,15 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	unset dpkg_pkg_array_
 	if [[ -n "${dpkg_to_install[*]}" ]]; then
                 sudo apt -y install ${dpkg_to_install[*]}
-                pkg_Err
+                debug_location
+		# pkg_Err
               	unset dpkg_to_install
         fi
 	if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
 		if ! dpkg -s g++ &> /dev/null; then
 			sudo apt -y install g++-arm-linux-gnueabihf
-			pkg_Err
+			debug_location 
+			# pkg_Err
 		fi
 	fi
 elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
@@ -57,31 +69,35 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null; then
 			arch_to_install+=( "$line" )
-			pkg_Err
+			debug_location
+			# pkg_Err
 		fi
 	done <<<$(printf '%s\n' "${arch_pkg_array_[@]}")
 	unset arch_pkg_array_
         if [[ -n "${arch_to_install[*]}" ]]; then
        	        sudo pacman --noconfirm -Sy ${arch_to_install[*]}
-       		pkg_Err
+       		debug_location
+		# pkg_Err
                 unset arch_to_install
        	fi
 	if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
 		if ! pacman -Qi arm-none-eabi-binutils &> /dev/null; then
 			sudo pacman --noconfirm -Sy arm-none-eabi-binutils
-			pkg_Err
+			debug_location
+			# pkg_Err
 		fi
                 if ! pacman -Qi arm-none-eabi-gcc &> /dev/null;	then
 			sudo pacman --noconfirm -Sy arm-none-eabi-gcc
-			pkg_Err
+			debug_location
+			# pkg_Err
 		fi
 	fi
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
 		declare -a bsd__pkg_array_=(  libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 gcc-11.2.0p2 clang boost nano \
-			zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 g++-11.2.0p2 \
-			llvm )
+			zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 g++-11.2.0p2 ) # \
+			# llvm )
 	else
 		novoBsd=1
 		pkg upgrade -y
@@ -98,16 +114,17 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ -n "${pkg_to_install_[*]}" ]]; then
 		if [[ "$novoBsd" == 1 ]]; then
 			pkg install -y ${pkg_to_install_[*]}
-			pkg_Err
+			debug_location
+			# pkg_Err
 		elif [[ "$novoBsd" == 2 ]]; then
 			pkg_add ${pkg_to_install_[*]}
-			pkg_Err
+			debug_location
+			# pkg_Err
 		fi
 	fi
 else
 	echo "$novo_OS unsupported"
-	script_exit
-	unset -f script_exit
+	script_exit; unset -f script_exit
 	exit 1
 fi
 # end dependency installation script
@@ -121,10 +138,12 @@ novoTgz="$novoVer".tar.gz
 novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 novoNum="${novoVer//v/}"
 novoSrc="$PWD/novo-$novoNum"
+frshDir=0
 
 #make directories, backup folders
 if [[ ! -d "$novoDir" ]]; then
 	mkdir "$novoDir"
+	frshDir=1
 elif [[ -d "$novoDir" ]]; then
 	echo $'\n'"backing up existing novo directory"$'\n'
 	IFS= read -r -p "stop your node first if running. press enter to continue"
@@ -133,29 +152,36 @@ elif [[ -d "$novoDir" ]]; then
 fi
 
 # download
-wget -N "$novoGit"
+debug_step="wget $novoGit"
+if [[ ! -f "$novoTgz" ]]; then
+	wget "$novoGit"
+else
+	echo "$novoTgz already downloaded"
+fi
+debug_location
+# if [[ "$?" != 0 ]]; then echo $'\n'"wget $novoGit has failed"; keep_clean; exit 1; fi
+
+
+if [[ -d "$novoSrc" ]]; then 
+	rm -r "$novoSrc"
+fi
 
 # extract
-if [[ -f "$novoTgz" ]]; then
-	tar -zxvf "$novoTgz"
-	if [[ "$?" != 0 ]]; then echo $'\n'"decompress $novoTgz has failed"; exit 1; fi
-else
-	echo $'\n'"file download has failed"
-	exit 1
-fi
+debug_step="decompress $novoTgz"
+tar -zxvf "$novoTgz"
+debug_location
+# if [[ "$?" != 0 ]]; then echo $'\n'"decompress $novoTgz has failed"; keep_clean; exit 1; fi
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 ##build db4 on some bsds and set versions##
 if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n'"installing db4..."$'\n'
-
-	# Pick some path to install BDB to, here we create a directory within the dogecoin directory
 	BDB_PREFIX="${novoSrc}/db4"
 	mkdir -p $BDB_PREFIX
 	curl -o db-4.8.30.NC.tar.gz 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
 	echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256 -c
-	tar -xzf db-4.8.30.NC.tar.gz
+	tar -zxvf db-4.8.30.NC.tar.gz
 	cd db-4.8.30.NC/build_unix/
 	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CC=egcc CXX=eg++ CPP=ecpp
 	make install
@@ -173,7 +199,8 @@ fi
 # autogen
 ./autogen.sh
 
-# configure with arm specific instructions
+# configure with specific instructions
+debug_step="./configure"
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
@@ -189,50 +216,52 @@ elif [[ "$novoBsd" == 1 ]]; then
 	BDB_LIBS="-ldb_cxx-5" \
         BDB_CFLAGS="-I/usr/local/include/db5" 
 elif [[ "$novoBsd" == 2 ]]; then 
+	export AUTOCONF_VERSION=2.71
+	export AUTOMAKE_VERSION=1.16
+	export BDB_PREFIX="$novoSrc/db4" 
 	./configure --without-gui \
 	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
-	BDB_PREFIX="$PWD/db4" \
-	AUTOCONF_VERSION=2.71 \
-	AUTOMAKE_VERSION=1.16 \
+#	BDB_PREFIX="$PWD/db4" \
+#	AUTOCONF_VERSION=2.71 \
+#	AUTOMAKE_VERSION=1.16 \
 #	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
 #        CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/include" \
 #        LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/lib" \
         BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" \
         BDB_CFLAGS="-I${BDB_PREFIX}/include" 
 fi
-if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; exit 1; fi
+debug_location
+# if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; keep_clean; script_exit; unset -f script_exit; exit 1; fi
 
 # make
-if [[ "$novoBsd" == 2 ]]; then
-	novoPrc=$(sysctl hw.ncpu | cut -d '=' -f 2)
-elif [[ "$novoBsd" == 1 ]]; then
-	novoPrc=$(sysctl hw.ncpu | cut -d ':' -f 2)
+debug_step="make/gmake package"
+if [[ "$novoBsd" != 0 ]]; then
+	gmake
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
 	make -j "$novoPrc"
 fi
-if [[ "$novoBsd" != 0 ]]; then
-	gmake # -J "$novoPrc"
-fi
-if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
+debug_location
+# if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; keep_clean; script_exit; unset -f script_exit; exit 1; fi
 
 # copies and strips the executables, placing them in .novo/bin
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
+debug_step="binary creation"
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
 
 # if successful, print location of binaries to terminal
-if [[ "$?" == 0 ]]; then
-	echo $'\n'"binaries available in $novoBin"$'\n'
-	ls "$novoBin"
-	echo $'\n'"to use:"
-	echo "$novoBin/novod --daemon"
-	echo "tail -f $novoDir/debug.log"
-	echo "$novoBin/novo-cli --help"
-fi
 
+debug_location
+debug_step="conf creation"
+echo $'\n'"binaries available in $novoBin"$'\n'
+ls "$novoBin"
+echo $'\n'"to use:"
+echo "$novoBin/novod --daemon"
+echo "tail -f $novoDir/debug.log"
+echo "$novoBin/novo-cli --help"
 # creates the node configuration file
 if [[ ! -f "$novoCnf" ]]; then
 	IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
@@ -247,5 +276,6 @@ if [[ ! -f "$novoCnf" ]]; then
 	"maxmempool=1600" \
 	> "$novoCnf"
 fi
+debug_location
 script_exit
 unset -f script_exit
