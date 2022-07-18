@@ -192,10 +192,6 @@ if [[ "$novoBsd" == 2 ]]; then
 	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CC=clang CXX=clang++ # CPP=ecpp
 	make install
 	debug_location
-# wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
-# wget https://raw.githubusercontent.com/bitcoin/bitcoin/master/contrib/install_db4.sh
-#	chmod +x install_db4.sh
-#	./install_db4.sh `pwd`
 #	export BDB_PREFIX="$PWD/db4"
 #	export AUTOCONF_VERSION=2.71
 #	export AUTOMAKE_VERSION=1.16
@@ -207,10 +203,10 @@ fi
 
 # configure with specific instructions
 debug_step="./configure"
-if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
+if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
-elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
+elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
 	./configure --without-gui
 elif [[ "$novoBsd" == 1 ]]; then
 	./configure --without-gui --disable-dependency-tracking \
@@ -241,15 +237,15 @@ debug_location
 # if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; keep_clean; script_exit; unset -f script_exit; exit 1; fi
 
 # make
-# debug_step="make/gmake package"
+debug_step="make/gmake package"
 if [[ "$novoBsd" != 0 ]]; then
 	gmake
 else
-#	novoPrc=$(echo "$(nproc) - 1" | bc)
-#	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
-	make # -j "$novoPrc"
+	novoPrc=$(echo "$(nproc) - 1" | bc)
+	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
+	make -j "$novoPrc"
 fi
-# debug_location
+debug_location
 # if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; keep_clean; script_exit; unset -f script_exit; exit 1; fi
 
 # copies and strips the executables, placing them in .novo/bin
