@@ -215,9 +215,9 @@ if [[ "$?" == 0 ]]; then
 	echo $'\n'"binaries available in $novoBin"$'\n'
 	ls "$novoBin"
 	echo $'\n'"to use:"
-	echo "./$novoBin/novod --daemon"
+	echo "$novoBin/novod --daemon"
 	echo "tail -f $novoDir/debug.log"
-	echo "./$novoBin/novo-cli --help"
+	echo "$novoBin/novo-cli --help"
 fi
 
 # creates the node configuration file
