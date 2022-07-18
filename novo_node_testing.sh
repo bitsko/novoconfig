@@ -23,7 +23,7 @@ cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID"; fi)
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
-if [[ "$novo_OS" == *"BSD" ]]; then novoBSD=2; fi
+if [[ "$novo_OS" == *"BSD" ]]; then novoBsd=2; fi
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
