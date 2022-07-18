@@ -148,12 +148,13 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ##build db4 on some bsds and set versions##
 if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n'"installing db4..."$'\n'
-	wget https://raw.githubusercontent.com/bitcoin/bitcoin/master/contrib/install_db4.sh
+	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
+	# wget https://raw.githubusercontent.com/bitcoin/bitcoin/master/contrib/install_db4.sh
 	chmod +x install_db4.sh
 	./install_db4.sh `pwd`
-	export BDB_PREFIX="$PWD/db4"
-	export AUTOCONF_VERSION=2.71
-	export AUTOMAKE_VERSION=1.16
+#	export BDB_PREFIX="$PWD/db4"
+#	export AUTOCONF_VERSION=2.71
+#	export AUTOMAKE_VERSION=1.16
 fi
 #############
 
