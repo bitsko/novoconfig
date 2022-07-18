@@ -7,11 +7,10 @@
 pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 	novo_OS novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
-	bsdpkg_array redhat_array cpu_type pkg_Err novoBsd; }
+	bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd; }
 
 # dependency installation script
-cpu_type="$(uname -m)"
-novoBsd=0
+
 declare -a bsdpkg_array=( freebsd OpenBSD )
 declare -a redhat_array=( fedora )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
@@ -19,9 +18,12 @@ declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 )
 
+novoBsd=0
+cpu_type="$(uname -m)"
+uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID"; fi)
-if [[ -z "$novo_OS" ]]; then novo_OS=$(uname -s); novoBSD=2; fi
-
+if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
+if [[ "$novo_OS" == *"BSD" ]]; then novoBSD=2; fi
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
@@ -78,11 +80,9 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
 		declare -a bsd__pkg_array_=(  libevent libqrencode nano \
-		pkgconf miniupnpc gzip curl jq wget gmake python3 sqlite3 \
-		gcc-11.2 clang boost automake autoconf zeromq openssl )
-						
-		#	libnpupnp fakeroot db5  binutils
-			
+			pkgconf miniupnpc gzip curl jq wget gmake python \
+			sqlite3 gcc-11.2 clang boost automake autoconf zeromq \
+			openssl libtool autoconf-2.71 automake-1.16.3 )
 	else
 		novoBsd=1
 		pkg upgrade -y
@@ -114,6 +114,7 @@ else
 	exit 1
 fi
 # end dependency installation script
+
 # file and path variables
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
@@ -141,8 +142,19 @@ wget -N "$novoGit"
 tar -xf "$novoTgz"
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
+##build db4 on some bsds and set versions##
+if [[ "$novoBsd" == 2 ]]; then
+	echo $'\n'"installing db4..."$'\n'
+	./contrib/install_db4.sh `pwd`
+	export BDB_PREFIX="$PWD/db4"
+	export AUTOCONF_VERSION=2.71
+	export AUTOMAKE_VERSION=1.16
+fi
+#############
+
 # autogen
 ./autogen.sh
+
 # configure with arm specific instructions
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBSD" == 0 ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
@@ -158,24 +170,32 @@ elif [[ "$novoBsd" == 1 ]]; then
 	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5" \
 	BDB_LIBS="-ldb_cxx-5" \
         BDB_CFLAGS="-I/usr/local/include/db5" 
+elif [[ "$novoBsd" == 2 ]]; then 
+	./configure --without-gui \
+	MAKE=gmake
 fi
 if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; exit 1; fi
 
 # make
-if [[ "$novoBsd" != 0 ]]; then
-	cd "$novoSrc"
-	gmake
+if [[ "$novoBsd" == 2 ]]; then
+	novoPrc=$(sysctl hw.ncpu | cut -d '=' -f 2)
+elif [[ "$novoBsd" == 1 ]]; then
+	novoPrc=$(sysctl hw.ncpu | cut -d ':' -f 2)
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
 	make -j "$novoPrc"
 	unset novoPrc
 fi
+if [[ "$novoBsd" != 0 ]]; then
+	gmake -J "$novoPrc"
+	unset novoPrc
+fi
+
 if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
 
-if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
-
 # copies and strips the executables, placing them in .novo/bin
+if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
@@ -184,6 +204,10 @@ cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
 if [[ "$?" == 0 ]]; then
 	echo $'\n'"binaries available in $novoBin"$'\n'
 	ls "$novoBin"
+	echo $'\n'"to use:"
+	echo "./$novoBin/novod --daemon"
+	echo "tail -f $novoDir/debug.log"
+	echo "./$novoBin/novo-cli --help"
 fi
 
 # creates the node configuration file
