@@ -7,7 +7,7 @@
 pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 	novo_OS novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
-	bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd; }
+	bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc; }
 
 # dependency installation script
 
@@ -135,8 +135,13 @@ fi
 wget -N "$novoGit"
 
 # extract
-if [[ ! -f "$novoTgz" ]]; then tar -zxvf "$novoTgz"; fi
-if [[ "$?" != 0 ]]; then echo $'\n'"file extraction has failed"; exit 1; fi
+if [[ -f "$novoTgz" ]]; then
+	tar -zxvf "$novoTgz"
+	if [[ "$?" != 0 ]]; then echo $'\n'"decompress $novoTgz has failed"; exit 1; fi
+else
+	echo $'\n'"file download has failed"
+	exit 1
+fi
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
@@ -183,13 +188,10 @@ else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
 	make -j "$novoPrc"
-	unset novoPrc
 fi
 if [[ "$novoBsd" != 0 ]]; then
 	gmake -J "$novoPrc"
-	unset novoPrc
 fi
-
 if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
 
 # copies and strips the executables, placing them in .novo/bin
