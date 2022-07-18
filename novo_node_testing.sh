@@ -177,7 +177,7 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 elif [[ "$novoBsd" == 2 ]]; then 
 	./configure --without-gui \
-	MAKE=gmake \
+	MAKE=gmake CXX=clang++ CC=clang \
 	BDB_PREFIX="$PWD/db4" \
 	AUTOCONF_VERSION=2.71 \
 	AUTOMAKE_VERSION=1.16 \
