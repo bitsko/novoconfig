@@ -192,7 +192,7 @@ else
 	make -j "$novoPrc"
 fi
 if [[ "$novoBsd" != 0 ]]; then
-	gmake -J "$novoPrc"
+	gmake # -J "$novoPrc"
 fi
 if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; exit 1; fi
 
