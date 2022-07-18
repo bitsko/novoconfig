@@ -180,8 +180,12 @@ if [[ "$novoBsd" == 2 ]]; then
 	BDB_PREFIX="${novoSrc}/db4"
 	mkdir -p $BDB_PREFIX
 	curl -o db-4.8.30.NC.tar.gz 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
+	debug_step="db-4.8.30.NC.tar.gz checksum match"
 	echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256 -c
+	debug_location
+	debug_step="untar db-4.8.30.NC.tar.gz"
 	tar -zxvf db-4.8.30.NC.tar.gz
+	debug_location
 	cd db-4.8.30.NC/build_unix/
 	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CC=egcc CXX=eg++ CPP=ecpp
 	make install
