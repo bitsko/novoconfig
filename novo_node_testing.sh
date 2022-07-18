@@ -241,7 +241,7 @@ debug_location
 # if [[ "$?" != 0 ]]; then echo $'\n'"./configure failed"; keep_clean; script_exit; unset -f script_exit; exit 1; fi
 
 # make
-debug_step="make/gmake package"
+# debug_step="make/gmake package"
 if [[ "$novoBsd" != 0 ]]; then
 	gmake
 else
@@ -249,7 +249,7 @@ else
 #	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
 	make # -j "$novoPrc"
 fi
-debug_location
+# debug_location
 # if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; keep_clean; script_exit; unset -f script_exit; exit 1; fi
 
 # copies and strips the executables, placing them in .novo/bin
