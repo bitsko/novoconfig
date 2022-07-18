@@ -80,7 +80,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
 		declare -a bsd__pkg_array_=(  libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 gcc-11.2.0p2 clang boost nano \
-			zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 )
+			zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 g++-11.2.0p2 \
+			llvm )
 	else
 		novoBsd=1
 		pkg upgrade -y
@@ -148,10 +149,21 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ##build db4 on some bsds and set versions##
 if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n'"installing db4..."$'\n'
-	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
-	# wget https://raw.githubusercontent.com/bitcoin/bitcoin/master/contrib/install_db4.sh
-	chmod +x install_db4.sh
-	./install_db4.sh `pwd`
+
+	# Pick some path to install BDB to, here we create a directory within the dogecoin directory
+	BDB_PREFIX="${novoSrc}/db4"
+	mkdir -p $BDB_PREFIX
+	curl -o db-4.8.30.NC.tar.gz 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
+	echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256 -c
+	tar -xzf db-4.8.30.NC.tar.gz
+	cd db-4.8.30.NC/build_unix/
+	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CC=egcc CXX=eg++ CPP=ecpp
+	make install
+	
+# wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
+# wget https://raw.githubusercontent.com/bitcoin/bitcoin/master/contrib/install_db4.sh
+#	chmod +x install_db4.sh
+#	./install_db4.sh `pwd`
 #	export BDB_PREFIX="$PWD/db4"
 #	export AUTOCONF_VERSION=2.71
 #	export AUTOMAKE_VERSION=1.16
@@ -178,7 +190,7 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 elif [[ "$novoBsd" == 2 ]]; then 
 	./configure --without-gui \
-	MAKE=gmake CXX=clang++ CC=clang \
+	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
 	BDB_PREFIX="$PWD/db4" \
 	AUTOCONF_VERSION=2.71 \
 	AUTOMAKE_VERSION=1.16 \
