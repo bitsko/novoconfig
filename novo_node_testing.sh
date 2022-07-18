@@ -238,9 +238,9 @@ debug_step="make/gmake package"
 if [[ "$novoBsd" != 0 ]]; then
 	gmake
 else
-	novoPrc=$(echo "$(nproc) - 1" | bc)
-	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
-	make -j "$novoPrc"
+#	novoPrc=$(echo "$(nproc) - 1" | bc)
+#	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
+	make # -j "$novoPrc"
 fi
 debug_location
 # if [[ "$?" != 0 ]]; then echo $'\n'"make package failed"; keep_clean; script_exit; unset -f script_exit; exit 1; fi
