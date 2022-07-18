@@ -96,8 +96,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
 		declare -a bsd__pkg_array_=(  libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 gcc-11.2.0p2 clang boost nano \
-			zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 g++-11.2.0p2 ) # \
-			# llvm )
+			zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 g++-11.2.0p2 \
+			llvm )
 	else
 		novoBsd=1
 		pkg upgrade -y
@@ -187,10 +187,11 @@ if [[ "$novoBsd" == 2 ]]; then
 	debug_step="untar db-4.8.30.NC.tar.gz"
 	tar -zxvf db-4.8.30.NC.tar.gz
 	debug_location
+	debug_step="make db4"
 	cd db-4.8.30.NC/build_unix/
-	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CC=egcc CXX=eg++ CPP=ecpp
+	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CC=clang CXX=clang++ # CPP=ecpp
 	make install
-	
+	debug_location
 # wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
 # wget https://raw.githubusercontent.com/bitcoin/bitcoin/master/contrib/install_db4.sh
 #	chmod +x install_db4.sh
@@ -225,7 +226,8 @@ elif [[ "$novoBsd" == 2 ]]; then
 	export AUTOMAKE_VERSION=1.16
 	export BDB_PREFIX="$novoSrc/db4" 
 	./configure --without-gui \
-	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
+	MAKE=gmake CXX=clang++ CC=clang \
+#	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
 #	BDB_PREFIX="$PWD/db4" \
 #	AUTOCONF_VERSION=2.71 \
 #	AUTOMAKE_VERSION=1.16 \
