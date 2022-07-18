@@ -80,7 +80,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
 		declare -a bsd__pkg_array_=(  libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 gcc-11.2.0p2 clang boost nano \
-			automake autoconf zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 )
+			zeromq openssl libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 )
 	else
 		novoBsd=1
 		pkg upgrade -y
