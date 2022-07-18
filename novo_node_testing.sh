@@ -16,7 +16,7 @@ declare -a redhat_array=( fedora )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
-declare -a x86cpu_array=( i686 x86_64 i386 )
+declare -a x86cpu_array=( i686 x86_64 i386 ) # amd64
 
 novoBsd=0
 cpu_type="$(uname -m)"
@@ -51,10 +51,9 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	fi
 elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
-	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp \
-		binutils libtool m4 make automake autoconf zeromq gzip curl \
-		sqlite qrencode nano fakeroot gcc grep pkgconf sed miniupnpc \
-		jq wget bc )
+	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp binutils libtool m4 make \
+		automake autoconf zeromq gzip curl sqlite qrencode nano fakeroot gcc grep pkgconf \
+		sed miniupnpc jq wget bc )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null; then
 			arch_to_install+=( "$line" )
@@ -79,18 +78,15 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	fi
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
-		declare -a bsd__pkg_array_=(  libevent libqrencode nano \
-			pkgconf miniupnpc gzip curl jq wget gmake python-3.9.13 \
-			sqlite3 gcc-11.2.0p2 clang boost automake autoconf zeromq \
-			openssl libtool autoconf-2.71 automake-1.16.3 )
+		declare -a bsd__pkg_array_=(  libevent libqrencode pkgconf miniupnpc jq \
+			curl wget gmake python-3.9.13 sqlite3 gcc-11.2.0p2 clang boost nano \
+			automake autoconf zeromq openssl libtool autoconf-2.71 automake-1.16.3 )
 	else
 		novoBsd=1
 		pkg upgrade -y
-		declare -a bsd__pkg_array_=( boost-all libevent autotools \
-			libqrencode octave-forge-zeromq libnpupnp \
-			nano fakeroot pkgconf miniupnpc gzip curl \
-			jq wget db5 libressl gmake python3 sqlite3 \
-			binutils gcc clang )
+		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
+			octave-forge-zeromq libnpupnp nano fakeroot pkgconf miniupnpc gzip \
+			jq wget db5 libressl gmake python3 sqlite3 binutils gcc clang )
 	fi
 	while read -r line; do 
 		if ! command -v "$line" >/dev/null; then
