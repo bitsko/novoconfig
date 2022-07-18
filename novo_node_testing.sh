@@ -181,9 +181,9 @@ elif [[ "$novoBsd" == 2 ]]; then
 	BDB_PREFIX="$PWD/db4" \
 	AUTOCONF_VERSION=2.71 \
 	AUTOMAKE_VERSION=1.16 \
-#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
-#        CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}" \
-#        LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}" \
+	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
+        CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/include" \
+        LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/include" \
         BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" \
         BDB_CFLAGS="-I${BDB_PREFIX}/include" 
 fi
