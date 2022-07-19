@@ -235,7 +235,7 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
-	./configure --without-gui \
+	./configure --without-gui --with-incompatible-bdb \
 #	--target x86_64-unknown-openbsd7.1 \	
 #	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
 	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
