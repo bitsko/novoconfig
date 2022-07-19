@@ -240,74 +240,16 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
-	### begin bitcoin core developer copyrighted code mit licence ###
-	check_exists() {
-		command -v "$1" >/dev/null
-	}
-
-	sha256_check() {
-  	# Args: <sha256_hash> <filename>
-  	#
-  	if check_exists sha256sum; then
-    		echo "${1}  ${2}" | sha256sum -c
-  	elif check_exists sha256; then
-    		if [ "$(uname)" = "FreeBSD" ]; then
-      			sha256 -c "${1}" "${2}"
-    		else
-      			echo "${1}  ${2}" | sha256 -c
-    		fi
-  	else
-    		echo "${1}  ${2}" | shasum -a 256 -c
-  	fi
-	}
-
-	http_get() {
-  		# Args: <url> <filename> <sha256_hash>
-  		#
-  		# It's acceptable that we don't require SSL here because we manually verify
-  		# content hashes below.
-  		#
-  	if [ -f "${2}" ]; then
-    		echo "File ${2} already exists; not downloading again"
-  	elif check_exists curl; then
-    		curl --insecure --retry 5 "${1}" -o "${2}"
-  	elif check_exists wget; then
-    		wget --no-check-certificate "${1}" -O "${2}"
-  	else
-    		echo "Simple transfer utilities 'curl' and 'wget' not found. Please install one of them and try again."
-    	exit 1
-  	fi
-
-  	sha256_check "${3}" "${2}"
-	}
-	# The packaged config.guess and config.sub are ancient (2009) and can cause build issues.
-	# Replace them with modern versions.
-	# See https://github.com/bitcoin/bitcoin/issues/16064
-	CONFIG_GUESS_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=4550d2f15b3a7ce2451c1f29500b9339430c877f'
-	CONFIG_GUESS_HASH='c8f530e01840719871748a8071113435bdfdf75b74c57e78e47898edea8754ae'
-	CONFIG_SUB_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=4550d2f15b3a7ce2451c1f29500b9339430c877f'
-	CONFIG_SUB_HASH='3969f7d5f6967ccc6f792401b8ef3916a1d1b1d0f0de5a4e354c95addb8b800e'
-
-	rm -f "build-aux/config.guess"
-	rm -f "build-aux/config.sub"
-
-	http_get "${CONFIG_GUESS_URL}" build-aux/config.guess "${CONFIG_GUESS_HASH}"
-	http_get "${CONFIG_SUB_URL}" build-aux/config.sub "${CONFIG_SUB_HASH}"
-	##### end bitcoin core developer copyright code mit licence ###
-	
-	./configure --without-gui \ # --with-incompatible-bdb \
+#	export BUILD="x86_64-unknown-openbsd7.1"
+#	export HOST="x86_64-unknown-openbsd7.1"
+#	export TARGET=="x86_64-unknown-openbsd7.1"
+	./configure --without-gui \
 	--disable-wallet \
-#	MAKE=gmake \
-#	--build="x86_64-unknown-openbsd7.1" \	
-#	--host="x86_64-unknown-openbsd7.1" \
-#	--target="x86_64-unknown-openbsd7.1" \
-#	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
-	MAKE=gmake CXX=eg++ CC=egcc \ # CPP=ecpp \
+	MAKE=gmake CXX=clang++ CC=clang \ 
+#	MAKE=gmake CXX=eg++ CC=egcc \ 
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
-        CXXFLAGS="-I/usr/local/include" \ # -I${BDB_PREFIX}/include" \
-        LDFLAGS="-L/usr/local/lib" \ # -L${BDB_PREFIX}/lib" \
-#        BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" \
-#        BDB_CFLAGS="-I${BDB_PREFIX}/include" 
+        CXXFLAGS="-I/usr/local/include" \ 
+        LDFLAGS="-L/usr/local/lib" \ 
 	debug_location
 fi
 
