@@ -191,7 +191,14 @@ fi
 
 # autogen
 debug_step="running autogen.sh"; progress_banner
-./autogen.sh
+if [[ "$novoBsd" == 2 ]]; then
+	export AUTOCONF_VERSION=2.71
+	export AUTOMAKE_VERSION=1.16
+	export BDB_PREFIX="$novoSrc/db4"
+	./autogen.sh
+else
+	./autogen.sh
+fi	
 debug_location
 
 # configure with specific instructions
@@ -212,9 +219,9 @@ elif [[ "$novoBsd" == 1 ]]; then
 	BDB_LIBS="-ldb_cxx-5" \
         BDB_CFLAGS="-I/usr/local/include/db5" 
 elif [[ "$novoBsd" == 2 ]]; then 
-	export AUTOCONF_VERSION=2.71
-	export AUTOMAKE_VERSION=1.16
-	export BDB_PREFIX="$novoSrc/db4" 
+#	export AUTOCONF_VERSION=2.71
+#	export AUTOMAKE_VERSION=1.16
+#	export BDB_PREFIX="$novoSrc/db4" 
 	./configure --without-gui \
 	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
 #	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
