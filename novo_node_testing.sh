@@ -25,7 +25,7 @@ novoTxt="***********************"
 novoBsd=0
 
 # dependency installation script
-debug_step="novo node compile script"; progress_banner
+echo "$novoTxt"; debug_step="novo node compile script"; progress_banner; echo "$novoTxt"
 debug_step="dependencies installation"; progress_banner
 
 declare -a bsdpkg_array=( freebsd OpenBSD )
@@ -179,7 +179,8 @@ if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n'"installing db4..."$'\n'
 #	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
 	debug_step="db4 install"
-	wget https://raw.githubusercontent.com/bitcoincore-dev/db-4.8.30.NC/main/install_db4.sh
+#	wget https://raw.githubusercontent.com/bitcoincore-dev/db-4.8.30.NC/main/install_db4.sh
+	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
 	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
 #	bash install.sh
 	if [[ ! -d "db4" ]]; then mkdir db4; fi
@@ -215,7 +216,7 @@ elif [[ "$novoBsd" == 2 ]]; then
 	export AUTOMAKE_VERSION=1.16
 	export BDB_PREFIX="$novoSrc/db4" 
 	./configure --without-gui \
-	MAKE=gmake CXX=clang++ CC=clang CPP=clang-cpp \
+	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
 #	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
 #	BDB_PREFIX="$PWD/db4" \
 #	AUTOCONF_VERSION=2.71 \
