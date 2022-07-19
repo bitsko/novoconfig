@@ -247,9 +247,9 @@ elif [[ "$novoBsd" == 2 ]]; then
 #	--target="x86_64-unknown-openbsd7.1" \
 	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
 #	MAKE=gmake CXX=eg++ CC=egcc \ # CPP=ecpp \
-	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
-        CXXFLAGS="-I/usr/local/include \ # -I${BDB_PREFIX}/include" \
-        LDFLAGS="-L/usr/local/lib \ # -L${BDB_PREFIX}/lib" \
+#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
+#        CXXFLAGS="-I/usr/local/include \ # -I${BDB_PREFIX}/include" \
+#        LDFLAGS="-L/usr/local/lib \ # -L${BDB_PREFIX}/lib" \
 #        BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" \
 #        BDB_CFLAGS="-I${BDB_PREFIX}/include" 
 	debug_location
