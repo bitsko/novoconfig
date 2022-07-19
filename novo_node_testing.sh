@@ -232,8 +232,8 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 elif [[ "$novoBsd" == 2 ]]; then 
 	./configure --without-gui \
-	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
-#	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
+#	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
+	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/include" \
         LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/lib" \
