@@ -55,7 +55,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 		bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
 		libboost-chrono-dev libboost-program-options-dev libboost-test-dev automake \
 		libboost-thread-dev libsqlite3-dev libqrencode-dev libdb-dev libdb++-dev \
-		libssl-dev miniupnpc bc curl jq wget libzmq3-dev )
+		libssl-dev miniupnpc bc curl jq wget libzmq3-dev xxd )
 	while read -r line; do
         	if ! dpkg -s "$line" &> /dev/null; then
 			dpkg_to_install+=( "$line" )
@@ -77,7 +77,7 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp binutils libtool m4 make \
 		automake autoconf zeromq gzip curl sqlite qrencode nano fakeroot gcc grep pkgconf \
-		sed miniupnpc jq wget bc )
+		sed miniupnpc jq wget bc vim )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null; then
 			arch_to_install+=( "$line" )
@@ -104,14 +104,14 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
-			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 )
+			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
 			# clang llvm g++-11.2.0p2 gcc-11.2.0p2
 	else
 		novoBsd=1
 		pkg upgrade -y
 		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
 			octave-forge-zeromq libnpupnp nano fakeroot pkgconf miniupnpc gzip \
-			jq wget db5 libressl gmake python3 sqlite3 binutils gcc clang )
+			jq wget db5 libressl gmake python3 sqlite3 binutils gcc clang vim )
 	fi
 	while read -r line; do 
 		if ! command -v "$line" >/dev/null; then
