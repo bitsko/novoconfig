@@ -200,7 +200,15 @@ if [[ "$novoBsd" == 2 ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
 	export BDB_PREFIX="$novoSrc/db4"
-	./autogen.sh
+	debug_step="autoreconf --install"
+	autoreconf --install
+	debug_location
+	debug_step="automake --add-missing"
+	automake --add-missing
+	debug_location
+	debug_step="./autogen.sh --system"
+	./autogen.sh --system
+	debug_location
 else
 	./autogen.sh
 fi	
