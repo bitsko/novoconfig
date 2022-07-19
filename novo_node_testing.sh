@@ -241,7 +241,7 @@ elif [[ "$novoBsd" == 2 ]]; then
 	MAKE=gmake \
 	CPPFLAGS="-I${BDB_PREFIX}" \
 	LDFLAGS="-L${BDB_PREFIX}" \
-	BDB_LIBS="-L${BDB_PREFIX} -ldb-5.3" \
+	BDB_LIBS="-L${BDB_PREFIX} -ldb_cxx-5.3" \
         BDB_CFLAGS="-I${BDB_PREFIX}"
 	debug_location
 	# --disable-hardening \
