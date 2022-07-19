@@ -235,7 +235,7 @@ elif [[ "$novoBsd" == 1 ]]; then
 elif [[ "$novoBsd" == 2 ]]; then 
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet --disable-hardening \
-	MAKE=gmake \
+	MAKE=gmake CC=egcc CXX=eg++ CPP=ecpp \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include" \ 
         LDFLAGS="-L/usr/local/lib"  
@@ -243,7 +243,6 @@ elif [[ "$novoBsd" == 2 ]]; then
 fi
 
 debug_step="make/gmake package"; progress_banner
-
 if [[ "$novoBsd" != 0 ]]; then
 	gmake
 else
