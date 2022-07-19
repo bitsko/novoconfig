@@ -201,13 +201,13 @@ if [[ "$novoBsd" == 2 ]]; then
 	export AUTOMAKE_VERSION=1.16
 	export BDB_PREFIX="$novoSrc/db4"
 	export BDB_VERSION='db-4.8.30.NC'
-	debug_step="autoreconf --install"
+	debug_step="autoreconf --install"; progress_banner
 	autoreconf --install
 	debug_location
-	debug_step="automake --add-missing"
+	debug_step="automake --add-missing"; progress_banner
 	automake --add-missing
 	debug_location
-	debug_step="./autogen.sh --system"
+	debug_step="./autogen.sh --system"; progress_banner
 	./autogen.sh --system
 	debug_location
 else
