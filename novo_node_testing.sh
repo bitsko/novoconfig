@@ -194,7 +194,7 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 if [[ "$novoBsd" == 2 ]]; then
 	debug_step="db5 install"
 	echo $'\n'"installing db5..."$'\n'
-	if [[ ! -d "db5" ]]; then mkdir db5; fi
+#	if [[ ! -d "db5" ]]; then mkdir db5; fi
 	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/get-bdb-5.3.sh
 	bash get-bdb-5.3.sh
 #	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db5.sh
