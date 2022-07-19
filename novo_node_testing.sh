@@ -4,6 +4,8 @@
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
+progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 1; }
+
 keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz" 2>/dev/null; fi; }
 
 debug_location(){
@@ -12,34 +14,41 @@ debug_location(){
 		keep_clean
 		script_exit
 		exit 1
-	fi; }
+	fi
+}
 
-progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 1; }
 
-script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
-	novo_OS novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
-	bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc debug_step \
-	keep_clean; }
+script_exit(){ 
+	unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
+		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
+		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc debug_step \
+		novo_OS novoBar keep_clean
+}
 
 novoTxt="***********************"
+novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
 
 # dependency installation script
-echo "$novoTxt"; debug_step="novo node compile script"; progress_banner; echo "$novoTxt"
+echo "$novoBar"; debug_step="novo node compile script"; progress_banner; echo "$novoBar"
 debug_step="dependencies installation"; progress_banner
 
+debug_step="declare arrays with bash v4+"
 declare -a bsdpkg_array=( freebsd OpenBSD )
 declare -a redhat_array=( fedora )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 ) # amd64
+debug_location
 
+debug_step="find the operating system type"
 cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
 if [[ "$novo_OS" == *"BSD" ]]; then novoBsd=2; fi
+if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
@@ -120,6 +129,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 			debug_location
 		fi
 	fi
+elif [[ "$novo_OS" == "Linux" ]]; then
+	echo "attempting to compile without checking dependencies"
 else
 	echo "$novo_OS unsupported"
 	script_exit
@@ -177,12 +188,9 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ##build db4 on some bsds and set versions##
 if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n'"installing db4..."$'\n'
-#	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
 	debug_step="db4 install"
-#	wget https://raw.githubusercontent.com/bitcoincore-dev/db-4.8.30.NC/main/install_db4.sh
 	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
 	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
-#	bash install.sh
 	if [[ ! -d "db4" ]]; then mkdir db4; fi
 	bash install_db4.sh db4
 	debug_location
