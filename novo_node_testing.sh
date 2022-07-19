@@ -234,17 +234,18 @@ elif [[ "$novoBsd" == 1 ]]; then
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
 	export BDB_PREFIX="$novoSrc/db5/build_unix/build"
-	./configure --without-gui \
+	./configure \
+	--without-gui \
 	--disable-dependency-tracking \
-	# --disable-wallet \
-	--disable-hardening \
 	MAKE=gmake \
-	# CC=egcc CXX=eg++ CPP=ecpp \
 	CPPFLAGS="-I${BDB_PREFIX}/include/" \
 	LDFLAGS="-L${BDB_PREFIX}/lib/" \
 	BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-5.3" \
         BDB_CFLAGS="-I${BDB_PREFIX}/include"
 	debug_location
+	# --disable-hardening \
+	# --disable-wallet \
+	# CC=egcc CXX=eg++ CPP=ecpp \
 fi
 
 debug_step="make/gmake package"; progress_banner
