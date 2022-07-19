@@ -199,22 +199,8 @@ debug_step="running autogen.sh"; progress_banner
 if [[ "$novoBsd" == 2 ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
-#	export BDB_PREFIX="$PWD/db4"
-#	export BDB_VERSION='db-4.8.30.NC'
-#	debug_step="autoreconf --install"; progress_banner
-#	autoreconf --install
-#	debug_location
-#	debug_step="automake --add-missing"; progress_banner
-#	automake --add-missing
-#	debug_location
-#	debug_step="./autogen.sh --system"; progress_banner
-#	./autogen.sh --system
-#	debug_step="autoupdate"; progress_banner
-#	autoupdate
-#	debug_location
-#	debug_step="autogen.sh"; progress_banner
 	./autogen.sh
-#	debug_location
+
 else
 	./autogen.sh
 fi	
@@ -245,8 +231,8 @@ elif [[ "$novoBsd" == 2 ]]; then
 #	export TARGET=="x86_64-unknown-openbsd7.1"
 	./configure --without-gui \
 	--disable-wallet \
-	MAKE=gmake CXX=clang++ CC=clang \ 
-#	MAKE=gmake CXX=eg++ CC=egcc \ 
+#	MAKE=gmake CXX=clang++ CC=clang \ 
+	MAKE=gmake CXX=eg++ CC=egcc \ 
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include" \ 
         LDFLAGS="-L/usr/local/lib" \ 
