@@ -177,10 +177,12 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 ##build db4 on some bsds and set versions##
 if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n'"installing db4..."$'\n'
-	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
+#	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
 	debug_step="db4 install"
+	wget https://raw.githubusercontent.com/bitcoincore-dev/db-4.8.30.NC/main/install_db4.sh
 	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
-	bash install.sh
+#	bash install.sh
+	bash install_db4.sh db4
 	debug_location
 fi
 #############
