@@ -239,14 +239,14 @@ elif [[ "$novoBsd" == 2 ]]; then
 	--disable-dependency-tracking \
 	--with-incompatible-wallet \
 	MAKE=gmake \
-	CPPFLAGS="-I${BDB_PREFIX}" \
-	LDFLAGS="-L${BDB_PREFIX}" \
-	BDB_LIBS="-L${BDB_PREFIX} -ldb_cxx-5.3" \
-        BDB_CFLAGS="-I${BDB_PREFIX}"
+	BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-5.3" \
+        BDB_CFLAGS="-I${BDB_PREFIX}/include"
 	debug_location
 	# --disable-hardening \
 	# --disable-wallet \
 	# CC=egcc CXX=eg++ CPP=ecpp \
+	# CPPFLAGS="-I${BDB_PREFIX}" \
+	# LDFLAGS="-L${BDB_PREFIX}" \
 fi
 
 debug_step="make/gmake package"; progress_banner
