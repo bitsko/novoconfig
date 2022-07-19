@@ -214,7 +214,7 @@ if [[ "$novoBsd" == 2 ]]; then
 #	debug_location
 #	debug_step="autogen.sh"; progress_banner
 	./autogen.sh
-	debug_location
+#	debug_location
 else
 	./autogen.sh
 fi	
@@ -242,11 +242,11 @@ elif [[ "$novoBsd" == 1 ]]; then
 elif [[ "$novoBsd" == 2 ]]; then 
 	./configure --without-gui \ # --with-incompatible-bdb \
 	--disable-wallet \
-#	--host=x86_64-unknown-openbsd7.1 \	
-#	--target=x86_64-unknown-openbsd7.1 \
-#	--build=x86_64-unknown-openbsd7.1 \
+	--build="x86_64-unknown-openbsd7.1" \	
+	--host="x86_64-unknown-openbsd7.1" \
+	--target="x86_64-unknown-openbsd7.1" \
 #	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
-	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
+	MAKE=gmake CXX=eg++ CC=egcc \ # CPP=ecpp \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include \ # -I${BDB_PREFIX}/include" \
         LDFLAGS="-L/usr/local/lib \ # -L${BDB_PREFIX}/lib" \
