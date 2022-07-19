@@ -190,7 +190,7 @@ if [[ "$novoBsd" == 2 ]]; then
 	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
 	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
 	if [[ ! -d "db4" ]]; then mkdir db4; fi
-	bash install_db4.sh db4
+	bash install_db4.sh "$PWD"
 	debug_location
 fi
 
