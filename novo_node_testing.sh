@@ -263,8 +263,8 @@ debug_location
 
 if [[ ! -f "$novoCnf" ]]; then
 	debug_step="creating conf"; progress_banner
-	novoUsr=$(xxd -l 16 -p /dev/urandom)
-	novoRpc=$(xxd -l 32 -p /dev/urandom)
+	novoUsr="$(xxd -l 16 -p /dev/urandom)"
+	novoRpc="$(xxd -l 20 -p /dev/urandom)"
 	# IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
 	# IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 	echo \
