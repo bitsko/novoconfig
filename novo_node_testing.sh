@@ -200,6 +200,7 @@ if [[ "$novoBsd" == 2 ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
 	export BDB_PREFIX="$novoSrc/db4"
+	export BDB_VERSION='db-4.8.30.NC'
 	debug_step="autoreconf --install"
 	autoreconf --install
 	debug_location
@@ -235,10 +236,10 @@ elif [[ "$novoBsd" == 2 ]]; then
 #	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
 	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
-        CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/include" \
-        LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/lib" \
-        BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" \
-        BDB_CFLAGS="-I${BDB_PREFIX}/include" 
+        CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/${BDB_VERSION}/include" \
+        LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/${BDB_VERSION}/lib" \
+        BDB_LIBS="-L${BDB_PREFIX}/${BDB_VERSION}/lib -ldb_cxx-4.8" \
+        BDB_CFLAGS="-I${BDB_PREFIX}/${BDB_VERSION}/include" 
 fi
 debug_location
 
