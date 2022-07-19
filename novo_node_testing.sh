@@ -229,7 +229,7 @@ elif [[ "$novoBsd" == 2 ]]; then
 #	export BUILD="x86_64-unknown-openbsd7.1"
 #	export HOST="x86_64-unknown-openbsd7.1"
 #	export TARGET=="x86_64-unknown-openbsd7.1"
-	./configure --without-gui \
+	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet \
 #	MAKE=gmake CXX=clang++ CC=clang \ 
 	MAKE=gmake CXX=eg++ CC=egcc \ 
