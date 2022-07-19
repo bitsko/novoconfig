@@ -240,6 +240,22 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
+	### begin bitcoin core developer copyrighted code mit licence ###
+	# The packaged config.guess and config.sub are ancient (2009) and can cause build issues.
+	# Replace them with modern versions.
+	# See https://github.com/bitcoin/bitcoin/issues/16064
+	CONFIG_GUESS_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=4550d2f15b3a7ce2451c1f29500b9339430c877f'
+	CONFIG_GUESS_HASH='c8f530e01840719871748a8071113435bdfdf75b74c57e78e47898edea8754ae'
+	CONFIG_SUB_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=4550d2f15b3a7ce2451c1f29500b9339430c877f'
+	CONFIG_SUB_HASH='3969f7d5f6967ccc6f792401b8ef3916a1d1b1d0f0de5a4e354c95addb8b800e'
+
+	rm -f "build-aux/config.guess"
+	rm -f "build-aux/config.sub"
+
+	http_get "${CONFIG_GUESS_URL}" build-aux/config.guess "${CONFIG_GUESS_HASH}"
+	http_get "${CONFIG_SUB_URL}" build-aux/config.sub "${CONFIG_SUB_HASH}"
+	##### end bitcoin core developer copyright code mit licence ###
+	
 	./configure --without-gui \ # --with-incompatible-bdb \
 	--disable-wallet \
 #	MAKE=gmake \
