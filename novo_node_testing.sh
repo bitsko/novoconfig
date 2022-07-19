@@ -231,8 +231,8 @@ elif [[ "$novoBsd" == 2 ]]; then
 #	export TARGET=="x86_64-unknown-openbsd7.1"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet \
-#	MAKE=gmake CXX=clang++ CC=clang \ 
-	MAKE=gmake CXX=eg++ CC=egcc \ 
+	MAKE=gmake CXX=clang++ CC=clang \ 
+#	MAKE=gmake CXX=eg++ CC=egcc \ 
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include" \ 
         LDFLAGS="-L/usr/local/lib" \ 
