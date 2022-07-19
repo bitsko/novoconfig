@@ -229,10 +229,11 @@ elif [[ "$novoBsd" == 1 ]]; then
 elif [[ "$novoBsd" == 2 ]]; then 
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet --disable-hardening \
-	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \ 
+#	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \ 
+	MAKE=gmake \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include" \ 
-        LDFLAGS="-L/usr/local/lib" \ 
+        LDFLAGS="-L/usr/local/lib"  
 	debug_location
 fi
 
