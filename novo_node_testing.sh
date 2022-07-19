@@ -14,24 +14,21 @@ debug_location(){
 		keep_clean
 		script_exit
 		exit 1
-	fi
-}
+	fi; }
 
-
-script_exit(){ 
-	unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
+script_exit(){ unset \
+		novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc debug_step \
-		novo_OS novoBar keep_clean
-}
+		novo_OS novoBar keep_clean; }
 
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
 
-# dependency installation script
-echo "$novoBar"; debug_step="novo node compile script"; progress_banner; echo "$novoBar"
-debug_step="dependencies installation"; progress_banner
+echo "$novoBar"
+debug_step="novo node compile script"; progress_banner
+echo "$novoBar"
 
 debug_step="declare arrays with bash v4+"
 declare -a bsdpkg_array=( freebsd OpenBSD )
@@ -49,6 +46,8 @@ novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
 if [[ "$novo_OS" == *"BSD" ]]; then novoBsd=2; fi
 if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
+
+debug_step="dependencies installation"; progress_banner
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 	sudo apt update
 	sudo apt -y upgrade
@@ -139,11 +138,10 @@ else
 fi
 # end dependency installation script
 
-# file and path variables
+debug_step="setting installation variables, curl-ing the release version"	`
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
 novoCnf="$novoDir/novo.conf"
-debug_step="setting installation variables"
 novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
 debug_location
 novoTgz="$novoVer".tar.gz
@@ -152,20 +150,20 @@ novoNum="${novoVer//v/}"
 novoSrc="$PWD/novo-$novoNum"
 frshDir=0
 
-#make directories, backup folders
+debug_step="making directories, backing up .novo folder if present"
 if [[ ! -d "$novoDir" ]]; then
 	mkdir "$novoDir"
+	debug_location
 	frshDir=1
 elif [[ -d "$novoDir" ]]; then
 	echo $'\n'"backing up existing novo directory"$'\n'
 	IFS= read -r -p "stop your node first if running. press enter to continue"
 	cp -r "$novoDir" "$HOME"/novo."$EPOCHSECONDS".backup
+	debug_location
 	echo "existing .novo folder backed up to: $HOME/novo.$EPOCHSECONDS.backup"
 fi
 
-# download
-debug_step="wget $novoTgz"; progress_banner
-
+debug_step="wget $novoTgz download"; progress_banner
 if [[ ! -f "$novoTgz" ]]; then
 	wget "$novoGit"
 else
@@ -173,29 +171,28 @@ else
 fi
 debug_location
 
+debug_step="removing pre-existing source compile folder"
 if [[ -d "$novoSrc" ]]; then 
 	rm -r "$novoSrc"
 fi
+debug_location
 
-# extract
 debug_step="decompress $novoTgz"; progress_banner
-
 tar -zxvf "$novoTgz"
 debug_location
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
-##build db4 on some bsds and set versions##
+##build db4 on some bsds##
 if [[ "$novoBsd" == 2 ]]; then
-	echo $'\n'"installing db4..."$'\n'
 	debug_step="db4 install"
+	echo $'\n'"installing db4..."$'\n'
 	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
 	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
 	if [[ ! -d "db4" ]]; then mkdir db4; fi
 	bash install_db4.sh db4
 	debug_location
 fi
-#############
 
 # autogen
 debug_step="running autogen.sh"; progress_banner
@@ -209,7 +206,6 @@ else
 fi	
 debug_location
 
-# configure with specific instructions
 debug_step="running ./configure"; progress_banner
 
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
@@ -227,24 +223,17 @@ elif [[ "$novoBsd" == 1 ]]; then
 	BDB_LIBS="-ldb_cxx-5" \
         BDB_CFLAGS="-I/usr/local/include/db5" 
 elif [[ "$novoBsd" == 2 ]]; then 
-#	export AUTOCONF_VERSION=2.71
-#	export AUTOMAKE_VERSION=1.16
-#	export BDB_PREFIX="$novoSrc/db4" 
 	./configure --without-gui \
 	MAKE=gmake CXX=clang++ CC=clang \ # CPP=clang-cpp \
 #	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \
-#	BDB_PREFIX="$PWD/db4" \
-#	AUTOCONF_VERSION=2.71 \
-#	AUTOMAKE_VERSION=1.16 \
 #	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
-#        CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/include" \
-#        LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/lib" \
+#       CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/include" \
+#       LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/lib" \
         BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" \
         BDB_CFLAGS="-I${BDB_PREFIX}/include" 
 fi
 debug_location
 
-# make
 debug_step="make/gmake package"; progress_banner
 
 if [[ "$novoBsd" != 0 ]]; then
@@ -256,16 +245,15 @@ else
 fi
 debug_location
 
-# copies and strips the executables, placing them in .novo/bin
+debug_step="copying and stripping binaries into $novoBin"
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
-debug_step="binary creation"
+
 
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
 debug_location
 
-# creates the node configuration file
 if [[ ! -f "$novoCnf" ]]; then
 	debug_step="creating conf"; progress_banner
 	IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
@@ -283,15 +271,12 @@ if [[ ! -f "$novoCnf" ]]; then
 	cat "$novoCnf"
 fi
 
-# if successful, print location of binaries to terminal
 echo $'\n'"binaries available in $novoBin"$'\n'
 ls "$novoBin"
 echo $'\n'"to use:"
 echo "$novoBin/novod --daemon"
 echo "tail -f $novoDir/debug.log"
 echo "$novoBin/novo-cli --help"
-
-
 
 script_exit
 unset -f script_exit
