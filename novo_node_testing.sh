@@ -157,6 +157,12 @@ if [[ ! -d "$novoDir" ]]; then
 	frshDir=1
 elif [[ -d "$novoDir" ]]; then
 	echo $'\n'"backing up existing novo directory"$'\n'
+	if [[ -f "$novoDir/novo.pid" ]]; then
+		novoPid=$(cat "$novoDir"/novo.pid)
+		echo "kill $novoPid"
+		echo "or $novoBin/novo-cli stop"
+		unset novoPid
+	fi
 	IFS= read -r -p "stop your node first if running. press enter to continue"
 	cp -r "$novoDir" "$HOME"/novo."$EPOCHSECONDS".backup
 	debug_location
@@ -199,7 +205,6 @@ debug_step="running autogen.sh"; progress_banner
 if [[ "$novoBsd" == 2 ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
-	# autoreconf --install
 	./autogen.sh
 
 else
@@ -229,7 +234,6 @@ elif [[ "$novoBsd" == 1 ]]; then
 elif [[ "$novoBsd" == 2 ]]; then 
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet --disable-hardening \
-#	MAKE=gmake CXX=eg++ CC=egcc CPP=ecpp \ 
 	MAKE=gmake \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include" \ 
@@ -259,8 +263,10 @@ debug_location
 
 if [[ ! -f "$novoCnf" ]]; then
 	debug_step="creating conf"; progress_banner
-	IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
-	IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
+	novoUsr=$(xxd -l 16 -p /dev/urandom)
+	novoRpc=$(xxd -l 32 -p /dev/urandom)
+	# IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
+	# IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 	echo \
 	"port=8666"$'\n'\
 	"rpcport=8665"$'\n'\
