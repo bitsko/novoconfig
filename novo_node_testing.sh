@@ -4,7 +4,7 @@
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz"; fi; }
+keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz" 2>/dev/null; fi; }
 
 debug_location(){
 	if [[ "$?" != 0 ]]; then
@@ -14,7 +14,7 @@ debug_location(){
 		exit 1
 	fi; }
 
-progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; }
+progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 1; }
 
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 	novo_OS novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
@@ -25,9 +25,8 @@ novoTxt="***********************"
 novoBsd=0
 
 # dependency installation script
-
-debug_step="package installation"
-progress_banner
+debug_step="novo node compile script"; progress_banner
+debug_step="dependencies installation"; progress_banner
 
 declare -a bsdpkg_array=( freebsd OpenBSD )
 declare -a redhat_array=( fedora )
@@ -38,7 +37,7 @@ declare -a x86cpu_array=( i686 x86_64 i386 ) # amd64
 
 cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
-novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID"; fi)
+novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
 if [[ "$novo_OS" == *"BSD" ]]; then novoBsd=2; fi
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
@@ -133,7 +132,9 @@ fi
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
 novoCnf="$novoDir/novo.conf"
+debug_step="setting installation variables"
 novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
+debug_location
 novoTgz="$novoVer".tar.gz
 novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
 novoNum="${novoVer//v/}"
@@ -152,8 +153,7 @@ elif [[ -d "$novoDir" ]]; then
 fi
 
 # download
-debug_step="wget $novoGit"
-progress_banner
+debug_step="wget $novoTgz"; progress_banner
 
 if [[ ! -f "$novoTgz" ]]; then
 	wget "$novoGit"
@@ -167,8 +167,7 @@ if [[ -d "$novoSrc" ]]; then
 fi
 
 # extract
-debug_step="decompress $novoTgz"
-progress_banner
+debug_step="decompress $novoTgz"; progress_banner
 
 tar -zxvf "$novoTgz"
 debug_location
@@ -183,33 +182,16 @@ if [[ "$novoBsd" == 2 ]]; then
 	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
 	bash install.sh
 	debug_location
-#	BDB_PREFIX="${novoSrc}/db4"
-#	mkdir -p "$BDB_PREFIX"
-# curl -o db-4.8.30.NC.tar.gz 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
-#	wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
-#	debug_step="db-4.8.30.NC.tar.gz checksum match"
-#	echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256 -c
-#	debug_location
-#	debug_step="untar db-4.8.30.NC.tar.gz"
-#	tar -zxvf db-4.8.30.NC.tar.gz
-#	debug_location
-#	debug_step="make db4"
-#	cd db-4.8.30.NC/build_unix/
-#	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CC=clang CXX=clang++ CPP=clang-cpp
-#	make install
-#	debug_location
-#	export BDB_PREFIX="$PWD/db4"
-#	export AUTOCONF_VERSION=2.71
-#	export AUTOMAKE_VERSION=1.16
 fi
 #############
 
 # autogen
+debug_step="running autogen.sh"; progress_banner
 ./autogen.sh
+debug_location
 
 # configure with specific instructions
-debug_step="./configure"
-progress_banner
+debug_step="running ./configure"; progress_banner
 
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
@@ -244,8 +226,7 @@ fi
 debug_location
 
 # make
-debug_step="make/gmake package"
-progress_banner
+debug_step="make/gmake package"; progress_banner
 
 if [[ "$novoBsd" != 0 ]]; then
 	gmake
@@ -259,27 +240,15 @@ debug_location
 # copies and strips the executables, placing them in .novo/bin
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 debug_step="binary creation"
-progress_banner
 
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
 debug_location
 
-# if successful, print location of binaries to terminal
-
-debug_step="conf creation"
-progress_banner
-
-echo $'\n'"binaries available in $novoBin"$'\n'
-ls "$novoBin"
-echo $'\n'"to use:"
-echo "$novoBin/novod --daemon"
-echo "tail -f $novoDir/debug.log"
-echo "$novoBin/novo-cli --help"
-
 # creates the node configuration file
 if [[ ! -f "$novoCnf" ]]; then
+	debug_step="creating conf"; progress_banner
 	IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
 	IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 	echo \
@@ -291,7 +260,19 @@ if [[ ! -f "$novoCnf" ]]; then
 	"txindex=1"$'\n'\
 	"maxmempool=1600" \
 	> "$novoCnf"
+	debug_location
+	cat "$novoCnf"
 fi
-debug_location
+
+# if successful, print location of binaries to terminal
+echo $'\n'"binaries available in $novoBin"$'\n'
+ls "$novoBin"
+echo $'\n'"to use:"
+echo "$novoBin/novod --daemon"
+echo "tail -f $novoDir/debug.log"
+echo "$novoBin/novo-cli --help"
+
+
+
 script_exit
 unset -f script_exit
