@@ -199,6 +199,7 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 #	if [[ ! -d "db4" ]]; then mkdir db4; fi
 #	bash install_db4.sh "$PWD"
 #	debug_location
+#       wget http://download.oracle.com/berkeley-db/db-5.3.28.NC.tar.gz
 # fi
 
 # autogen
