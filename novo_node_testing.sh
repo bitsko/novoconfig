@@ -241,6 +241,45 @@ elif [[ "$novoBsd" == 1 ]]; then
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
 	### begin bitcoin core developer copyrighted code mit licence ###
+	check_exists() {
+		command -v "$1" >/dev/null
+	}
+
+	sha256_check() {
+  	# Args: <sha256_hash> <filename>
+  	#
+  	if check_exists sha256sum; then
+    		echo "${1}  ${2}" | sha256sum -c
+  	elif check_exists sha256; then
+    		if [ "$(uname)" = "FreeBSD" ]; then
+      			sha256 -c "${1}" "${2}"
+    		else
+      			echo "${1}  ${2}" | sha256 -c
+    		fi
+  	else
+    		echo "${1}  ${2}" | shasum -a 256 -c
+  	fi
+	}
+
+	http_get() {
+  		# Args: <url> <filename> <sha256_hash>
+  		#
+  		# It's acceptable that we don't require SSL here because we manually verify
+  		# content hashes below.
+  		#
+  	if [ -f "${2}" ]; then
+    		echo "File ${2} already exists; not downloading again"
+  	elif check_exists curl; then
+    		curl --insecure --retry 5 "${1}" -o "${2}"
+  	elif check_exists wget; then
+    		wget --no-check-certificate "${1}" -O "${2}"
+  	else
+    		echo "Simple transfer utilities 'curl' and 'wget' not found. Please install one of them and try again."
+    	exit 1
+  	fi
+
+  	sha256_check "${3}" "${2}"
+	}
 	# The packaged config.guess and config.sub are ancient (2009) and can cause build issues.
 	# Replace them with modern versions.
 	# See https://github.com/bitcoin/bitcoin/issues/16064
