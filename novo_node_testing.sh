@@ -190,20 +190,14 @@ debug_location
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
-##build db4 on some bsds##
- if [[ "$novoBsd" == 2 ]]; then
-#	debug_step="db4 install"
-#	echo $'\n'"installing db4..."$'\n'
-#	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
-#	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
-#	if [[ ! -d "db4" ]]; then mkdir db4; fi
-#	bash install_db4.sh "$PWD"
-#	debug_location
-#       wget http://download.oracle.com/berkeley-db/db-5.3.28.NC.tar.gz
-#	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
+##build db5.3 on some bsds##
+if [[ "$novoBsd" == 2 ]]; then
+	debug_step="db5 install"
+	echo $'\n'"installing db5..."$'\n'
+	if [[ ! -d "db5" ]]; then mkdir db5; fi
 	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/get-bdb-5.3.sh
-	bash install.sh
- fi
+	bash get-bdb-5.3.sh
+fi
 
 # autogen
 debug_step="running autogen.sh"; progress_banner
