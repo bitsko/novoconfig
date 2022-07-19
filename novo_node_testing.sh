@@ -200,8 +200,9 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 #	bash install_db4.sh "$PWD"
 #	debug_location
 #       wget http://download.oracle.com/berkeley-db/db-5.3.28.NC.tar.gz
-	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
- 	bash install.sh
+#	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
+	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/get-bdb-5.3.sh
+	bash install.sh
  fi
 
 # autogen
