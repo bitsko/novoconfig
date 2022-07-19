@@ -238,8 +238,10 @@ elif [[ "$novoBsd" == 1 ]]; then
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
 	export BDB_PREFIX="$novoSrc/db5"
-	./configure --without-gui --disable-dependency-tracking \
-	--disable-wallet --disable-hardening \
+	./configure --without-gui \
+	--disable-dependency-tracking \
+	# --disable-wallet \
+	--disable-hardening \
 	MAKE=gmake \
 	CPPFLAGS="-I${BDB_PREFIX}/include/" \
 	LDFLAGS="-L${BDB_PREFIX}/lib/" \
