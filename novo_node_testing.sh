@@ -209,9 +209,7 @@ debug_step="running autogen.sh"; progress_banner
 if [[ "$novoBsd" == 2 ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
-	export BDB_PREFIX="$novoSrc/db5"
 	./autogen.sh
-
 else
 	./autogen.sh
 fi	
@@ -237,7 +235,7 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
-	export BDB_PREFIX="$novoSrc/db5"
+	export BDB_PREFIX="$novoSrc/db5/build_unix/build"
 	./configure --without-gui \
 	--disable-dependency-tracking \
 	# --disable-wallet \
