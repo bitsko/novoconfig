@@ -5,7 +5,7 @@
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
 keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz"; fi; }
-# pkg_Err(){ if [[ "$?" != 0 ]]; then echo $'\n'"package update failed"; exit 1; fi; }
+
 debug_location(){
 	if [[ "$?" != 0 ]]; then
 		echo $'\n\n'"$debug_step has failed!"$'\n\n'
@@ -13,13 +13,16 @@ debug_location(){
 		script_exit
 		exit 1
 	fi; }
+
 progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; }
+
 script_exit(){ unset novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
-	novo_OS novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
+	novo_OS novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 	bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc debug_step \
 	keep_clean; }
 
 novoTxt="***********************"
+novoBsd=0
 
 # dependency installation script
 
@@ -33,7 +36,6 @@ declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 ) # amd64
 
-novoBsd=0
 cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID"; fi)
@@ -121,7 +123,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	fi
 else
 	echo "$novo_OS unsupported"
-	script_exit; unset -f script_exit
+	script_exit
+	unset -f script_exit
 	exit 1
 fi
 # end dependency installation script
@@ -261,10 +264,10 @@ progress_banner
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
+debug_location
 
 # if successful, print location of binaries to terminal
 
-debug_location
 debug_step="conf creation"
 progress_banner
 
