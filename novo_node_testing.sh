@@ -198,7 +198,7 @@ if [[ "$novoBsd" == 2 ]]; then
 	# wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/get-bdb-5.3.sh
 	# bash get-bdb-5.3.sh
 	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db5.sh
-	bash install_db5.sh
+	bash install_db5.sh "$PWD"
 	debug_location
 fi
 
