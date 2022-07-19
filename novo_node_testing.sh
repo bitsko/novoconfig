@@ -238,7 +238,7 @@ elif [[ "$novoBsd" == 2 ]]; then
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
         CXXFLAGS="-I/usr/local/include -I${BDB_PREFIX}/${BDB_VERSION}/include" \
         LDFLAGS="-L/usr/local/lib -L${BDB_PREFIX}/${BDB_VERSION}/lib" \
-        BDB_LIBS="-L${BDB_PREFIX}/${BDB_VERSION}/lib -ldb_cxx-4.8" \
+        BDB_LIBS="-L${BDB_PREFIX}/${BDB_VERSION}/lib -libdb_cxx-4.8" \
         BDB_CFLAGS="-I${BDB_PREFIX}/${BDB_VERSION}/include" 
 fi
 debug_location
