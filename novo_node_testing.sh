@@ -233,6 +233,9 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
+	export BUILD="x86_64-unknown-openbsd7.1"
+	export HOST="x86_64-unknown-openbsd7.1"
+	export TARGET=="x86_64-unknown-openbsd7.1"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet --disable-hardening \
 	MAKE=gmake CC=egcc CXX=eg++ CPP=ecpp \
