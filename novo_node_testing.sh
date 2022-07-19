@@ -191,7 +191,7 @@ debug_location
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 ##build db4 on some bsds##
-# if [[ "$novoBsd" == 2 ]]; then
+ if [[ "$novoBsd" == 2 ]]; then
 #	debug_step="db4 install"
 #	echo $'\n'"installing db4..."$'\n'
 #	wget https://raw.githubusercontent.com/bitsko/bitcoin-related/main/bitcoin/install_db4.sh
@@ -200,13 +200,16 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 #	bash install_db4.sh "$PWD"
 #	debug_location
 #       wget http://download.oracle.com/berkeley-db/db-5.3.28.NC.tar.gz
-# fi
+	wget https://raw.githubusercontent.com/bitsko/get-bdb-4.8/master/install.sh
+ 	bash install.sh
+ fi
 
 # autogen
 debug_step="running autogen.sh"; progress_banner
 if [[ "$novoBsd" == 2 ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
+	export BDB_PREFIX="$novoSrc/db5"
 	./autogen.sh
 
 else
@@ -234,9 +237,14 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
+	export BDB_PREFIX="$novoSrc/db5"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet --disable-hardening \
-	MAKE=gmake
+	MAKE=gmake \
+	CPPFLAGS="-I${BDB_PREFIX}/include/" \
+	LDFLAGS="-L${BDB_PREFIX}/lib/" \
+	BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-5.3" \
+        BDB_CFLAGS="-I${BDB_PREFIX}/include"
 	debug_location
 fi
 
