@@ -182,6 +182,7 @@ if [[ "$novoBsd" == 2 ]]; then
 	wget https://raw.githubusercontent.com/bitcoincore-dev/db-4.8.30.NC/main/install_db4.sh
 	echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'
 #	bash install.sh
+	if [[ ! -d "db4" ]]; then mkdir db4; fi
 	bash install_db4.sh db4
 	debug_location
 fi
