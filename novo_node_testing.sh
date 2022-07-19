@@ -268,7 +268,7 @@ if [[ ! -f "$novoCnf" ]]; then
 	"gen=1"$'\n'\
 	"txindex=1"$'\n'\
 	"maxmempool=1600" \
-	> "$novoCnf"
+	| tr -d ' ' > "$novoCnf"
 	debug_location
 	cat "$novoCnf"
 fi
