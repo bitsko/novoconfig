@@ -273,8 +273,15 @@ elif [[ "$novo_OS" == NetBSD ]]; then
         BDB_CFLAGS="-I/usr/pkg/include/db5" 
 	debug_location
 elif [[ "$novo_OS" == centos ]]; then
-	./configure --without-gui
-	
+	./configure --without-gui \
+	--with-incompatible-bdb \
+	MAKE=gmake \
+	CFLAGS="-I/usr/include -I/usr/include/machine" \
+	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
+	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
+	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx-5" \
+        BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
+	debug_location 	
 fi
 
 debug_step="make/gmake package"; progress_banner
