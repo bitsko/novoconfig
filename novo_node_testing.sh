@@ -103,10 +103,16 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	fi
 elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
         sudo dnf update
-        declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
-		libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
-		qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
-        while read -r line; do
+        if [[ "$novo_OS" == fedora ]]; then
+		declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
+			libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
+			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
+        elif [[ "$novo_OS" == centos ]]; then
+	                declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
+                        libevent-devel boost-devel libdb-devel libdb-devel miniupnpc-devel gcc-c++ \
+                        qrencode-devel gzip jq wget bc vim sed grep zeromq-devel libuuid-devel )
+	fi
+	while read -r line; do
                 if ! rpm -qi "$line" &> /dev/null; then
                         rhat_to_install+=( "$line" )
                         debug_location
@@ -135,7 +141,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
 			# clang llvm g++-11.2.0p2 gcc-11.2.0p2
 	elif [[ "$novo_Bsd" == NetBSD ]]; then
-		declare -a bsd__pkg_array_=( )
+		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
+		jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf automake )
 	elif [[ "$novo_Bsd" == freebsd ]]; then
 		novoBsd=1
 		pkg upgrade -y
