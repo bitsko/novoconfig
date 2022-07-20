@@ -269,8 +269,8 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	CFLAGS="-I/usr/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/include -I/usr/pkg/include/db5" \
 	LDFLAGS="-L/usr/lib -L/usr/pkg/lib" \
-	BDB_LIBS="-L/usr/pkg/lib -ldb_cxx-5" \
-        BDB_CFLAGS="-I/usr/include/db5" 
+	BDB_LIBS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -ldb_cxx-5" \
+        BDB_CFLAGS="-I/usr/pkg/include/db5" 
 	debug_location
 elif [[ "$novo_OS" == centos ]]; then
 	./configure --without-gui
