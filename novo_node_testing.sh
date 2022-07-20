@@ -31,7 +31,7 @@ debug_step="novo node compile script"; progress_banner
 echo "$novoBar"
 
 debug_step="declare arrays with bash v4+"
-declare -a bsdpkg_array=( freebsd OpenBSD )
+declare -a bsdpkg_array=( freebsd OpenBSD NetBSD )
 declare -a redhat_array=( fedora )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
@@ -44,7 +44,8 @@ cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
-if [[ "$novo_OS" == *"BSD" ]]; then novoBsd=2; fi
+if [[ "$novo_OS" == "OpenBSD" ]]; then novoBsd=2; fi
+if [[ "$novo_OS" == "NetBSD" ]]; then novoBsd=3; fi
 if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
 
 debug_step="dependencies installation"; progress_banner
@@ -103,7 +104,7 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
         sudo dnf update
         declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
-		libevent-devel boost-devel libdb4-devel libdb4-cxx-devel miniupnpc-devel \
+		libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
 		qrencode-devel gzip jq wget bc vim sed grep )
         while read -r line; do
                 if ! command -v "$line" &> /dev/null; then
@@ -133,6 +134,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
 			# clang llvm g++-11.2.0p2 gcc-11.2.0p2
+	elif [[ "$novo_Bsd" == 3 ]]; then
+		declare -a bsd__pkg_array_=( )
 	else
 		novoBsd=1
 		pkg upgrade -y
