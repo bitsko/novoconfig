@@ -265,7 +265,7 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening --with-incompatible-bdb \
-	MAKE=gmake CXX=clang++ CC=clang \
+	MAKE=gmake \
 	CFLAGS="-I/usr/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/include -I/usr/include/db5" \
 	LDFLAGS="-L/usr/lib -L/usr/lib/db5" \
