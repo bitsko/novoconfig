@@ -263,14 +263,18 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	MAKE=gmake
 	debug_location
 elif [[ "$novo_OS" == NetBSD ]]; then
-	./configure \
-        --without-gui \
-#        --disable-dependency-tracking \
-#        --disable-wallet \
-        MAKE=gmake
-        debug_location
+	./configure --without-gui --disable-dependency-tracking \
+	--disable-hardening --with-incompatible-bdb \
+	MAKE=gmake CXX=clang++ CC=clang \
+	CFLAGS="-I/usr/include -I/usr/include/machine" \
+	CXXFLAGS="-I/usr/include -I/usr/include/db5" \
+	LDFLAGS="-L/usr/lib -L/usr/lib/db5" \
+	BDB_LIBS="-ldb_cxx-5" \
+        BDB_CFLAGS="-I/usr/include/db5" 
+	debug_location
 elif [[ "$novo_OS" == centos ]]; then
 	./configure --without-gui
+	
 fi
 
 debug_step="make/gmake package"; progress_banner
