@@ -19,12 +19,11 @@ debug_location(){
 script_exit(){ unset \
 		novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
-		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc debug_step \
+		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
 		novo_OS novoBar keep_clean bsd__pkg_array_; }
 
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
-novoBsd=0
 
 echo "$novoBar"
 debug_step="novo node compile script"; progress_banner
@@ -159,10 +158,10 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	done <<<$(printf '%s\n' "${bsd__pkg_array_[@]}")
 	
 	if [[ -n "${pkg_to_install_[*]}" ]]; then
-		if [[ "$novoBsd" == 1 ]]; then
+		if [[ "$novo_OS" == freebsd ]]; then
 			pkg install -y ${pkg_to_install_[*]}
 			debug_location
-		elif [[ "$novoBsd" == 2 ]]; then
+		elif [[ "$uname_OS" == "OpenBSD" ]] || [[ "$uname_OS" == "NetBSD" ]]; then
 			pkg_add ${pkg_to_install_[*]}
 			debug_location
 		fi
