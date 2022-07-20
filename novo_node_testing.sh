@@ -20,7 +20,7 @@ script_exit(){ unset \
 		novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoBsd novoPrc debug_step \
-		novo_OS novoBar keep_clean; }
+		novo_OS novoBar keep_clean bsd__pkg_array_; }
 
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
@@ -44,8 +44,8 @@ cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
-if [[ "$novo_OS" == "OpenBSD" ]]; then novoBsd=2; fi
-if [[ "$novo_OS" == "NetBSD" ]]; then novoBsd=3; fi
+# if [[ "$novo_OS" == "OpenBSD" ]]; then novoBsd=2; fi
+# if [[ "$novo_OS" == "NetBSD" ]]; then novoBsd=3; fi
 if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
 
 debug_step="dependencies installation"; progress_banner
@@ -150,7 +150,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 			pkg_to_install_+=( "$line" )
 		fi
 	done <<<$(printf '%s\n' "${bsd__pkg_array_[@]}")
-	unset bsd__pkg_array_
+	
 	if [[ -n "${pkg_to_install_[*]}" ]]; then
 		if [[ "$novoBsd" == 1 ]]; then
 			pkg install -y ${pkg_to_install_[*]}
@@ -182,20 +182,20 @@ novoNum="${novoVer//v/}"
 novoSrc="$PWD/novo-$novoNum"
 frshDir=0
 
-debug_step="making directories, backing up .novo folder if present"
+debug_step="making directories, backing up .novo folder if present"; progress_banner
 if [[ ! -d "$novoDir" ]]; then
 	mkdir "$novoDir"
 	debug_location
 	frshDir=1
 elif [[ -d "$novoDir" ]]; then
-	echo $'\n'"backing up existing novo directory"$'\n'
+	debug_step="backing up existing novo directory"; progress_banner
 	if [[ -f "$novoDir/novo.pid" ]]; then
-		novoPid=$(cat "$novoDir"/novo.pid)
+		IFS= read -r -p "stop your node first if running. press enter to continue"
+		novoPid=$(cat "$novoDir"/novod.pid)
 		echo "kill $novoPid"
 		echo "or $novoBin/novo-cli stop"
 		unset novoPid
 	fi
-	IFS= read -r -p "stop your node first if running. press enter to continue"
 	cp -r "$novoDir" "$HOME"/novo."$EPOCHSECONDS".backup
 	debug_location
 	echo "existing .novo folder backed up to: $HOME/novo.$EPOCHSECONDS.backup"
@@ -209,7 +209,7 @@ else
 fi
 debug_location
 
-debug_step="removing pre-existing source compile folder"
+debug_step="removing pre-existing source compile folder"; progress_banner
 if [[ -d "$novoSrc" ]]; then 
 	rm -r "$novoSrc"
 fi
@@ -223,7 +223,7 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 # autogen
 debug_step="running autogen.sh"; progress_banner
-if [[ "$novoBsd" == 2 ]]; then
+if [[ "$novo_OS" == OpenBSD ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
 	./autogen.sh
@@ -233,7 +233,6 @@ fi
 debug_location
 
 debug_step="running ./configure"; progress_banner
-
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
@@ -241,7 +240,7 @@ if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
 	./configure --without-gui
 	debug_location
-elif [[ "$novoBsd" == 1 ]]; then
+elif [[ "$novo_OS" == freebsd ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening --with-incompatible-bdb \
 	MAKE=gmake CXX=clang++ CC=clang \
@@ -251,17 +250,25 @@ elif [[ "$novoBsd" == 1 ]]; then
 	BDB_LIBS="-ldb_cxx-5" \
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
-elif [[ "$novoBsd" == 2 ]]; then 
+elif [[ "$novo_OS" == OpenBSD ]]; then 
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
 	--disable-wallet \
 	MAKE=gmake
 	debug_location
+elif [[ "$novo_OS" == NetBSD ]]; then
+	./configure \
+        --without-gui \
+#        --disable-dependency-tracking \
+#        --disable-wallet \
+        MAKE=gmake
+        debug_location
 fi
 
 debug_step="make/gmake package"; progress_banner
-if [[ "$novoBsd" != 0 ]]; then
+if [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
+# if [[ "$novoBsd" != 0 ]]; then
 	gmake
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
@@ -270,7 +277,7 @@ else
 fi
 debug_location
 
-debug_step="copying and stripping binaries into $novoBin"
+debug_step="copying and stripping binaries into $novoBin"; progress_banner
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 
 
@@ -298,12 +305,12 @@ if [[ ! -f "$novoCnf" ]]; then
 	cat "$novoCnf"
 fi
 
-echo $'\n'"binaries available in $novoBin"$'\n'
+debug_step="binaries available in $novoBin:"; progress_banner
 ls "$novoBin"
+debug_location
 echo $'\n'"to use:"
 echo "$novoBin/novod --daemon"
 echo "tail -f $novoDir/debug.log"
 echo "$novoBin/novo-cli --help"
-
 script_exit
 unset -f script_exit
