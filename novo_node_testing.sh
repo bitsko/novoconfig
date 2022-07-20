@@ -108,8 +108,8 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
 			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
         elif [[ "$novo_OS" == centos ]]; then
 	                declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
-                        libevent-devel boost-devel libdb-devel libdb-devel miniupnpc-devel gcc-c++ \
-                        qrencode-devel gzip jq wget bc vim sed grep zeromq-devel libuuid-devel )
+                        libevent-devel boost-devel libdb-devel  gcc-c++ gzip jq wget bc vim sed grep libuuid-devel )
+	                # miniupnpc-devel qrencode-devel zeromq-devel
 	fi
 	while read -r line; do
                 if ! rpm -qi "$line" &> /dev/null; then
