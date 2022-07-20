@@ -5,7 +5,7 @@
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
 progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 2; }
-minor_progress(){ echo "$novoTxt $debug_step $novoTxt"; sleep 1; }
+minor_progress(){ echo "*** $debug_step $novoTxt"; sleep 1; }
 keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz" 2>/dev/null; fi; }
 
 debug_location(){
@@ -240,11 +240,11 @@ fi
 debug_location
 
 debug_step="running ./configure"; progress_banner
-if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
+if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "novo_OS" != centos ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 	debug_location
-elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]]; then
+elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "novo_OS" != centos ]]; then
 	./configure --without-gui
 	debug_location
 elif [[ "$novo_OS" == freebsd ]]; then
@@ -271,6 +271,8 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 #        --disable-wallet \
         MAKE=gmake
         debug_location
+elif [[ "$novo_OS" == centos ]]; then
+	
 fi
 
 debug_step="make/gmake package"; progress_banner
