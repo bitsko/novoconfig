@@ -4,8 +4,8 @@
 
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
-progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 1; }
-minor_progress(){ echo "$novoTxt $debug_step $novoTxt"; }
+progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 2; }
+minor_progress(){ echo "$novoTxt $debug_step $novoTxt"; sleep 1; }
 keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz" 2>/dev/null; fi; }
 
 debug_location(){
