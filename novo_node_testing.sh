@@ -235,7 +235,7 @@ if [[ "$novo_OS" == OpenBSD ]]; then
 	export AUTOMAKE_VERSION=1.16
 	./autogen.sh
 else
-	./autogen.shd
+	./autogen.sh
 fi	
 debug_location
 
