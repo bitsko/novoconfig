@@ -105,7 +105,7 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
         sudo dnf update
         declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
 		libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
-		qrencode-devel gzip jq wget bc vim sed grep )
+		qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
         while read -r line; do
                 if ! command -v "$line" &> /dev/null; then
                         rhat_to_install+=( "$line" )
