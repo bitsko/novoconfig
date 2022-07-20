@@ -197,7 +197,7 @@ debug_location
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 
 ##build db5.3 on some bsds##
-if [[ "$novoBsd" == 2 ]]; then
+if [[ "$novoBsd" == 3 ]]; then
 	debug_step="db5 install"
 	echo $'\n'"installing db5..."$'\n'
 #	https://raw.githubusercontent.com/bitsko/bitcoin-related/main/get-bdb-5.3.sh
@@ -297,14 +297,16 @@ elif [[ "$novoBsd" == 1 ]]; then
         BDB_CFLAGS="-I/usr/local/include/db5" 
 	debug_location
 elif [[ "$novoBsd" == 2 ]]; then 
-	export BDB_PREFIX="$novoSrc/db5/build_unix"
+#	export BDB_PREFIX="$novoSrc/db5/build_unix"
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
-	--with-incompatible-wallet \
-	"$clang_cnfg" \
-	BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-5.3" \
-        BDB_CFLAGS="-I${BDB_PREFIX}/include"
+	--disable-wallet \
+	MAKE=gmake
+#	--with-incompatible-wallet \
+#	"$clang_cnfg" \
+#	BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-5.3" \
+#        BDB_CFLAGS="-I${BDB_PREFIX}/include"
 	debug_location
 	# --disable-hardening \
 	# --disable-wallet \
