@@ -32,7 +32,7 @@ echo "$novoBar"
 
 debug_step="declare arrays with bash v4+"
 declare -a bsdpkg_array=( freebsd OpenBSD NetBSD )
-declare -a redhat_array=( fedora )
+declare -a redhat_array=( fedora centos )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
 declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
