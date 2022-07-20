@@ -107,7 +107,7 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
 		libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
 		qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
         while read -r line; do
-                if ! command -v "$line" &> /dev/null; then
+                if ! rpm -qi "$line" &> /dev/null; then
                         rhat_to_install+=( "$line" )
                         debug_location
                 fi
@@ -119,11 +119,11 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
                 unset rhat_to_install
         fi
         if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
-                if ! command -v arm-none-eabi-binutils &> /dev/null; then
+                if ! rpm -qi arm-none-eabi-binutils &> /dev/null; then
                         sudo dnf install -y arm-none-eabi-binutils
                         debug_location
                 fi
-                if ! command -v arm-none-eabi-gcc &> /dev/null; then
+                if ! rpm -qi arm-none-eabi-gcc &> /dev/null; then
                         sudo dnf install -y arm-none-eabi-gcc
                         debug_location
                 fi
