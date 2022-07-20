@@ -5,7 +5,7 @@
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
 progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 1; }
-
+minor_progress(){ echo "$novoTxt $debug_step $novoTxt"; }
 keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz" 2>/dev/null; fi; }
 
 debug_location(){
@@ -30,7 +30,7 @@ echo "$novoBar"
 debug_step="novo node compile script"; progress_banner
 echo "$novoBar"
 
-debug_step="declare arrays with bash v4+"
+debug_step="declare arrays with bash v4+"; minor_progress
 declare -a bsdpkg_array=( freebsd OpenBSD NetBSD )
 declare -a redhat_array=( fedora centos )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
@@ -39,7 +39,7 @@ declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 ) # amd64
 debug_location
 
-debug_step="find the operating system type"
+debug_step="find the operating system type"; minor_progress
 cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
@@ -135,15 +135,15 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
                 fi
         fi
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
-	if [[ "$novo_OS" == OpenBSD ]]; then
+	if [[ "$uname_OS" == OpenBSD ]]; then
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
 			# clang llvm g++-11.2.0p2 gcc-11.2.0p2
-	elif [[ "$novo_Bsd" == NetBSD ]]; then
+	elif [[ "$uname_OS" == NetBSD ]]; then
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
 		jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf automake )
-	elif [[ "$novo_Bsd" == freebsd ]]; then
+	elif [[ "$novo_OS" == freebsd ]]; then
 		novoBsd=1
 		pkg upgrade -y
 		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
@@ -177,7 +177,7 @@ else
 fi
 # end dependency installation script
 
-debug_step="setting installation variables and curl-ing the release version"
+debug_step="setting installation variables and curl-ing the release version"; minor_progress
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
 novoCnf="$novoDir/novo.conf"
@@ -189,7 +189,7 @@ novoNum="${novoVer//v/}"
 novoSrc="$PWD/novo-$novoNum"
 frshDir=0
 
-debug_step="making directories, backing up .novo folder if present"; progress_banner
+debug_step="making directories, backing up .novo folder if present"; minor_progress
 if [[ ! -d "$novoDir" ]]; then
 	mkdir "$novoDir"
 	debug_location
@@ -216,7 +216,7 @@ else
 fi
 debug_location
 
-debug_step="removing pre-existing source compile folder"; progress_banner
+debug_step="removing pre-existing source compile folder"; minor_progress
 if [[ -d "$novoSrc" ]]; then 
 	rm -r "$novoSrc"
 fi
@@ -235,7 +235,7 @@ if [[ "$novo_OS" == OpenBSD ]]; then
 	export AUTOMAKE_VERSION=1.16
 	./autogen.sh
 else
-	./autogen.sh
+	./autogen.shd
 fi	
 debug_location
 
@@ -284,7 +284,7 @@ else
 fi
 debug_location
 
-debug_step="copying and stripping binaries into $novoBin"; progress_banner
+debug_step="copying and stripping binaries into $novoBin"; minor_progress
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
 
 
@@ -312,7 +312,7 @@ if [[ ! -f "$novoCnf" ]]; then
 	cat "$novoCnf"
 fi
 
-debug_step="binaries available in $novoBin:"; progress_banner
+debug_step="binaries available in $novoBin:"; minor_progress
 ls "$novoBin"
 debug_location
 echo $'\n'"to use:"
