@@ -24,7 +24,7 @@ script_exit(){ unset \
 
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
-
+novoBsd=0
 echo "$novoBar"
 debug_step="novo node compile script"; progress_banner
 echo "$novoBar"
@@ -134,6 +134,7 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
                 fi
         fi
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
+	novoBsd=1
 	if [[ "$uname_OS" == OpenBSD ]]; then
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
@@ -143,7 +144,6 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
 		jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf automake )
 	elif [[ "$novo_OS" == freebsd ]]; then
-		novoBsd=1
 		pkg upgrade -y
 		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
 			octave-forge-zeromq libnpupnp nano fakeroot pkgconf miniupnpc gzip \
