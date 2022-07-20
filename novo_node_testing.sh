@@ -42,7 +42,7 @@ uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
 debug_step="find the operating system type"
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
-debug_step="compiling for: $novo_OS $cpu_type"; minor_progress
+debug_step="compiling for: $novo_OS $cpu_type"; progress_banner
 if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
 
 debug_step="dependencies installation"; progress_banner
