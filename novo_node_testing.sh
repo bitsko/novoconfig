@@ -100,13 +100,39 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 			debug_location
 		fi
 	fi
+elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
+        sudo dnf update
+        declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
+		libevent-devel boost-devel libdb4-devel libdb4-cxx-devel miniupnpc-devel \
+		qrencode-devel gzip jq wget bc vim sed grep )
+        while read -r line; do
+                if ! command -v "$line" &> /dev/null; then
+                        rhat_to_install+=( "$line" )
+                        debug_location
+                fi
+        done <<<$(printf '%s\n' "${rhat_pkg_array_[@]}")
+        unset rhat_pkg_array_
+        if [[ -n "${rhat_to_install[*]}" ]]; then
+                sudo dnf install -y ${rhat_to_install[*]}
+                debug_location
+                unset rhat_to_install
+        fi
+        if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
+                if ! command -v arm-none-eabi-binutils &> /dev/null; then
+                        sudo dnf install -y arm-none-eabi-binutils
+                        debug_location
+                fi
+                if ! command -v arm-none-eabi-gcc &> /dev/null; then
+                        sudo dnf install -y arm-none-eabi-gcc
+                        debug_location
+                fi
+        fi
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$novoBsd" == 2 ]]; then
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
-			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 \
-			g++-11.2.0p2 gcc-11.2.0p2 )
-			# clang llvm
+			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
+			# clang llvm g++-11.2.0p2 gcc-11.2.0p2
 	else
 		novoBsd=1
 		pkg upgrade -y
