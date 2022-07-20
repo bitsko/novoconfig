@@ -29,7 +29,7 @@ echo "$novoBar"
 debug_step="novo node compile script"; progress_banner
 echo "$novoBar"
 
-debug_step="declare arrays with bash v4+"; minor_progress
+debug_step="declare arrays with bash v4+"
 declare -a bsdpkg_array=( freebsd OpenBSD NetBSD )
 declare -a redhat_array=( fedora centos )
 declare -a deb_os_array=( debian ubuntu raspbian linuxmint pop )
@@ -37,14 +37,12 @@ declare -a archos_array=( manjaro-arm manjaro endeavouros arch )
 declare -a armcpu_array=( aarch64 aarch64_be armv8b armv8l armv7l )
 declare -a x86cpu_array=( i686 x86_64 i386 ) # amd64
 debug_location
-
-debug_step="find the operating system type"; minor_progress
 cpu_type="$(uname -m)"
 uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
+debug_step="find the operating system type"; minor_progress
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
-# if [[ "$novo_OS" == "OpenBSD" ]]; then novoBsd=2; fi
-# if [[ "$novo_OS" == "NetBSD" ]]; then novoBsd=3; fi
+debug_step="compiling for: $novo_OS $cpu_type"; minor_progress
 if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
 
 debug_step="dependencies installation"; progress_banner
@@ -240,11 +238,11 @@ fi
 debug_location
 
 debug_step="running ./configure"; progress_banner
-if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "novo_OS" != centos ]]; then
+if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "$novo_OS" != centos ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 	debug_location
-elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "novo_OS" != centos ]]; then
+elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "$novo_OS" != centos ]]; then
 	./configure --without-gui
 	debug_location
 elif [[ "$novo_OS" == freebsd ]]; then
@@ -272,7 +270,7 @@ elif [[ "$novo_OS" == NetBSD ]]; then
         MAKE=gmake
         debug_location
 elif [[ "$novo_OS" == centos ]]; then
-	
+	./configure --without-gui
 fi
 
 debug_step="make/gmake package"; progress_banner
