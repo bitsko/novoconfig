@@ -104,7 +104,7 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	fi
 elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
         sudo dnf update
-        if [[ "$novo_OS" == fedora ]]; then
+        if [[ "$novo_OS" == fedora  || "$novo_OS" == amzn ]]; then
 		declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
 			libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
 			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
