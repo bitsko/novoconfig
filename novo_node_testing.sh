@@ -144,6 +144,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
 			# clang llvm g++-11.2.0p2 gcc-11.2.0p2
 	elif [[ "$uname_OS" == NetBSD ]]; then
+		compile_bdb53=1
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
 			jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf \
 			automake ca-certificates db5 )
@@ -280,7 +281,6 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
-	--disable-wallet \
 	MAKE=gmake \
 	BDB_LIBS="-L/usr/local/BerkeleyDB.5.3/lib" \
 	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
@@ -290,10 +290,12 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening \
 	MAKE=gmake \
-	BDB_LIBS="-L/usr/pkg/lib -libdb5_cxx -libdb5_cxx-5.3" \
-        BDB_CFLAGS="-I/usr/pkg/include/db5" 
+	BDB_LIBS="-L/usr/local/BerkeleyDB.5.3/lib" \
+	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
 	debug_location
 ################################################################
+#	BDB_LIBS="-L/usr/pkg/lib -libdb5_cxx -libdb5_cxx-5.3" \
+#       BDB_CFLAGS="-I/usr/pkg/include/db5" 
 #	CFLAGS="-I/usr/include -I/usr/include/machine" \
 #	CXXFLAGS="-I/usr/include -I/usr/pkg/include/db5" \
 #	LDFLAGS="-L/usr/lib -L/usr/pkg/lib" \
