@@ -289,7 +289,7 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening --with-incompatible-bdb \
 	MAKE=gmake \
-	BDB_LIBS="-L/usr/pkg/lib -ldb_cxx -ldb_cxx5.3" \
+	BDB_LIBS="-L/usr/pkg/lib" \
         BDB_CFLAGS="-I/usr/pkg/include/db5" 
 	debug_location
 #	CFLAGS="-I/usr/include -I/usr/include/machine" \
