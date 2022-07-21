@@ -282,7 +282,7 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	--without-gui \
 	--disable-dependency-tracking \
 	MAKE=gmake \
-	BDB_LIBS="-L/usr/local/BerkeleyDB.5.3/lib" \
+	BDB_LIBS="-L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
 	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
 	debug_location
 #################################################################
@@ -290,7 +290,7 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening \
 	MAKE=gmake \
-	BDB_LIBS="-L/usr/local/BerkeleyDB.5.3/lib" \
+	BDB_LIBS="-L/usr/local/BerkeleyDB.5.3/lib -ldb5_cxx" \
 	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
 	debug_location
 ################################################################
