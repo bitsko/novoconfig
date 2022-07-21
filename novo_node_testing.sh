@@ -20,8 +20,9 @@ script_exit(){ unset \
 		novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
-		novo_OS novoBar keep_clean bsd__pkg_array_; }
-
+		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
+		progress_banner minor_progress; }
+compile_bdb53=0
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
@@ -134,14 +135,15 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	novoBsd=1
 	if [[ "$uname_OS" == OpenBSD ]]; then
+		compile_bdb53=1
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
 			# clang llvm g++-11.2.0p2 gcc-11.2.0p2
 	elif [[ "$uname_OS" == NetBSD ]]; then
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
-		jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf automake \
-		ca-certificates db5 )
+			jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf \
+			automake ca-certificates db5 )
 	elif [[ "$novo_OS" == freebsd ]]; then
 		pkg upgrade -y
 		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
@@ -225,6 +227,21 @@ tar -zxvf "$novoTgz"
 debug_location
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
+# compile  BerkeleyDB.5.3 on some platforms
+if [[ "$compile_bdb53" == 1 ]]; then
+	debug_step="compiling BerkeleyDB.5.3"; progress_banner; debug_step="wget db-5.3.28"; minor_progress
+	wget https://github.com/bitsko/libdb/releases/download/v5.3.28/db-5.3.28.tar.gz
+	debug_location; debug_step="untar db-5.3"; minor_progress
+	tar -zxvf db-5.3.28.tar.gz
+	debug_location; debug_step="configure db-5.3"; minor_progress
+	cd db-5.3.28/build_unix || echo "unable to cd to $PWD/db-5.3.28/build_unix"
+	../dist/configure
+	debug_location; debug_step="make db5"; minor_progress
+	make
+	debug_location; debug_step="make install db5"; minor_progress
+	make install
+	debug_location; debug_step="bdb5 compiled"; progress_banner
+fi
 
 # autogen
 debug_step="running autogen.sh"; progress_banner
@@ -260,7 +277,9 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	--without-gui \
 	--disable-dependency-tracking \
 	--disable-wallet \
-	MAKE=gmake
+	MAKE=gmake \
+	BDB_LIBS="-L/usr/local/BerkeleyDB.5.3/lib" \
+	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
 	debug_location
 elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
@@ -269,7 +288,7 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	CFLAGS="-I/usr/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/include -I/usr/pkg/include/db5" \
 	LDFLAGS="-L/usr/lib -L/usr/pkg/lib" \
-	BDB_LIBS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -ldb_cxx-5" \
+	BDB_LIBS="-L/usr/pkg/lib" \
         BDB_CFLAGS="-I/usr/pkg/include/db5" 
 	debug_location
 elif [[ "$novo_OS" == centos ]]; then
@@ -279,7 +298,7 @@ elif [[ "$novo_OS" == centos ]]; then
 	CFLAGS="-I/usr/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
 	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
-	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -libdb-5.3.so" \
+	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
         BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
 	debug_location 	
 fi
