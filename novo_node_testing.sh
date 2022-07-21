@@ -232,12 +232,12 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	debug_step="compiling BerkeleyDB.5.3"; progress_banner; debug_step="wget db-5.3.28"; minor_progress
 	wget https://github.com/bitsko/libdb/archive/refs/tags/v5.3.28.tar.gz
 	debug_location; debug_step="untar db-5.3"; minor_progress
-	tar -zxvf db-5.3.28.tar.gz
+	tar -zxvf v5.3.28.tar.gz
 	debug_location; debug_step="configure db-5.3"; minor_progress
-	cd db-5.3.28/build_unix || echo "unable to cd to $PWD/db-5.3.28/build_unix"
+	cd libdb-5.3.28/build_unix || echo "unable to cd to $PWD/libdb-5.3.28/build_unix"
 	../dist/configure
-	debug_location; debug_step="make db5"; minor_progress
-	make
+#	debug_location; debug_step="make db5"; minor_progress
+#	make
 	debug_location; debug_step="make install db5"; minor_progress
 	make install
 	debug_location; debug_step="bdb5 compiled"; progress_banner
