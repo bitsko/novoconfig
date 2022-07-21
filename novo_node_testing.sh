@@ -285,12 +285,12 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening --with-incompatible-bdb \
 	MAKE=gmake \
-	CFLAGS="-I/usr/include -I/usr/include/machine" \
-	CXXFLAGS="-I/usr/include -I/usr/pkg/include/db5" \
-	LDFLAGS="-L/usr/lib -L/usr/pkg/lib" \
-	BDB_LIBS="-L/usr/pkg/lib" \
+	BDB_LIBS="-L/usr/pkg/lib -ldb_cxx -ldb_cxx5.3" \
         BDB_CFLAGS="-I/usr/pkg/include/db5" 
 	debug_location
+#	CFLAGS="-I/usr/include -I/usr/include/machine" \
+#	CXXFLAGS="-I/usr/include -I/usr/pkg/include/db5" \
+#	LDFLAGS="-L/usr/lib -L/usr/pkg/lib" \
 elif [[ "$novo_OS" == centos ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
