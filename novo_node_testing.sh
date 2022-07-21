@@ -326,7 +326,7 @@ elif [[ "$novo_OS" == centos ]]; then
 elif [[ "$novo_OS" == amzn ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
-	CXX=clang++ CC=clang
+	CXX=clang++ CC=clang CPP=clang-cpp
 fi
 
 debug_step="make/gmake package"; progress_banner
