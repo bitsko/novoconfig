@@ -5,7 +5,7 @@
 # wget -N https://raw.githubusercontent.com/bitsko/novoconfig/main/novo_node_compile.sh && chmod +x novo_node_compile.sh && ./novo_node_compile.sh
 
 progress_banner(){ echo $'\n\n'"${novoTxt} ${debug_step} ${novoTxt}"$'\n\n'; sleep 2; }
-minor_progress(){ echo "***** $debug_step *****"; sleep 1; }
+minor_progress(){ echo "	***** $debug_step *****"; sleep 1; }
 keep_clean(){ if [[ "$frshDir" == 1 ]]; then rm -r "$novoDir" "$novoTgz" 2>/dev/null; fi; }
 
 debug_location(){
@@ -264,11 +264,13 @@ fi
 debug_location
 
 debug_step="running ./configure"; progress_banner
-if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "$novo_OS" != centos ]]; then
+if [[ "${armcpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]] && \
+	[[ "$novo_OS" != centos && "$novo_OS" != amzn ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 	debug_location
-elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && [[ "$novoBsd" == 0 ]] && [[ "$novo_OS" != centos ]]; then
+elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]] && \
+	[[ "$novo_OS" != centos && "$novo_OS" != amzn ]]; then
 	./configure --without-gui
 	debug_location
 elif [[ "$novo_OS" == freebsd ]]; then
@@ -318,11 +320,14 @@ elif [[ "$novo_OS" == centos ]]; then
 	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
         BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
 	debug_location 	
+elif [[ "$novo_OS" == amzn ]]; then
+	./configure --without-gui \
+	--with-incompatible-bdb \
+	CXX=clang++ CC=clang
 fi
 
 debug_step="make/gmake package"; progress_banner
 if [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
-# if [[ "$novoBsd" != 0 ]]; then
 	gmake
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
