@@ -121,9 +121,14 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
         done <<<$(printf '%s\n' "${rhat_pkg_array_[@]}")
         unset rhat_pkg_array_
         if [[ -n "${rhat_to_install[*]}" ]]; then
-                sudo dnf install -y ${rhat_to_install[*]}
-                debug_location
-                unset rhat_to_install
+                if [[ "$novo_OS" == amzn ]]; then
+			sudo yum install -y ${rhat_to_install[*]}
+                        debug_location
+		else
+			sudo dnf install -y ${rhat_to_install[*]}
+                	debug_location
+                fi
+		unset rhat_to_install
         fi
         if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]]; then
                 if ! rpm -qi arm-none-eabi-binutils &> /dev/null; then
