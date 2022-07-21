@@ -22,10 +22,13 @@ script_exit(){ unset \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
 		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
 		progress_banner minor_progress; }
-compile_bdb53=0
+
+
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
+compile_bdb53=0
+
 echo "$novoBar"
 debug_step="novo node compile script"; progress_banner
 echo "$novoBar"
@@ -43,8 +46,8 @@ uname_OS="$(uname -s)"
 novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	fi; )
 debug_step="find the operating system type"
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
-debug_step="compiling for: $novo_OS $cpu_type"; progress_banner
 if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
+debug_step="compiling for: $novo_OS $cpu_type"; progress_banner
 
 debug_step="dependencies installation"; progress_banner
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
@@ -230,11 +233,11 @@ cd "$novoSrc" || echo "unable to cd to $novoSrc"
 # compile  BerkeleyDB.5.3 on some platforms
 if [[ "$compile_bdb53" == 1 ]]; then
 	debug_step="compiling BerkeleyDB.5.3"; progress_banner; debug_step="wget db-5.3.28"; minor_progress
-	wget https://github.com/bitsko/libdb/archive/refs/tags/v5.3.28.tar.gz
+	wget https://github.com/berkeleydb/libdb/releases/download/v5.3.28/db-5.3.28.tar.gz
 	debug_location; debug_step="untar db-5.3"; minor_progress
-	tar -zxvf v5.3.28.tar.gz
+	tar -zxvf db-5.3.28.tar.gz
 	debug_location; debug_step="configure db-5.3"; minor_progress
-	cd libdb-5.3.28/build_unix || echo "unable to cd to $PWD/libdb-5.3.28/build_unix"
+	cd db-5.3.28/build_unix || echo "unable to cd to $PWD/libdb-5.3.28/build_unix"
 	../dist/configure
 	debug_location; debug_step="make db5"; minor_progress
 	make
@@ -316,8 +319,6 @@ debug_location
 
 debug_step="copying and stripping binaries into $novoBin"; minor_progress
 if [[ ! -d "$novoBin" ]]; then mkdir "$novoBin"; fi
-
-
 cp src/novod "$novoBin"/novod && strip "$novoBin"/novod
 cp src/novo-cli "$novoBin"/novo-cli && strip "$novoBin"/novo-cli
 cp src/novo-tx "$novoBin"/novo-tx && strip "$novoBin"/novo-tx
@@ -327,8 +328,6 @@ if [[ ! -f "$novoCnf" ]]; then
 	debug_step="creating conf"; progress_banner
 	novoUsr="$(xxd -l 16 -p /dev/urandom)"
 	novoRpc="$(xxd -l 20 -p /dev/urandom)"
-	# IFS=' ' read -r -p "enter a novod username"$'\n>' novoUsr
-	# IFS=' ' read -r -p "enter a novod rpc password"$'\n>' novoRpc
 	echo \
 	"port=8666"$'\n'\
 	"rpcport=8665"$'\n'\
