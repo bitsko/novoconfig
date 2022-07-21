@@ -244,6 +244,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	debug_location; debug_step="make install db5"; minor_progress
 	make install
 	debug_location; debug_step="bdb5 compiled"; progress_banner
+	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
 
 # autogen
