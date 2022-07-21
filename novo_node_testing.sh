@@ -170,7 +170,11 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 			pkg install -y ${pkg_to_install_[*]}
 			debug_location
 		elif [[ "$uname_OS" == "OpenBSD" ]] || [[ "$uname_OS" == "NetBSD" ]]; then
-			pkg_add ${pkg_to_install_[*]}
+			if [[ -n $(command -v pkgin) ]]; then
+				pkgin install ${pkg_to_install_[*]}
+			else
+				pkg_add ${pkg_to_install_[*]}
+			fi
 			debug_location
 		fi
 	fi
