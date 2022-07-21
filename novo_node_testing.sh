@@ -238,7 +238,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	tar -zxvf db-5.3.28.tar.gz
 	debug_location; debug_step="configure db-5.3"; minor_progress
 	cd db-5.3.28/build_unix || echo "unable to cd to $PWD/libdb-5.3.28/build_unix"
-	../dist/configure --enable-cxx
+	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic
 	debug_location; debug_step="make db5"; minor_progress
 	make
 	debug_location; debug_step="make install db5"; minor_progress
