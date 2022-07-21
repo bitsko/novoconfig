@@ -236,8 +236,8 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	debug_location; debug_step="configure db-5.3"; minor_progress
 	cd libdb-5.3.28/build_unix || echo "unable to cd to $PWD/libdb-5.3.28/build_unix"
 	../dist/configure
-#	debug_location; debug_step="make db5"; minor_progress
-#	make
+	debug_location; debug_step="make db5"; minor_progress
+	make
 	debug_location; debug_step="make install db5"; minor_progress
 	make install
 	debug_location; debug_step="bdb5 compiled"; progress_banner
