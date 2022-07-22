@@ -21,7 +21,7 @@ script_exit(){ unset \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
 		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
-		progress_banner minor_progress compile_boost; }
+		progress_banner minor_progress compile_boost wallet_disabled; }
 
 
 novoTxt="***********************"
@@ -29,6 +29,7 @@ novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
 compile_bdb53=0
 compile_boost=0
+wallet_disabled=0
 
 echo "$novoBar"; debug_step="novo node compile script"; progress_banner
 
@@ -324,80 +325,34 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	--disable-dependency-tracking \
 	--disable-wallet \
 	MAKE=gmake
-#	BDB_LIBS="-ldb_cxx-5" \
-#        BDB_CFLAGS="-I/usr/local/include/db5" 
-#	MAKE=gmake CC=egcc CXX=eg++ \
-#	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
-#	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
-#	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
-#	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
 	debug_location
-#################################################################
+	wallet_disabled=1
 elif [[ "$novo_OS" == NetBSD ]]; then
-#	export BOOST_ROOT="/usr/pkg/include/boost"
-#	export PKGSRC_GCC_VERSION="9.3.0"
-#	export PKGSRC_GXX_VERSION="9.3.0"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet \
 	MAKE=gmake CXX=clang++ CC=clang 
-#	MAKE=gmake
-#	--with-boost=$BOOST_ROOT \
-#	MAKE=gmake CXX="/usr/pkg/gcc9/bin/g++" CC="/usr/pkg/gcc9/bin/gcc" \ 		
-#	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
-#	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
-#	BDB_LIBS="-L/usr/pkg/include/db5 -L/usr/pkg/lib -llibdb5_cxx" \
-#       BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
-#	BOOST_VERSION=107800 \
-#	BOOST_LIB_VERSION=1_78 
-#	# CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	debug_location
-	
-	#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
-################################################################
-
-#	CFLAGS="-I/usr/include -I/usr/include/machine" \
-#	CXXFLAGS="-I/usr/include -I/usr/pkg/include/db5" \
-#	LDFLAGS="-L/usr/lib -L/usr/pkg/lib" \
+	wallet_disabled=1
 elif [[ "$novo_OS" == centos ]]; then
 	./configure --without-gui \
-	--with-incompatible-bdb \
 	--disable-wallet
-#	MAKE=gmake \
-#	CFLAGS="-I/usr/include -I/usr/include/machine" \
-#	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
-#	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
-#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
-#       BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
-#	debug_location 	
+	debug_location
+	wallet_disabled=1
 elif [[ "$novo_OS" == amzn ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
 	--disable-wallet
-#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx" \
-#	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
-	# CPP=clang-cpp
+	debug_location
+	wallet_disabled=1
 elif [[ "$novo_OS" == rocky ]]; then
-	# wget https://kojihub.stream.centos.org/kojifiles/packages/libdb/5.3.28/42.el8_4/x86_64/libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
-	# sudo rpm -i libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
 	./configure --without-gui \
 	--disable-wallet
-#	CFLAGS="-I/usr/include -I/usr/include/machine" \
-#	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
-#	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
-#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -llibdb-5.3" \
- #       BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
-	debug_location 	
-#	MAKE=gmake \
-#	--with-incompatible-bdb \
+	debug_location
+	wallet_disabled=1
 fi
-
 debug_step="make/gmake package"; progress_banner
 if [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
-	if [[ "$uname_OS" == NetBSD ]]; then
-		CC="/usr/pkg/gcc9/bin/gcc" gmake
-	else
-		gmake
-	fi
+	gmake
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
@@ -438,3 +393,56 @@ echo "tail -f $novoDir/debug.log"
 echo "$novoBin/novo-cli --help"
 script_exit
 unset -f script_exit
+
+# openbsd	BDB_LIBS="-ldb_cxx-5" \
+#        BDB_CFLAGS="-I/usr/local/include/db5" 
+#	MAKE=gmake CC=egcc CXX=eg++ \
+#	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
+#	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
+#	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
+#	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
+	debug_location
+#################################################################
+# netbsd
+#	export BOOST_ROOT="/usr/pkg/include/boost"
+#	export PKGSRC_GCC_VERSION="9.3.0"
+#	export PKGSRC_GXX_VERSION="9.3.0"
+#	MAKE=gmake
+#	--with-boost=$BOOST_ROOT \
+#	MAKE=gmake CXX="/usr/pkg/gcc9/bin/g++" CC="/usr/pkg/gcc9/bin/gcc" \ 		
+#	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
+#	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
+#	BDB_LIBS="-L/usr/pkg/include/db5 -L/usr/pkg/lib -llibdb5_cxx" \
+#       BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
+#	BOOST_VERSION=107800 \
+#	BOOST_LIB_VERSION=1_78 
+#	# CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
+#	debug_location
+	
+	#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
+################################################################
+
+# c entos	CFLAGS="-I/usr/include -I/usr/include/machine" \
+#	CXXFLAGS="-I/usr/include -I/usr/pkg/include/db5" \
+#	LDFLAGS="-L/usr/lib -L/usr/pkg/lib" \
+#	MAKE=gmake \
+#	CFLAGS="-I/usr/include -I/usr/include/machine" \
+#	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
+#	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
+#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
+#       BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
+# amzn	debug_location 	
+#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx" \
+#	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
+	# CPP=clang-cpp
+# rocky
+#	CFLAGS="-I/usr/include -I/usr/include/machine" \
+#	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
+#	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
+#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -llibdb-5.3" \
+ #       BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
+	debug_location 	
+#	MAKE=gmake \
+#	--with-incompatible-bdb \
+
+
