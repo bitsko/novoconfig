@@ -387,12 +387,19 @@ fi
 debug_step="binaries available in $novoBin:"; minor_progress
 ls "$novoBin"
 debug_location
+if [[ "$wallet_disabled" == 1 ]]; then
+	debug_step="wallet build is presently disabled on $novo_OS"; progress_banner
+	echo "please submit a pull request or comment on how to build the wallet to the repo at:"
+	echo "https://github.com/bitsko/novoconfig"
+fi
 echo $'\n'"to use:"
 echo "$novoBin/novod --daemon"
 echo "tail -f $novoDir/debug.log"
 echo "$novoBin/novo-cli --help"
 script_exit
 unset -f script_exit
+
+
 
 # openbsd	BDB_LIBS="-ldb_cxx-5" \
 #        BDB_CFLAGS="-I/usr/local/include/db5" 
