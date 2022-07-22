@@ -277,7 +277,7 @@ if [[ "$compile_boost" == 1 ]]; then
 	git clone --recursive https://github.com/boostorg/boost.git
 	cd boost
 	git checkout develop
-	./bootstrap.sh CC=egcc CXX=eg++
+	./bootstrap.sh --with-toolset=g++
 	./b2 headers
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
@@ -366,15 +366,17 @@ elif [[ "$novo_OS" == amzn ]]; then
 	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
 	# CPP=clang-cpp
 elif [[ "$novo_OS" == rocky ]]; then
+	wget https://kojihub.stream.centos.org/kojifiles/packages/libdb/5.3.28/42.el8_4/x86_64/libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
+	sudo rpm -i libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
 	./configure --without-gui \
-	--with-incompatible-bdb \
-	MAKE=gmake \
 	CFLAGS="-I/usr/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
 	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
 	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -llibdb-5.3" \
         BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
 	debug_location 	
+#	MAKE=gmake \
+#	--with-incompatible-bdb \
 fi
 
 debug_step="make/gmake package"; progress_banner
