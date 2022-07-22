@@ -21,13 +21,15 @@ script_exit(){ unset \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
 		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
-		progress_banner minor_progress compile_boost; }
+		progress_banner minor_progress compile_boost egcc_toolkit clang_toolkit; }
 
 
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
 compile_bdb53=0
+egcc_toolkit="CC=egcc CXX=eg++"
+clang_toolkit="CXX=clang++ CC=clang"
 
 echo "$novoBar"
 debug_step="novo node compile script"; progress_banner
@@ -144,6 +146,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	if [[ "$uname_OS" == OpenBSD ]]; then
 		compile_bdb53=1
 		compile_boost=1
+		
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 nano zeromq openssl \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 \
@@ -253,7 +256,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	sed -i 's/__atomic_compare_exchange((p), (o), (n))/__atomic_compare_exchange_db((p), (o), (n))/g' src/dbinc/atomic.h; debug_location
 	sed -i 's/static inline int __atomic_compare_exchange/static inline int __atomic_compare_exchange_db/g' src/dbinc/atomic.h; debug_location
 	cd build_unix || echo "unable to cd to $PWD/build_unix"
-	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=egcc CXX=eg++ CPP=ecpp
+	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic "$egcc_toolkit" CPP=ecpp
 	# CC=clang CXX=clang++ CPP=clang-cpp
 	debug_location; debug_step="make db5"; minor_progress
 	make
@@ -268,7 +271,7 @@ if [[ "$compile_boost" == 1 ]]; then
 	git clone --recursive https://github.com/boostorg/boost.git
 	cd boost
 	git checkout develop
-	./bootstrap.sh --with-toolset=clang
+	./bootstrap.sh --with-toolset=egcc "$egcc_toolkit"
 	./b2 headers
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
@@ -296,7 +299,7 @@ elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]] && \
 elif [[ "$novo_OS" == freebsd ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening --with-incompatible-bdb \
-	MAKE=gmake CXX=clang++ CC=clang \
+	MAKE=gmake "$clang_toolkit" \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5" \
@@ -307,7 +310,7 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
-	MAKE=gmake CXX=clang++ CC=clang \
+	MAKE=gmake "$egcc_toolkit" \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
 	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
@@ -319,7 +322,7 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening \
 	--with-boost=$BOOST_ROOT
-	MAKE=gmake \ 		# CXX=clang++ CC=clang \
+	MAKE=gmake \ 		
 	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
 	BDB_LIBS="-L/usr/pkg/lib -ldb5_cxx" \
@@ -349,7 +352,6 @@ elif [[ "$novo_OS" == amzn ]]; then
 	--with-incompatible-bdb \
 	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx" \
 	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
-	CXX=g++ CC=gcc 
 	# CPP=clang-cpp
 fi
 
