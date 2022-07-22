@@ -156,7 +156,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		fi
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc \
 			jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf \
-			automake ca-certificates boost-libs readline vim )
+			automake ca-certificates boost-libs readline vim llvm clang )
 			# db5 llvm clang gcc9 R-BH-1.75.0.0
 	elif [[ "$novo_OS" == freebsd ]]; then
 		pkg upgrade -y
@@ -339,7 +339,8 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 #	export PKGSRC_GXX_VERSION="9.3.0"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet \
-	MAKE=gmake
+	MAKE=gmake CXX=clang++ CC=clang 
+#	MAKE=gmake
 #	--with-boost=$BOOST_ROOT \
 #	MAKE=gmake CXX="/usr/pkg/gcc9/bin/g++" CC="/usr/pkg/gcc9/bin/gcc" \ 		
 #	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
