@@ -12,6 +12,7 @@ debug_location(){
 	if [[ "$?" != 0 ]]; then
 		echo $'\n\n'"$debug_step has failed!"$'\n\n'
 		keep_clean
+		kill "$tail_pid"
 		script_exit
 		exit 1
 	fi; }
@@ -19,8 +20,8 @@ debug_location(){
 script_exit(){ unset \
 		novoUsr novoRpc novoCpu novoAdr novoDir novoCnf novoVer novoTgz novoGit \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
-		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
-		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
+		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step frshDir \
+		novo_OS novoBar keep_clean bsd__pkg_array_ compile_bdb53 novoTxt tail_pid \
 		progress_banner minor_progress compile_boost wallet_disabled novoLog; }
 
 novoLog='>>$novoSrc/log 2>&1'
@@ -255,7 +256,8 @@ fi
 debug_location
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
-
+tail -f log & 
+tail_pid=$!
 # compile  BerkeleyDB.5.3
 if [[ "$compile_bdb53" == 1 ]]; then
 	bdb53mjver="5"
@@ -413,5 +415,6 @@ echo $'\n'"to use:"
 echo "$novoBin/novod --daemon"
 echo "tail -f $novoDir/debug.log"
 echo "$novoBin/novo-cli --help"
+kill "$tail_pid"
 script_exit
 unset -f script_exit
