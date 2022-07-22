@@ -260,7 +260,8 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	debug_location; debug_step="bdb5 compiled"; progress_banner
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
-
+if [[ "$compile_boost == 1 ]]; then
+	debug_step="compiling boost 1 61
 # autogen
 debug_step="running autogen.sh"; progress_banner
 if [[ "$novo_OS" == OpenBSD ]]; then
@@ -336,7 +337,7 @@ elif [[ "$novo_OS" == centos ]]; then
 elif [[ "$novo_OS" == amzn ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
-	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
+	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx" \
 	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
 	CXX=g++ CC=gcc 
 	# CPP=clang-cpp
