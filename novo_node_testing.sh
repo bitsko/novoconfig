@@ -308,7 +308,8 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	BDB_LIBS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -ldb5_cxx -ldb5_cxx-5" \
         BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
 	BOOST_VERSION=107800 \
-	BOOST_LIB_VERSION=1_78 
+	BOOST_LIB_VERSION=1_78 \
+	BOOST_ROOT="/usr/pkg/lib"
 	debug_location
 	#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
 ################################################################
