@@ -336,8 +336,8 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening \
 	--with-boost=$BOOST_ROOT \
-	CXXFLAGS="-I/usr/pkg/gcc9/include -I/usr/pkg/gcc9/bin" \
 	MAKE=gmake CXX="/usr/pkg/gcc9/bin/g++" CC="/usr/pkg/gcc9/bin/gcc" \ 		
+	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
 	BDB_LIBS="-L/usr/pkg/include/db5 -L/usr/pkg/lib -llibdb5_cxx" \
         BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
@@ -345,6 +345,7 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	BOOST_LIB_VERSION=1_78 
 	# CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	debug_location
+	
 	#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
 ################################################################
 
