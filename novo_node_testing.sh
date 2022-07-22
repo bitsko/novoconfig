@@ -57,7 +57,7 @@ if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
 		bsdmainutils python3 libevent-dev libboost-system-dev libboost-filesystem-dev \
 		libboost-chrono-dev libboost-program-options-dev libboost-test-dev automake \
 		libboost-thread-dev libsqlite3-dev libqrencode-dev libdb-dev libdb++-dev \
-		libssl-dev miniupnpc bc curl jq wget libzmq3-dev xxd )
+		libssl-dev miniupnpc bc curl jq wget libzmq3-dev xxd pv )
 	while read -r line; do
         	if ! dpkg -s "$line" &> /dev/null; then
 			dpkg_to_install+=( "$line" )
@@ -79,7 +79,7 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	sudo pacman -Syu
 	declare -a arch_pkg_array_=( boost boost-libs libevent libnatpmp binutils libtool m4 make \
 		automake autoconf zeromq gzip curl sqlite qrencode nano fakeroot gcc grep pkgconf \
-		sed miniupnpc jq wget bc vim )
+		sed miniupnpc jq wget bc vim pv )
 	while read -r line; do
         	if ! pacman -Qi "$line" &> /dev/null; then
 			arch_to_install+=( "$line" )
@@ -107,9 +107,9 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
         if [[ "$novo_OS" == fedora  || "$novo_OS" == amzn ]]; then
 		declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
 			libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
-			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
+			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel pv )
         elif [[ "$novo_OS" == centos || "$novo_OS" == rocky ]]; then
-	                declare -a rhat_pkg_array_=( libtool make autoconf automake openssl-devel \
+	                declare -a rhat_pkg_array_=( libtool make autoconf automake openssl-devel pv \
                         libevent-devel boost-devel gcc-c++ gzip jq wget bc vim sed grep libuuid-devel )
 	                # miniupnpc-devel qrencode-devel zeromq-devel libdb-devel
 	else
@@ -149,7 +149,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		# compile_boost=1
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 nano zeromq openssl boost \
-			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
+			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 pv )
 			# llvm boost git g++-11.2.0p2 gcc-11.2.0p2
 	elif [[ "$uname_OS" == NetBSD ]]; then
 		if [[ -z $(command -v pkgin) ]]; then
@@ -157,13 +157,13 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		fi
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc \
 			jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf \
-			automake ca-certificates boost-libs readline vim llvm clang )
+			automake ca-certificates boost-libs readline vim llvm clang pv )
 			# db5 llvm clang gcc9 R-BH-1.75.0.0
 	elif [[ "$novo_OS" == freebsd ]]; then
 		pkg upgrade -y
 		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
 			octave-forge-zeromq libnpupnp nano fakeroot pkgconf miniupnpc gzip \
-			jq wget db5 libressl gmake python3 sqlite3 binutils gcc clang vim )
+			jq wget db5 libressl gmake python3 sqlite3 binutils gcc clang vim pv )
 	else
 		echo "$novo_OS bsd distro not supported"
 	fi
@@ -283,6 +283,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	make install
 	debug_location; debug_step="bdb${bdb53mjver} compiled"; progress_banner
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
+	unset bdb53mjver bdb53vrsnm bdb53dldir bdb53targz
 fi
 if [[ "$compile_boost" == 1 ]]; then
 	debug_step="compiling boost"; minor_progress
