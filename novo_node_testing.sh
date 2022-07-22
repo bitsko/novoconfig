@@ -196,7 +196,12 @@ debug_step="curl-ing the release version"; minor_progress
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
 novoCnf="$novoDir/novo.conf"
-novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
+if [[ -n $(command -v jq) ]]; then
+	novoVer="$(curl -s https://api.github.com/repos/novoworks/novo/releases/latest | jq .tag_name | sed 's/"//g' )"
+else 
+	echo "*** jq not installed, dependencies installation failed"
+	exit 1
+fi
 debug_location
 novoTgz="$novoVer".tar.gz
 novoGit="https://github.com/novoworks/novo/archive/refs/tags/$novoTgz"
