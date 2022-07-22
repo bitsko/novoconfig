@@ -143,11 +143,12 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	novoBsd=1
 	if [[ "$uname_OS" == OpenBSD ]]; then
 		compile_bdb53=1
+		compile_boost=1
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
-			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
+			curl wget gmake python-3.9.13 sqlite3 nano zeromq openssl \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 \
 			llvm g++-11.2.0p2 gcc-11.2.0p2 )
-			# g++-11.2.0p2 gcc-11.2.0p2
+			# g++-11.2.0p2 gcc-11.2.0p2 boost
 	elif [[ "$uname_OS" == NetBSD ]]; then
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
 			jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf \
@@ -242,7 +243,6 @@ debug_location
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 # compile  BerkeleyDB.5.3 on some platforms
 if [[ "$compile_bdb53" == 1 ]]; then
-	compile_boost=1
 	debug_step="compiling BerkeleyDB.5.3"; progress_banner; debug_step="wget db-5.3.28"; minor_progress
 	wget https://github.com/berkeleydb/libdb/releases/download/v5.3.28/db-5.3.28.tar.gz
 	debug_location; debug_step="untar db-5.3"; minor_progress
@@ -263,6 +263,12 @@ if [[ "$compile_bdb53" == 1 ]]; then
 fi
 if [[ "$compile_boost" == 1 ]]; then
 	debug_step="compiling boost"; minor_progress
+	cd "$novoSrc" || echo "unable to cd to $novoSrc"
+	git clone --recursive https://github.com/boostorg/boost.git
+	cd boost
+	git checkout develop
+	./bootstrap.sh
+	./b2 headers
 fi
 # autogen
 debug_step="running autogen.sh"; progress_banner
