@@ -291,15 +291,19 @@ else
 	./autogen.sh
 fi	
 debug_location
-
+# "${x86cpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]]
+# "${armcpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]]
 debug_step="running ./configure"; progress_banner
-if [[ "${armcpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]] && \
-	[[ "$novo_OS" != centos && "$novo_OS" != amzn ]]; then
+if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && \
+	[[ ! "${redhat_array[*]}" =~ "$novo_OS" && ! "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
 	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
 	debug_location
-elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]] && \
-	[[ "$novo_OS" != centos && "$novo_OS" != amzn ]]; then
+elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && \
+	[[ ! "${redhat_array[*]}" =~ "$novo_OS" && ! "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
+	./configure --without-gui
+	debug_location
+elif [[ "$novo_OS" == fedora ]]; then 
 	./configure --without-gui
 	debug_location
 elif [[ "$novo_OS" == freebsd ]]; then
@@ -361,6 +365,16 @@ elif [[ "$novo_OS" == amzn ]]; then
 	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx" \
 	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
 	# CPP=clang-cpp
+elif [[ "$novo_OS" == rocky ]]; then
+	./configure --without-gui \
+	--with-incompatible-bdb \
+	MAKE=gmake \
+	CFLAGS="-I/usr/include -I/usr/include/machine" \
+	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
+	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
+	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
+        BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
+	debug_location 	
 fi
 
 debug_step="make/gmake package"; progress_banner
