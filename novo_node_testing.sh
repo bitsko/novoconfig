@@ -336,6 +336,8 @@ elif [[ "$novo_OS" == centos ]]; then
 elif [[ "$novo_OS" == amzn ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
+	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
+	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
 	CXX=g++ CC=gcc 
 	# CPP=clang-cpp
 fi
