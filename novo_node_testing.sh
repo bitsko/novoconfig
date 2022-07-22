@@ -12,9 +12,12 @@ debug_location(){
 	if [[ "$?" != 0 ]]; then
 		echo $'\n\n'"$debug_step has failed!"$'\n\n'
 		keep_clean
-		kill "$tail_pid"
+		if ps -p $tail_pid > /dev/null; then 
+			kill "$tail_pid"
+		fi
 		if [[ -s "$novoSrc/log" ]]; then
-			echo "log available at $novoSrc/log"
+			tail -n 10 "$novoSrc/log"
+			echo $'\n'"log available at $novoSrc/log"$'\n'
 		fi
 		script_exit
 		exit 1
@@ -411,6 +414,12 @@ fi
 debug_step="binaries available in $novoBin:"; minor_progress
 ls "$novoBin"
 debug_location
+if [[ -s "$novoSrc/log" ]]; then
+	sed -n '/Options used to compile and link:/,/Making all in src/p' "$novoSrc/log"
+	if [[ "$?" != 0 ]]; then
+		tail -n 10 "$novoSrc/log"
+	fi
+fi
 if [[ "$wallet_disabled" == 1 ]]; then
 	if [[ -n $(source /etc/os-release; echo "$PRETTY_NAME") ]]; then
 		novo_OS=$(source /etc/os-release; echo "$PRETTY_NAME")
@@ -423,6 +432,8 @@ echo $'\n'"to use:"
 echo "$novoBin/novod --daemon"
 echo "tail -f $novoDir/debug.log"
 echo "$novoBin/novo-cli --help"
-kill "$tail_pid"
+if ps -p $tail_pid > /dev/null; then
+	kill "$tail_pid"
+fi
 script_exit
 unset -f script_exit
