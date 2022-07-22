@@ -24,7 +24,6 @@ script_exit(){ unset \
 		novo_OS novoBar keep_clean bsd__pkg_array_ compile_bdb53 novoTxt tail_pid \
 		progress_banner minor_progress compile_boost wallet_disabled novoLog; }
 
-novoLog='>>$novoSrc/log 2>&1'
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
@@ -256,8 +255,7 @@ fi
 debug_location
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
-tail -f log & 
-tail_pid=$!
+
 # compile  BerkeleyDB.5.3
 if [[ "$compile_bdb53" == 1 ]]; then
 	bdb53mjver="5"
@@ -301,6 +299,11 @@ if [[ "$compile_boost" == 1 ]]; then
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
 
+if [[ -f "$novoSrc/log" ]]; then
+	mv "$novoSrc/log $novoSrc/log$EPOCHSECONDS"
+fi
+touch "$novoSrc/log"
+
 debug_step="running autogen.sh"; progress_banner
 if [[ "$novo_OS" == OpenBSD ]]; then
 	export AUTOCONF_VERSION=2.71
@@ -308,8 +311,10 @@ if [[ "$novo_OS" == OpenBSD ]]; then
 	./autogen.sh >>$novoSrc/log 2>&1
 else
 	./autogen.sh >>$novoSrc/log 2>&1
-fi	
+fi
 debug_location
+tail -f log & 
+tail_pid=$!
 
 debug_step="running ./configure"; progress_banner
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && \
