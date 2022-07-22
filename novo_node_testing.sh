@@ -21,7 +21,7 @@ script_exit(){ unset \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
 		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
-		progress_banner minor_progress; }
+		progress_banner minor_progress compile_boost; }
 
 
 novoTxt="***********************"
@@ -242,6 +242,7 @@ debug_location
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 # compile  BerkeleyDB.5.3 on some platforms
 if [[ "$compile_bdb53" == 1 ]]; then
+	compile_boost=1
 	debug_step="compiling BerkeleyDB.5.3"; progress_banner; debug_step="wget db-5.3.28"; minor_progress
 	wget https://github.com/berkeleydb/libdb/releases/download/v5.3.28/db-5.3.28.tar.gz
 	debug_location; debug_step="untar db-5.3"; minor_progress
@@ -260,8 +261,9 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	debug_location; debug_step="bdb5 compiled"; progress_banner
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
-if [[ "$compile_boost == 1 ]]; then
-	debug_step="compiling boost 1 61
+if [[ "$compile_boost" == 1 ]]; then
+	debug_step="compiling boost"; minor_progress
+fi
 # autogen
 debug_step="running autogen.sh"; progress_banner
 if [[ "$novo_OS" == OpenBSD ]]; then
