@@ -247,7 +247,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	debug_location; debug_step="untar db-5.3"; minor_progress
 	tar -zxvf db-5.3.28.tar.gz
 	debug_location; debug_step="configure db-5.3"; minor_progress
-	cd db-5.3.28 || echo "unable to cd to $PWD/libdb-5.3.28"
+	cd db-5.3.28 || echo "unable to cd to $PWD/db-5.3.28"
 	sed -i 's/#define	atomic_init(p, val)	((p)->value = (val))/#define	atomic_init_db(p, val)	((p)->value = (val))/g' src/dbinc/atomic.h
 	sed -i 's/__atomic_compare_exchange((p), (o), (n))/__atomic_compare_exchange_db((p), (o), (n))/g' src/dbinc/atomic.h
 	sed -i 's/static inline int __atomic_compare_exchange/static inline int __atomic_compare_exchange_db/g' src/dbinc/atomic.h
@@ -259,7 +259,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	sed -i 's/atomic_init(&hp->hash_page_dirty, 0);/atomic_init_db(&hp->hash_page_dirty, 0);/g' src/mp/mp_region.c
 	sed -i 's/atomic_init(v, newval);/atomic_init_db(v, newval);/g' src/mutex/mut_method.c
 	sed -i 's/atomic_init(&mutexp->sharecount, 0);/atomic_init_db(&mutexp->sharecount, 0);/g' src/mutex/mut_tas.c
-	cd db-5.3.28/build_unix || echo "unable to cd to $PWD/libdb-5.3.28/build_unix"
+	cd build_unix || echo "unable to cd to $PWD/build_unix"
 	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=egcc CXX=eg++ CPP=ecpp
 	# CC=clang CXX=clang++ CPP=clang-cpp
 	debug_location; debug_step="make db5"; minor_progress
