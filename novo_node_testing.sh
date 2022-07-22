@@ -277,7 +277,9 @@ if [[ "$compile_boost" == 1 ]]; then
 	git clone --recursive https://github.com/boostorg/boost.git
 	cd boost
 	git checkout develop
-	./bootstrap.sh --with-toolset=gcc
+	echo 'using gcc : : eg++ : <cxxflags>"-fvisibility=hidden -fPIC" <linkflags>"" <archiver>"ar" <striper>"strip"  <ranlib>"ranlib" <rc>"" : ;' > user-config.jam
+	config_opts="runtime-link=shared threadapi=pthread threading=multi link=static variant=release --layout=tagged --build-type=complete --user-config=user-config.jam -sNO_BZIP2=1"
+	./bootstrap.sh --without-icu --with-libraries=chrono,filesystem,program_options,system,thread,test
 	./b2 headers
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
@@ -333,15 +335,15 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	export PKGSRC_GXX_VERSION="9.3.0"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening \
-	--with-boost=$BOOST_ROOT
+	--with-boost=$BOOST_ROOT \
+	CXXFLAGS="-I/usr/pkg/gcc9/include -I/usr/pkg/gcc9/bin" \
 	MAKE=gmake \ 		
-	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
-	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
+	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
 	BDB_LIBS="-L/usr/pkg/lib -llibdb5_cxx" \
         BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
 	BOOST_VERSION=107800 \
 	BOOST_LIB_VERSION=1_78 
-	
+	# CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	debug_location
 	#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
 ################################################################
@@ -366,8 +368,8 @@ elif [[ "$novo_OS" == amzn ]]; then
 	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
 	# CPP=clang-cpp
 elif [[ "$novo_OS" == rocky ]]; then
-	wget https://kojihub.stream.centos.org/kojifiles/packages/libdb/5.3.28/42.el8_4/x86_64/libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
-	sudo rpm -i libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
+	# wget https://kojihub.stream.centos.org/kojifiles/packages/libdb/5.3.28/42.el8_4/x86_64/libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
+	# sudo rpm -i libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
 	./configure --without-gui \
 	CFLAGS="-I/usr/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
