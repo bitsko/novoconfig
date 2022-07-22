@@ -311,7 +311,7 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	MAKE=gmake \ 		# CXX=clang++ CC=clang \
 	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
-	BDB_LIBS="-L/usr/pkg/lib -L/usr/pkg/include/db5" \
+	BDB_LIBS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -llibdb5_cxx" \
         BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
 	BOOST_VERSION=107800 \
 	BOOST_LIB_VERSION=1_78 
