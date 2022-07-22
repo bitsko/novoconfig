@@ -109,9 +109,9 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
 			libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
 			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel pv )
         elif [[ "$novo_OS" == centos || "$novo_OS" == rocky ]]; then
-	                declare -a rhat_pkg_array_=( libtool make autoconf automake openssl-devel pv \
+	                declare -a rhat_pkg_array_=( libtool make autoconf automake openssl-devel \
                         libevent-devel boost-devel gcc-c++ gzip jq wget bc vim sed grep libuuid-devel )
-	                # miniupnpc-devel qrencode-devel zeromq-devel libdb-devel
+	                # miniupnpc-devel qrencode-devel zeromq-devel libdb-devel pv
 	else
 		echo "$uname_OS unsupported"
 		exit 1
