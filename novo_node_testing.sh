@@ -269,7 +269,7 @@ if [[ "$compile_boost" == 1 ]]; then
 	git clone --recursive https://github.com/boostorg/boost.git
 	cd boost
 	git checkout develop
-	./bootstrap.sh --with-toolset=egcc "$egcc_toolkit"
+	./bootstrap.sh "$egcc_toolkit"
 	./b2 headers
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
