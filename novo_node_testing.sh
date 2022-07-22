@@ -28,6 +28,7 @@ novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
 compile_bdb53=0
+compile_boost=0
 
 echo "$novoBar"; debug_step="novo node compile script"; progress_banner
 
@@ -143,8 +144,8 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
 elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	novoBsd=1
 	if [[ "$uname_OS" == OpenBSD ]]; then
-		compile_bdb53=1
-		compile_boost=1
+		# compile_bdb53=1
+		# compile_boost=1
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 nano zeromq openssl \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
