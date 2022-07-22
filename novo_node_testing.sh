@@ -405,9 +405,9 @@ if [[ "$wallet_disabled" == 1 ]]; then
 	if [[ -n $(source /etc/os-release; echo "$PRETTY_NAME") ]]; then
 		novo_OS=$(source /etc/os-release; echo "$PRETTY_NAME")
 	fi
-	debug_step="wallet build is presently disabled on $novo_OS"; progress_banner
-	debug_step="please submit a pull request or comment on how to build the wallet"; progress_banner
-	debug_step="to the repo at: https://github.com/bitsko/novoconfig"; progress_banner
+	debug_step="wallet build is presently disabled on $novo_OS"; minor_progress
+	debug_step="please submit a pull request or comment on how to build the wallet"; minor_progress
+	debug_step="to the repo at: https://github.com/bitsko/novoconfig"; minor_progress
 fi
 echo $'\n'"to use:"
 echo "$novoBin/novod --daemon"
