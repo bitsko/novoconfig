@@ -253,7 +253,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	sed -i 's/__atomic_compare_exchange((p), (o), (n))/__atomic_compare_exchange_db((p), (o), (n))/g' src/dbinc/atomic.h; debug_location
 	sed -i 's/static inline int __atomic_compare_exchange/static inline int __atomic_compare_exchange_db/g' src/dbinc/atomic.h; debug_location
 	cd build_unix || echo "unable to cd to $PWD/build_unix"
-	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=egcc CXX=eg++ CPP=ecpp
+	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=clang CXX=clang++ CPP=clang-cpp
 	debug_location; debug_step="make db5"; minor_progress
 	make
 	debug_location; debug_step="make install db5"; minor_progress
@@ -267,7 +267,7 @@ if [[ "$compile_boost" == 1 ]]; then
 	git clone --recursive https://github.com/boostorg/boost.git
 	cd boost
 	git checkout develop
-	./bootstrap.sh
+	./bootstrap.sh --with-toolset=clang
 	./b2 headers
 fi
 # autogen
@@ -305,7 +305,7 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
-	MAKE=gmake CXX=eg++ CC=egcc \
+	MAKE=gmake CXX=clang++ CC=clang \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
 	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
