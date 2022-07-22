@@ -253,7 +253,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	sed -i 's/__atomic_compare_exchange((p), (o), (n))/__atomic_compare_exchange_db((p), (o), (n))/g' src/dbinc/atomic.h; debug_location
 	sed -i 's/static inline int __atomic_compare_exchange/static inline int __atomic_compare_exchange_db/g' src/dbinc/atomic.h; debug_location
 	cd build_unix || echo "unable to cd to $PWD/build_unix"
-	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=clang CXX=clang++ CPP=clang-cpp
+	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic # CC=clang CXX=clang++ CPP=clang-cpp
 	debug_location; debug_step="make db5"; minor_progress
 	make
 	debug_location; debug_step="make install db5"; minor_progress
