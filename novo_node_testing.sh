@@ -107,9 +107,9 @@ elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
 			libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
 			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
         elif [[ "$novo_OS" == centos || "$novo_OS" == rocky ]]; then
-	                declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
-                        libevent-devel boost-devel libdb-devel  gcc-c++ gzip jq wget bc vim sed grep libuuid-devel )
-	                # miniupnpc-devel qrencode-devel zeromq-devel
+	                declare -a rhat_pkg_array_=( libtool make autoconf automake openssl-devel \
+                        libevent-devel boost-devel gcc-c++ gzip jq wget bc vim sed grep libuuid-devel )
+	                # miniupnpc-devel qrencode-devel zeromq-devel libdb-devel
 	else
 		echo "$uname_OS unsupported"
 		exit 1
@@ -147,9 +147,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		compile_boost=1
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 nano zeromq openssl \
-			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 \
-			llvm g++-11.2.0p2 gcc-11.2.0p2 git )
-			# llvm boost
+			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
+			# llvm boost git g++-11.2.0p2 gcc-11.2.0p2
 	elif [[ "$uname_OS" == NetBSD ]]; then
 		if [[ -z $(command -v pkgin) ]]; then
 			pkg_add pkgin
@@ -322,11 +321,13 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
-	MAKE=gmake CC=egcc CXX=eg++ \
-	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
-	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
-	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
-	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
+	--disable-wallet \
+	MAKE=gmake
+#	MAKE=gmake CC=egcc CXX=eg++ \
+#	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
+#	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
+#	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
+#	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
 	debug_location
 #################################################################
 elif [[ "$novo_OS" == NetBSD ]]; then
@@ -356,28 +357,31 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 elif [[ "$novo_OS" == centos ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
-	MAKE=gmake \
-	CFLAGS="-I/usr/include -I/usr/include/machine" \
-	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
-	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
-	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
-        BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
-	debug_location 	
+	--disable-wallet
+#	MAKE=gmake \
+#	CFLAGS="-I/usr/include -I/usr/include/machine" \
+#	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
+#	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
+#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
+#       BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
+#	debug_location 	
 elif [[ "$novo_OS" == amzn ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
-	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx" \
-	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
+	--disable-wallet
+#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -ldb_cxx" \
+#	BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" \
 	# CPP=clang-cpp
 elif [[ "$novo_OS" == rocky ]]; then
 	# wget https://kojihub.stream.centos.org/kojifiles/packages/libdb/5.3.28/42.el8_4/x86_64/libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
 	# sudo rpm -i libdb-cxx-5.3.28-42.el8_4.x86_64.rpm
 	./configure --without-gui \
-	CFLAGS="-I/usr/include -I/usr/include/machine" \
-	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
-	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
-	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -llibdb-5.3" \
-        BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
+	--disable-wallet
+#	CFLAGS="-I/usr/include -I/usr/include/machine" \
+#	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
+#	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
+#	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -llibdb-5.3" \
+ #       BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
 	debug_location 	
 #	MAKE=gmake \
 #	--with-incompatible-bdb \
