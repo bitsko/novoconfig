@@ -383,7 +383,11 @@ fi
 
 debug_step="make/gmake package"; progress_banner
 if [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
-	gmake
+	if [[ "$uname_OS" == NetBSD ]]; then
+		CC="/usr/pkg/gcc9/bin/gcc" gmake
+	else
+		gmake
+	fi
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
