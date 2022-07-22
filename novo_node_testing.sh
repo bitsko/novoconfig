@@ -13,6 +13,9 @@ debug_location(){
 		echo $'\n\n'"$debug_step has failed!"$'\n\n'
 		keep_clean
 		kill "$tail_pid"
+		if [[ -s "$novoSrc/log" ]]; then
+			echo "log available at $novoSrc/log"
+		fi
 		script_exit
 		exit 1
 	fi; }
