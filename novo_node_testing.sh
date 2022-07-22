@@ -33,7 +33,6 @@ clang_toolkit="CXX=clang++ CC=clang"
 
 echo "$novoBar"
 debug_step="novo node compile script"; progress_banner
-echo "$novoBar"
 
 debug_step="declare arrays with bash v4+"
 declare -a bsdpkg_array=( freebsd OpenBSD NetBSD )
@@ -49,7 +48,7 @@ novo_OS=$(if [[ -f /etc/os-release ]]; then source /etc/os-release; echo "$ID";	
 debug_step="find the operating system type"
 if [[ -z "$novo_OS" ]]; then novo_OS="$uname_OS"; fi
 if [[ "$novo_OS" == "Linux" ]]; then echo "Linux distribution type unknown; cannot check for dependencies"; fi
-debug_step="compiling for: $novo_OS $cpu_type"; progress_banner
+debug_step="compiling for: $novo_OS $cpu_type"; progress_banner; echo "$novoBar"
 
 debug_step="dependencies installation"; progress_banner
 if [[ "${deb_os_array[*]}" =~ "$novo_OS" ]]; then
