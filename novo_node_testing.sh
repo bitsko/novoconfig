@@ -21,15 +21,13 @@ script_exit(){ unset \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
 		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
-		progress_banner minor_progress compile_boost egcc_toolkit clang_toolkit; }
+		progress_banner minor_progress compile_boost; }
 
 
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
 compile_bdb53=0
-egcc_toolkit="CC=egcc CXX=eg++"
-clang_toolkit="CXX=clang++ CC=clang"
 
 echo "$novoBar"; debug_step="novo node compile script"; progress_banner
 
@@ -254,7 +252,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	sed -i 's/__atomic_compare_exchange((p), (o), (n))/__atomic_compare_exchange_db((p), (o), (n))/g' src/dbinc/atomic.h; debug_location
 	sed -i 's/static inline int __atomic_compare_exchange/static inline int __atomic_compare_exchange_db/g' src/dbinc/atomic.h; debug_location
 	cd build_unix || echo "unable to cd to $PWD/build_unix"
-	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic "$egcc_toolkit" CPP=ecpp
+	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=egcc CXX=eg++ CPP=ecpp
 	# CC=clang CXX=clang++ CPP=clang-cpp
 	debug_location; debug_step="make db5"; minor_progress
 	make
@@ -269,7 +267,7 @@ if [[ "$compile_boost" == 1 ]]; then
 	git clone --recursive https://github.com/boostorg/boost.git
 	cd boost
 	git checkout develop
-	./bootstrap.sh "$egcc_toolkit"
+	./bootstrap.sh CC=egcc CXX=eg++
 	./b2 headers
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
@@ -297,7 +295,7 @@ elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" && "$novoBsd" == 0 ]] && \
 elif [[ "$novo_OS" == freebsd ]]; then
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening --with-incompatible-bdb \
-	MAKE=gmake "$clang_toolkit" \
+	MAKE=gmake CXX=clang++ CC=clang \
 	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5" \
@@ -308,7 +306,7 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
-	MAKE=gmake "$egcc_toolkit" \
+	MAKE=gmake CC=egcc CXX=eg++ \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
 	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
