@@ -147,7 +147,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		# compile_bdb53=1
 		# compile_boost=1
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
-			curl wget gmake python-3.9.13 sqlite3 nano zeromq openssl \
+			curl wget gmake python-3.9.13 sqlite3 nano zeromq openssl boost \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 )
 			# llvm boost git g++-11.2.0p2 gcc-11.2.0p2
 	elif [[ "$uname_OS" == NetBSD ]]; then
@@ -324,6 +324,8 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	--disable-dependency-tracking \
 	--disable-wallet \
 	MAKE=gmake
+#	BDB_LIBS="-ldb_cxx-5" \
+#        BDB_CFLAGS="-I/usr/local/include/db5" 
 #	MAKE=gmake CC=egcc CXX=eg++ \
 #	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
 #	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
