@@ -31,8 +31,7 @@ compile_bdb53=0
 egcc_toolkit="CC=egcc CXX=eg++"
 clang_toolkit="CXX=clang++ CC=clang"
 
-echo "$novoBar"
-debug_step="novo node compile script"; progress_banner
+echo "$novoBar"; debug_step="novo node compile script"; progress_banner
 
 debug_step="declare arrays with bash v4+"
 declare -a bsdpkg_array=( freebsd OpenBSD NetBSD )
