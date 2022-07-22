@@ -270,6 +270,7 @@ if [[ "$compile_boost" == 1 ]]; then
 	git checkout develop
 	./bootstrap.sh --with-toolset=clang
 	./b2 headers
+	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
 # autogen
 debug_step="running autogen.sh"; progress_banner
