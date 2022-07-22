@@ -355,23 +355,17 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	wallet_disabled=1
 elif [[ "$novo_OS" == NetBSD ]]; then
 	export BOOST_ROOT="/usr/pkg/include/boost"
-	./configure --without-gui --disable-dependency-tracking \
+	./configure --without-gui \
 	--disable-wallet \
 	MAKE=gmake >>$novoSrc/log 2>&1
 	debug_location
 	wallet_disabled=1
-elif [[ "$novo_OS" == centos ]]; then
+elif [[ "$novo_OS" == centos || "$novo_OS" == rocky ]]; then
 	./configure --without-gui \
 	--disable-wallet >>$novoSrc/log 2>&1
 	debug_location
 	wallet_disabled=1
 elif [[ "$novo_OS" == amzn ]]; then
-	./configure --without-gui \
-	--with-incompatible-bdb \
-	--disable-wallet >>$novoSrc/log 2>&1
-	debug_location
-	wallet_disabled=1
-elif [[ "$novo_OS" == rocky ]]; then
 	./configure --without-gui \
 	--disable-wallet >>$novoSrc/log 2>&1
 	debug_location
