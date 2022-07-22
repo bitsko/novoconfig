@@ -234,7 +234,7 @@ fi
 
 debug_step="wget $novoTgz download"; progress_banner
 if [[ ! -f "$novoTgz" ]]; then
-	wget "$novoGit"
+	wget "$novoGit" -q --show-progress
 else
 	echo "$novoTgz already downloaded"
 fi
@@ -247,29 +247,41 @@ fi
 debug_location
 
 debug_step="decompress $novoTgz"; progress_banner
-tar -zxvf "$novoTgz"
+if [[ -n $(command -v pv) ]]; then
+	pv "$novoTgz" | tar -xzf -
+else
+	tar -zxvf "$novoTgz"
+fi
 debug_location
 
 cd "$novoSrc" || echo "unable to cd to $novoSrc"
 # compile  BerkeleyDB.5.3 on some platforms
 if [[ "$compile_bdb53" == 1 ]]; then
-	debug_step="compiling BerkeleyDB.5.3"; progress_banner; debug_step="wget db-5.3.28"; minor_progress
-	wget https://github.com/berkeleydb/libdb/releases/download/v5.3.28/db-5.3.28.tar.gz
-	debug_location; debug_step="untar db-5.3"; minor_progress
-	tar -zxvf db-5.3.28.tar.gz
-	debug_location; debug_step="configure db-5.3"; minor_progress
-	cd db-5.3.28 || echo "unable to cd to $PWD/db-5.3.28"
+	bdb53mjver="5"
+	bdb53vrsnm="${bdb53mjver}.3.28"
+	bdb53dldir="db-${bdb53vrsnm}"
+	bdb53targz="${bdb53dldir}.tar.gz"
+	debug_step="compiling BerkeleyDB.5.3"; progress_banner; debug_step="wget $bdb53targz"; minor_progress
+	wget https://github.com/berkeleydb/libdb/releases/download/v5.3.28/"$bdb53targz"
+	debug_location; debug_step="untar $bdb53targz"; minor_progress
+	if [[ -n $(command -v pv) ]]; then
+		pv "$bdb53targz" | tar -xzf
+	else
+		tar -zxvf "$bdb53targz"
+	fi
+	debug_location; debug_step="configure ${bdb53dldir}"; minor_progress
+	cd "${bdb53dldir}" || echo "unable to cd to $PWD/${bdb53dldir}"
 	debug_step="applying atomic patch"; minor_progress
 	sed -i 's/__atomic_compare_exchange((p), (o), (n))/__atomic_compare_exchange_db((p), (o), (n))/g' src/dbinc/atomic.h; debug_location
 	sed -i 's/static inline int __atomic_compare_exchange/static inline int __atomic_compare_exchange_db/g' src/dbinc/atomic.h; debug_location
 	cd build_unix || echo "unable to cd to $PWD/build_unix"
 	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=egcc CXX=eg++ CPP=ecpp
 	# CC=clang CXX=clang++ CPP=clang-cpp
-	debug_location; debug_step="make db5"; minor_progress
+	debug_location; debug_step="make db${bdb53mjver}"; minor_progress
 	make
-	debug_location; debug_step="make install db5"; minor_progress
+	debug_location; debug_step="make install db${bdb53mjver}"; minor_progress
 	make install
-	debug_location; debug_step="bdb5 compiled"; progress_banner
+	debug_location; debug_step="bdb${bdb53mjver} compiled"; progress_banner
 	cd "$novoSrc" || echo "unable to cd to $novoSrc"
 fi
 if [[ "$compile_boost" == 1 ]]; then
