@@ -102,14 +102,17 @@ elif [[ "${archos_array[*]}" =~ "$novo_OS" ]]; then
 	fi
 elif [[ "${redhat_array[*]}" =~ "$novo_OS" ]]; then
         sudo dnf update
-        if [[ "$novo_OS" == fedora  || "$novo_OS" == amzn ]] || [[ "$novo_OS" == rocky ]]; then
+        if [[ "$novo_OS" == fedora  || "$novo_OS" == amzn ]]; then
 		declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
 			libevent-devel boost-devel libdb-devel libdb-cxx-devel miniupnpc-devel \
 			qrencode-devel gzip jq wget bc vim sed grep zeromq-devel )
-        elif [[ "$novo_OS" == centos ]]; then
+        elif [[ "$novo_OS" == centos || "$novo_OS" == rocky ]]; then
 	                declare -a rhat_pkg_array_=( gcc-c++ libtool make autoconf automake openssl-devel \
                         libevent-devel boost-devel libdb-devel  gcc-c++ gzip jq wget bc vim sed grep libuuid-devel )
 	                # miniupnpc-devel qrencode-devel zeromq-devel
+	else
+		echo "$uname_OS unsupported"
+		exit 1
 	fi
 	while read -r line; do
                 if ! rpm -qi "$line" &> /dev/null; then
