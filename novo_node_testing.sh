@@ -372,7 +372,7 @@ elif [[ "$novo_OS" == rocky ]]; then
 	CFLAGS="-I/usr/include -I/usr/include/machine" \
 	CXXFLAGS="-I/usr/include -I/usr/include/libdb" \
 	LDFLAGS="-L/usr/lib64 -L/usr/include/libdb" \
-	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb" \
+	BDB_LIBS="-L/usr/lib64 -L/usr/include/libdb -llibdb-5.3" \
         BDB_CFLAGS="-I/usr/include/libdb -I/usr/lib64" 
 	debug_location 	
 fi
