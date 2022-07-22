@@ -336,7 +336,7 @@ elif [[ "$novo_OS" == centos ]]; then
 elif [[ "$novo_OS" == amzn ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
-	CXX=clang++ CC=clang 
+	CXX=eg++ CC=egcc 
 	# CPP=clang-cpp
 fi
 
