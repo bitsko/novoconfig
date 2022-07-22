@@ -337,9 +337,9 @@ elif [[ "$novo_OS" == NetBSD ]]; then
 	--disable-hardening \
 	--with-boost=$BOOST_ROOT \
 	CXXFLAGS="-I/usr/pkg/gcc9/include -I/usr/pkg/gcc9/bin" \
-	MAKE=gmake \ 		
+	MAKE=gmake CXX="/usr/pkg/gcc9/bin/g++" CC="/usr/pkg/gcc9/bin/gcc" \ 		
 	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
-	BDB_LIBS="-L/usr/pkg/lib -llibdb5_cxx" \
+	BDB_LIBS="-L/usr/pkg/include/db5 -L/usr/pkg/lib -llibdb5_cxx" \
         BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
 	BOOST_VERSION=107800 \
 	BOOST_LIB_VERSION=1_78 
