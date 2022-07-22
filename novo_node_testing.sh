@@ -150,7 +150,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	elif [[ "$uname_OS" == NetBSD ]]; then
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
 			jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf \
-			automake ca-certificates db5 boost-libs )
+			automake ca-certificates db5 boost-libs readline )
 	elif [[ "$novo_OS" == freebsd ]]; then
 		pkg upgrade -y
 		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
