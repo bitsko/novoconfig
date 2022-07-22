@@ -328,8 +328,10 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	debug_location
 	wallet_disabled=1
 elif [[ "$novo_OS" == NetBSD ]]; then
+	export BOOST_ROOT="/usr/pkg/include/boost"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet \
+	--with-boost=$BOOST_ROOT \
 	MAKE=gmake CXX=clang++ CC=clang 
 	debug_location
 	wallet_disabled=1
