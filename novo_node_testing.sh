@@ -317,11 +317,13 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 #################################################################
 elif [[ "$novo_OS" == NetBSD ]]; then
 	export BOOST_ROOT="/usr/pkg/include/boost"
+	export PKGSRC_GCC_VERSION="9.3.0"
+	export PKGSRC_GXX_VERSION="9.3.0"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-hardening \
 	--with-boost=$BOOST_ROOT
 	MAKE=gmake \ 		
-	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
+	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
 	BDB_LIBS="-L/usr/pkg/lib -llibdb5_cxx" \
         BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
