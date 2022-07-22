@@ -21,9 +21,9 @@ script_exit(){ unset \
 		novoTxt novoSrc novoNum archos_array deb_os_array armcpu_array x86cpu_array \
 		bsdpkg_array redhat_array cpu_type pkg_Err uname_OS novoPrc debug_step \
 		novo_OS novoBar keep_clean bsd__pkg_array_ frshDir compile_bdb53 novoTxt \
-		progress_banner minor_progress compile_boost wallet_disabled; }
+		progress_banner minor_progress compile_boost wallet_disabled novoLog; }
 
-
+novoLog='>>$novoSrc/log 2>&1'
 novoTxt="***********************"
 novoBar="$novoTxt $novoTxt $novoTxt"
 novoBsd=0
@@ -303,9 +303,9 @@ debug_step="running autogen.sh"; progress_banner
 if [[ "$novo_OS" == OpenBSD ]]; then
 	export AUTOCONF_VERSION=2.71
 	export AUTOMAKE_VERSION=1.16
-	./autogen.sh
+	./autogen.sh "$novoLog"
 else
-	./autogen.sh
+	./autogen.sh "$novoLog"
 fi	
 debug_location
 
@@ -313,14 +313,14 @@ debug_step="running ./configure"; progress_banner
 if [[ "${armcpu_array[*]}" =~ "$cpu_type" ]] && \
 	[[ ! "${redhat_array[*]}" =~ "$novo_OS" && ! "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 	CONFIG_SITE=$PWD/depends/arm-linux-gnueabihf/share/config.site \
-	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++
+	./configure --without-gui --enable-reduce-exports LDFLAGS=-static-libstdc++ "$novoLog"
 	debug_location
 elif [[ "${x86cpu_array[*]}" =~ "$cpu_type" ]] && \
 	[[ ! "${redhat_array[*]}" =~ "$novo_OS" && ! "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
-	./configure --without-gui
+	./configure --without-gui "$novoLog"
 	debug_location
 elif [[ "$novo_OS" == fedora ]]; then 
-	./configure --without-gui
+	./configure --without-gui "$novoLog"
 	debug_location
 elif [[ "$novo_OS" == freebsd ]]; then
 	./configure --without-gui --disable-dependency-tracking \
@@ -330,47 +330,47 @@ elif [[ "$novo_OS" == freebsd ]]; then
 	CXXFLAGS="-I/usr/local/include -I/usr/local/include/db5" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/lib/db5" \
 	BDB_LIBS="-ldb_cxx-5" \
-        BDB_CFLAGS="-I/usr/local/include/db5" 
+        BDB_CFLAGS="-I/usr/local/include/db5" "$novoLog"
 	debug_location
 elif [[ "$novo_OS" == OpenBSD ]]; then 
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
 	--disable-wallet \
-	MAKE=gmake
+	MAKE=gmake "$novoLog"
 	debug_location
 	wallet_disabled=1
 elif [[ "$novo_OS" == NetBSD ]]; then
 	export BOOST_ROOT="/usr/pkg/include/boost"
 	./configure --without-gui --disable-dependency-tracking \
 	--disable-wallet \
-	MAKE=gmake 
+	MAKE=gmake "$novoLog"
 	debug_location
 	wallet_disabled=1
 elif [[ "$novo_OS" == centos ]]; then
 	./configure --without-gui \
-	--disable-wallet
+	--disable-wallet "$novoLog"
 	debug_location
 	wallet_disabled=1
 elif [[ "$novo_OS" == amzn ]]; then
 	./configure --without-gui \
 	--with-incompatible-bdb \
-	--disable-wallet
+	--disable-wallet "$novoLog"
 	debug_location
 	wallet_disabled=1
 elif [[ "$novo_OS" == rocky ]]; then
 	./configure --without-gui \
-	--disable-wallet
+	--disable-wallet "$novoLog"
 	debug_location
 	wallet_disabled=1
 fi
 debug_step="make/gmake package"; progress_banner
 if [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
-	gmake
+	gmake "$novoLog"
 else
 	novoPrc=$(echo "$(nproc) - 1" | bc)
 	if [[ "$novoPrc" == 0 ]]; then novoPrc="1"; fi
-	make -j "$novoPrc"
+	make -j "$novoPrc" "$novoLog"
 fi
 debug_location
 
