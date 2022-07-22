@@ -146,7 +146,7 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		declare -a bsd__pkg_array_=( libevent libqrencode pkgconf miniupnpc jq \
 			curl wget gmake python-3.9.13 sqlite3 boost nano zeromq openssl \
 			libtool-2.4.2p2 autoconf-2.71 automake-1.16.3 vim-8.2.4600-no_x11 \
-			llvm )
+			llvm g++-11.2.0p2 gcc-11.2.0p2 )
 			# g++-11.2.0p2 gcc-11.2.0p2
 	elif [[ "$uname_OS" == NetBSD ]]; then
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc vim \
@@ -248,7 +248,8 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	tar -zxvf db-5.3.28.tar.gz
 	debug_location; debug_step="configure db-5.3"; minor_progress
 	cd db-5.3.28/build_unix || echo "unable to cd to $PWD/libdb-5.3.28/build_unix"
-	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=clang CXX=clang++ CPP=clang-cpp
+	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=egcc CXX=eg++ CPP=ecpp
+	# CC=clang CXX=clang++ CPP=clang-cpp
 	debug_location; debug_step="make db5"; minor_progress
 	make
 	debug_location; debug_step="make install db5"; minor_progress
@@ -292,7 +293,7 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	./configure \
 	--without-gui \
 	--disable-dependency-tracking \
-	MAKE=gmake CXX=clang++ CC=clang \
+	MAKE=gmake CXX=eg++ CC=egcc \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
 	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib" \
 	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
