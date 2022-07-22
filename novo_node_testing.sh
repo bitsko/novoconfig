@@ -258,7 +258,7 @@ if [[ "$compile_bdb53" == 1 ]]; then
 	sed -i 's/atomic_init(&htab[i].hash_page_dirty, 0);/atomic_init_db(&htab[i].hash_page_dirty, 0);/g' src/mp/mp_region.c
 	sed -i 's/atomic_init(&hp->hash_page_dirty, 0);/atomic_init_db(&hp->hash_page_dirty, 0);/g' src/mp/mp_region.c
 	sed -i 's/atomic_init(v, newval);/atomic_init_db(v, newval);/g' src/mutex/mut_method.c
-	sed -i 's/atomic_init(&mutexp->sharecount, 0);/atomic_init_db(&mutexp->sharecount, 0);/g' src/mutex/mut_tas.c
+#	sed -i 's/atomic_init(&mutexp->sharecount, 0);/atomic_init_db(&mutexp->sharecount, 0);/g' src/mutex/mut_tas.c
 	cd build_unix || echo "unable to cd to $PWD/build_unix"
 	../dist/configure --enable-cxx --prefix=/usr/local --disable-shared --with-pic CC=egcc CXX=eg++ CPP=ecpp
 	# CC=clang CXX=clang++ CPP=clang-cpp
