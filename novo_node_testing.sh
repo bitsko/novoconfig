@@ -156,8 +156,8 @@ elif [[ "${bsdpkg_array[*]}" =~ "$novo_OS" ]]; then
 		fi
 		declare -a bsd__pkg_array_=( libtool libevent qrencode pkgconf miniupnpc \
 			jq curl wget gmake python39 sqlite3 boost nano zeromq openssl autoconf \
-			automake ca-certificates db5 boost-libs readline llvm clang vim gcc9 )
-			# R-BH-1.75.0.0
+			automake ca-certificates boost-libs readline vim )
+			# db5 llvm clang gcc9 R-BH-1.75.0.0
 	elif [[ "$novo_OS" == freebsd ]]; then
 		pkg upgrade -y
 		declare -a bsd__pkg_array_=( boost-all libevent autotools libqrencode curl \
@@ -330,20 +330,21 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	debug_location
 #################################################################
 elif [[ "$novo_OS" == NetBSD ]]; then
-	export BOOST_ROOT="/usr/pkg/include/boost"
-	export PKGSRC_GCC_VERSION="9.3.0"
-	export PKGSRC_GXX_VERSION="9.3.0"
+#	export BOOST_ROOT="/usr/pkg/include/boost"
+#	export PKGSRC_GCC_VERSION="9.3.0"
+#	export PKGSRC_GXX_VERSION="9.3.0"
 	./configure --without-gui --disable-dependency-tracking \
-	--disable-hardening \
-	--with-boost=$BOOST_ROOT \
-	MAKE=gmake CXX="/usr/pkg/gcc9/bin/g++" CC="/usr/pkg/gcc9/bin/gcc" \ 		
-	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
-	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
-	BDB_LIBS="-L/usr/pkg/include/db5 -L/usr/pkg/lib -llibdb5_cxx" \
-        BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
-	BOOST_VERSION=107800 \
-	BOOST_LIB_VERSION=1_78 
-	# CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
+	--disable-wallet \
+	MAKE=gmake
+#	--with-boost=$BOOST_ROOT \
+#	MAKE=gmake CXX="/usr/pkg/gcc9/bin/g++" CC="/usr/pkg/gcc9/bin/gcc" \ 		
+#	CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
+#	LDFLAGS="-L/usr/pkg/lib -L/usr/pkg/include/db5 -L/usr/pkg/lib/boost -L/usr/pkg/lib/db5" \
+#	BDB_LIBS="-L/usr/pkg/include/db5 -L/usr/pkg/lib -llibdb5_cxx" \
+#       BDB_CFLAGS="-I/usr/pkg/include/db5 -I/usr/pkg/lib" \
+#	BOOST_VERSION=107800 \
+#	BOOST_LIB_VERSION=1_78 
+#	# CXXFLAGS="-I/usr/pkg/include -I/usr/pkg/gcc9/include -I/usr/pkg/include/boost -I/usr/pkg/include/db5" \
 	debug_location
 	
 	#	CFLAGS="-I/usr/local/include -I/usr/include/machine" \
