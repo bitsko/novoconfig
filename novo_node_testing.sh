@@ -189,7 +189,7 @@ else
 fi
 # end dependency installation script
 
-debug_step="setting installation variables and curl-ing the release version"; minor_progress
+debug_step="curl-ing the release version"; minor_progress
 novoDir="$HOME/.novo"
 novoBin="$novoDir/bin"
 novoCnf="$novoDir/novo.conf"
