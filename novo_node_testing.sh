@@ -298,7 +298,7 @@ elif [[ "$novo_OS" == OpenBSD ]]; then
 	--disable-dependency-tracking \
 	MAKE=gmake CXX=eg++ CC=egcc \
 	CXXFLAGS="-I/usr/local/include -I/usr/local/BerkeleyDB.5.3/include" \
-	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib" \
+	LDFLAGS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -lboost_system" \
 	BDB_LIBS="-L/usr/local/lib -L/usr/local/BerkeleyDB.5.3/lib -ldb_cxx" \
 	BDB_CFLAGS="-I/usr/local/BerkeleyDB.5.3/include"
 	debug_location
